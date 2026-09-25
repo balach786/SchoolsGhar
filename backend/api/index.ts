@@ -1,10 +1,10 @@
-import { createApp } from './src/app';
-import { connectDatabase } from './src/config/db';
+import { createApp } from '../src/app';
+import { connectDatabase } from '../src/config/db';
 
 let isConnected = false;
 const app = createApp();
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   if (!isConnected) {
     await connectDatabase();
     isConnected = true;
