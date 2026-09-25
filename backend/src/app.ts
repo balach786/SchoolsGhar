@@ -40,8 +40,10 @@ export function createApp(): Express {
   app.use(
     cors({
       origin(origin, callback) {
-        // Allow same-origin/server-to-server requests (no Origin header)
+        // Allow exact matches or wildcard
         if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) return callback(null, true);
+        // Automatically allow any Vercel preview domain for seamless testing
+        if (origin.endsWith('.vercel.app')) return callback(null, true);
         if (env.nodeEnv !== 'production' && /localhost|127\.0\.0\.1|e2b\.app/i.test(origin)) {
           return callback(null, true);
         }
