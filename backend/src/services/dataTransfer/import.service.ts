@@ -371,6 +371,8 @@ export class ImportService {
     const validationResults: RowValidationResult[] = [];
     const allErrors: { rowNumber: number; identifier: string; status: string; field?: string; message: string }[] = [];
 
+    const { Class, Section, AcademicSession, Student, Staff } = getTenantModels(tenantDb);
+
     // Pre-load tenant reference caches for fast in-memory validation
     const [classes, sections, sessions] = await Promise.all([
       Class.find({ tenantId: tId }).lean(),
@@ -599,6 +601,8 @@ export class ImportService {
     let importedCount = 0;
     let skippedCount = 0;
     let failedCount = 0;
+
+    const { Class, Section, AcademicSession, Student, Staff, StudentHistory } = getTenantModels(tenantDb);
 
     const [classes, sections, sessions] = await Promise.all([
       Class.find({ tenantId: tId }).lean(),
