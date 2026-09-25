@@ -41,7 +41,7 @@ export function createApp(): Express {
     cors({
       origin(origin, callback) {
         // Allow same-origin/server-to-server requests (no Origin header)
-        if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+        if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) return callback(null, true);
         if (env.nodeEnv !== 'production' && /localhost|127\.0\.0\.1|e2b\.app/i.test(origin)) {
           return callback(null, true);
         }
