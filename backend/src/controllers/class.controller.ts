@@ -278,11 +278,9 @@ export const archiveClass = asyncHandler(async (req: AuthRequest, res: Response)
     if (activeStudents > 0) {
       throw ApiError.badRequest('Cannot archive class with active enrolled students. Reassign or archive students first.', 'CLASS_HAS_ACTIVE_STUDENTS');
     }
-    // Check active sections dependency guard
-    const activeSections = await Section.countDocuments(scopeQuery(req, { classId: doc._id, isArchived: false }));
-    if (activeSections > 0) {
-      throw ApiError.badRequest('Cannot archive class with active sections. Archive or delete sections first.', 'CLASS_HAS_ACTIVE_SECTIONS');
-    }
+    // Cascade archive to sections
+    await Section.updateMany(scopeQuery(req, { classId: doc._id, isArchived: false }), { $set: { isArchived: true, isActive: false } });
+    
     doc.isArchived = true;
     doc.isActive = false;
   } else {
