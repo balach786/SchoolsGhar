@@ -576,6 +576,7 @@ export function AppRoutes() {
       </Route>
 
       {/* Platform Administrator Control Panel */}
+      <Route path="/admin" element={<Navigate to="/platform-admin" replace />} />
       <Route path="/platform-admin/login" element={<PlatformLoginPage />} />
       <Route path="/platform-admin" element={<PlatformLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
