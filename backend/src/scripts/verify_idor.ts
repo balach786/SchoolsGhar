@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import { getMasterConnection } from 'c:/Users/BK Magsi/Downloads/school-management-system/backend/src/services/MasterConnectionManager';
-import { getMasterModels } from 'c:/Users/BK Magsi/Downloads/school-management-system/backend/src/services/MasterModelRegistry';
-import { getTenantConnection } from 'c:/Users/BK Magsi/Downloads/school-management-system/backend/src/services/TenantConnectionManager';
-import { getTenantModels } from 'c:/Users/BK Magsi/Downloads/school-management-system/backend/src/services/TenantModelRegistry';
-import { env } from 'c:/Users/BK Magsi/Downloads/school-management-system/backend/src/config/env';
+import { getMasterConnection } from '../services/MasterConnectionManager';
+import { getMasterModels } from '../services/MasterModelRegistry';
+import { getTenantConnection } from '../services/TenantConnectionManager';
+import { getTenantModels } from '../services/TenantModelRegistry';
+import { env } from '../config/env';
 
 async function main() {
   await mongoose.connect(env.mongodbUri);

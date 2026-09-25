@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { env } from 'c:/Users/BK Magsi/Downloads/school-management-system/backend/src/config/env';
-import { getMasterConnection } from 'c:/Users/BK Magsi/Downloads/school-management-system/backend/src/services/MasterConnectionManager';
-import { getMasterModels } from 'c:/Users/BK Magsi/Downloads/school-management-system/backend/src/services/MasterModelRegistry';
+import { env } from '../config/env';
+import { getMasterConnection } from '../services/MasterConnectionManager';
+import { getMasterModels } from '../services/MasterModelRegistry';
 
 async function main() {
   await mongoose.connect(env.mongodbUri);
@@ -12,11 +12,11 @@ async function main() {
 
   const tenants = await masterModels.Tenant.find().lean();
   const schoolDbCount = tenants.length;
-  const activeTestTenants = tenants.filter(t => ['bkm', 'demo', 'thesk', 'test'].some(s => String(t.slug).includes(s))).length;
+  const activeTestTenants = tenants.filter((t: any) => ['bkm', 'demo', 'thesk', 'test'].some(s => String(t.slug).includes(s))).length;
   console.log(`school DB count = ${schoolDbCount}`);
   console.log(`active test tenants = ${activeTestTenants}`);
 
-  const sampleTenant = tenants.find(t => t.isDatabaseProvisioned && t.databaseName);
+  const sampleTenant = tenants.find((t: any) => t.isDatabaseProvisioned && t.databaseName);
   if (sampleTenant) {
     const dbStats = await masterDb.useDb(sampleTenant.databaseName!).db!.stats();
     console.log(`collection count in representative tenant = ${dbStats.collections}`);
