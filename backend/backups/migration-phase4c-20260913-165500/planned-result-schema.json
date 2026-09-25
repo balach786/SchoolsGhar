@@ -1,0 +1,27 @@
+{
+  "collection": "results",
+  "fields": [
+    "_id",
+    "tenantId",
+    "examId",
+    "studentId",
+    "sessionId",
+    "classId",
+    "sectionId",
+    "version",
+    "studentSnapshot (fullName, admissionNumber, rollNumber, className, sectionName, sessionName)",
+    "examSnapshot (examName, examTypeName, gradeScaleName, gradeScaleBoundaries)",
+    "subjects ([subjectId, subjectName, subjectCode, examScheduleId, marksObtained, maximumMarks, passMarks, attendanceStatus, passed, percentage])",
+    "totalObtained",
+    "totalMaximum",
+    "percentage",
+    "overallGrade",
+    "passed",
+    "failedSubjectCount",
+    "sourceChecksum",
+    "calculationVersion",
+    "publishedAt",
+    "publishedBy"
+  ],
+  "immutability": "Strict append-only. Save of existing doc, updateOne, updateMany, findOneAndUpdate, replaceOne, deleteOne, deleteMany rejected by Mongoose pre-hooks."
+}

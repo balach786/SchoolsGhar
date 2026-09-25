@@ -1,0 +1,258 @@
+Created At: 2026-09-18T20:07:01+05:00
+Completed At: 2026-09-18T20:07:02+05:00
+File Path: `file:///c:/Users/BK%20Magsi/Downloads/school-management-system/frontend/src/pages/FeeSetupPage.tsx`
+Total Lines: 941
+Total Bytes: 35738
+Showing lines 1 to 250
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: import { useCallback, useEffect, useState } from 'react';
+2: import { useNavigate } from 'react-router-dom';
+3: import {
+4:   Plus,
+5:   Pencil,
+6:   Archive,
+7:   ArchiveRestore,
+8:   Sparkles,
+9:   Loader2,
+10:   Layers,
+11:   Calendar,
+12:   Clock,
+13:   CheckCircle2,
+14:   AlertCircle,
+15:   Filter,
+16: } from 'lucide-react';
+17: import { PageHeader } from '@/components/PageHeader';
+18: import { FeesNavHeader } from '@/components/finance/FeesNavHeader';
+19: import { DataTable, type Column, type PaginationState } from '@/components/DataTable';
+20: import { Badge } from '@/components/ui/badge';
+21: import { Button } from '@/components/ui/button';
+22: import { Input } from '@/components/ui/input';
+23: import { Label } from '@/components/ui/label';
+24: import { Textarea } from '@/components/ui/textarea';
+25: import {
+26:   Dialog,
+27:   DialogContent,
+28:   DialogDescription,
+29:   DialogFooter,
+30:   DialogHeader,
+31:   DialogTitle,
+32: } from '@/components/ui/dialog';
+33: import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+34: import { ConfirmDialog } from '@/components/ConfirmDialog';
+35: import { toast } from '@/components/ui/sonner';
+36: import { useAuth } from '@/context/AuthContext';
+37: import { api, apiErrorMessage, ApiListResponse, ApiDataResponse } from '@/lib/api';
+38: import { formatCurrency, formatDate, toPaisa } from '@/lib/format';
+39: import { useFeeSettings } from '@/hooks/useFeeSettings';
+40: 
+41: const FEE_TYPES: Record<string, string> = {
+42:   monthly_tuition: 'Monthly Tuition',
+43:   admission_fee: 'Admission Fee',
+44:   other: 'Other Fee',
+45: };
+46: 
+47: const MONTHS = [
+48:   'January',
+49:   'February',
+50:   'March',
+51:   'April',
+52:   'May',
+53:   'June',
+54:   'July',
+55:   'August',
+56:   'September',
+57:   'October',
+58:   'November',
+59:   'December',
+60: ];
+61: 
+62: interface SessionRow {
+63:   _id: string;
+64:   name: string;
+65:   isActive: boolean;
+66:   isArchived: boolean;
+67: }
+68: 
+69: interface ClassRow {
+70:   _id: string;
+71:   name: string;
+72:   sessionId: string;
+73:   isArchived: boolean;
+74: }
+75: 
+76: interface FeeRow {
+77:   _id: string;
+78:   sessionId: string;
+79:   classId: string;
+80:   feeType: string;
+81:   title: string;
+82:   amount: number;
+83:   month: number | null;
+84:   effectiveFromMonth: number | null;
+85:   effectiveFromYear: number | null;
+86:   dueDate: string | null;
+87:   description: string | null;
+88:   isActive: boolean;
+89:   isArchived: boolean;
+90:   className?: string;
+91:   sessionName?: string;
+92: }
+93: 
+94: export function FeeSetupPage() {
+95:   const { can } = useAuth();
+96:   const navigate = useNavigate();
+97:   const { hasDueDate, defaultDueDay } = useFeeSettings();
+98: 
+99:   const [data, setData] = useState<FeeRow[]>([]);
+100:   const [pagination, setPagination] = useState<PaginationState>({ page: 1, limit: 20, total: 0, totalPages: 0 });
+101:   const [loading, setLoading] = useState(true);
+102:   const [sessionId, setSessionId] = useState('');
+103:   const [classId, setClassId] = useState('all');
+104:   const [feeType, setFeeType] = useState('all');
+105:   const [sessions, setSessions] = useState<SessionRow[]>([]);
+106:   const [classes, setClasses] = useState<ClassRow[]>([]);
+107: 
+108:   // Structure Form Modal
+109:   const [formOpen, setFormOpen] = useState(false);
+110:   const [editing, setEditing] = useState<FeeRow | null>(null);
+111:   const [busy, setBusy] = useState(false);
+112: 
+113:   // Form Fields
+114:   const [formSessionId, setFormSessionId] = useState('');
+115:   const [formFeeType, setFormFeeType] = useState('monthly_tuition');
+116:   const [formTitle, setFormTitle] = useState('');
+117:   const [formMonth, setFormMonth] = useState<number | null>(null);
+118:   const [formEffectiveFromMonth, setFormEffectiveFromMonth] = useState<number | null>(null);
+119:   const [formEffectiveFromYear, setFormEffectiveFromYear] = useState<number | null>(null);
+120:   const [formDueDate, setFormDueDate] = useState('');
+121:   const [formDesc, setFormDesc] = useState('');
+122:   const [formRows, setFormRows] = useState<{ classId: string; amountPkr: string }[]>([{ classId: '', amountPkr: '' }]);
+123: 
+124:   // Generation Modal
+125:   const [generateTarget, setGenerateTarget] = useState<FeeRow | null>(null);
+126:   const [genMonth, setGenMonth] = useState<number>(new Date().getMonth() + 1);
+127:   const [genYear, setGenYear] = useState<number>(new Date().getFullYear());
+128:   const [genBusy, setGenBusy] = useState(false);
+129:   const [genEligibleCount, setGenEligibleCount] = useState<number | null>(null);
+130:   const [genExistingCount, setGenExistingCount] = useState<number | null>(null);
+131:   const [genCheckLoading, setGenCheckLoading] = useState(false);
+132: 
+133:   // Archive Target
+134:   const [archiveTarget, setArchiveTarget] = useState<FeeRow | null>(null);
+135: 
+136:   const canCreate = can('fees', 'create');
+137:   const canEdit = can('fees', 'edit');
+138: 
+139:   // Load Sessions
+140:   useEffect(() => {
+141:     let mounted = true;
+142:     api
+143:       .get<ApiListResponse<SessionRow>>('/academic-sessions?limit=50')
+144:       .then((r) => {
+145:         if (mounted && r.data?.data) {
+146:           const valid = r.data.data.filter((s) => !s.isArchived);
+147:           setSessions(valid);
+148:           const active = valid.find((s) => s.isActive);
+149:           if (active) {
+150:             setSessionId(active._id);
+151:             setFormSessionId(active._id);
+152:           } else if (valid.length > 0) {
+153:             setSessionId(valid[0]._id);
+154:             setFormSessionId(valid[0]._id);
+155:           }
+156:         }
+157:       })
+158:       .catch(() => {});
+159:     return () => {
+160:       mounted = false;
+161:     };
+162:   }, []);
+163: 
+164:   // Load Classes for selected session
+165:   useEffect(() => {
+166:     if (!sessionId) return;
+167:     let mounted = true;
+168:     api
+169:       .get<ApiListResponse<ClassRow>>(`/classes?sessionId=${sessionId}&limit=100`)
+170:       .then((r) => {
+171:         if (mounted && r.data?.data) {
+172:           setClasses(r.data.data.filter((c) => !c.isArchived));
+173:         }
+174:       })
+175:       .catch(() => {});
+176:     return () => {
+177:       mounted = false;
+178:     };
+179:   }, [sessionId]);
+180: 
+181:   // Load Structures
+182:   const loadStructures = useCallback(async () => {
+183:     setLoading(true);
+184:     try {
+185:       const params = new URLSearchParams({
+186:         page: String(pagination.page),
+187:         limit: String(pagination.limit),
+188:       });
+189:       if (sessionId) params.set('sessionId', sessionId);
+190:       if (classId && classId !== 'all') params.set('classId', classId);
+191:       if (feeType !== 'all') params.set('feeType', feeType);
+192: 
+193:       const res = await api.get<ApiListResponse<FeeRow>>(`/fee-structures?${params}`);
+194:       setData(res.data.data);
+195:       setPagination(res.data.pagination);
+196:     } catch (err: any) {
+197:       toast.error(apiErrorMessage(err));
+198:     } finally {
+199:       setLoading(false);
+200:     }
+201:   }, [pagination.page, pagination.limit, sessionId, classId, feeType]);
+202: 
+203:   useEffect(() => {
+204:     loadStructures();
+205:   }, [loadStructures]);
+206: 
+207:   function openCreate() {
+208:     setEditing(null);
+209:     setFormSessionId(sessionId || (sessions[0]?._id ?? ''));
+210:     setFormFeeType('monthly_tuition');
+211:     setFormTitle('');
+212:     setFormMonth(null);
+213:     setFormEffectiveFromMonth(null);
+214:     setFormEffectiveFromYear(null);
+215:     setFormDueDate('');
+216:     setFormDesc('');
+217:     setFormRows([{ classId: classes[0]?._id ?? '', amountPkr: '' }]);
+218:     setFormOpen(true);
+219:   }
+220: 
+221:   function openEdit(row: FeeRow) {
+222:     setEditing(row);
+223:     setFormSessionId(row.sessionId);
+224:     setFormFeeType(row.feeType);
+225:     setFormTitle(row.title);
+226:     setFormMonth(row.month);
+227:     setFormEffectiveFromMonth(row.effectiveFromMonth);
+228:     setFormEffectiveFromYear(row.effectiveFromYear);
+229:     setFormDueDate(row.dueDate ? row.dueDate.split('T')[0] : '');
+230:     setFormDesc(row.description || '');
+231:     setFormRows([{ classId: row.classId, amountPkr: String(row.amount / 100) }]);
+232:     setFormOpen(true);
+233:   }
+234: 
+235:   async function handleSaveStructure(e: React.FormEvent) {
+236:     e.preventDefault();
+237:     if (!formTitle.trim()) {
+238:       toast.error('Title is required');
+239:       return;
+240:     }
+241:     
+242:     // Validation
+243:     for (let i = 0; i < formRows.length; i++) {
+244:       const row = formRows[i];
+245:       if (!row.classId) return toast.error(`Please select a class in row ${i + 1}`);
+246:       const amt = parseFloat(row.amountPkr);
+247:       if (isNaN(amt) || amt <= 0) return toast.error(`Please enter a valid amount in row ${i + 1}`);
+248:     }
+249: 
+250:     setBusy(true);
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.

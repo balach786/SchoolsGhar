@@ -1,0 +1,15 @@
+{
+  "phase": "PHASE 4D — PRODUCTION SECURITY & OPERATIONAL HARDENING",
+  "actions": [
+    "Implement private authorized file streaming endpoint",
+    "Remove unauthenticated app.use(/uploads, express.static)",
+    "Add magic byte validation for uploads (JPEG, PNG, WebP, PDF)",
+    "Add dedicated auth rate limiter on sensitive endpoints",
+    "Implement graceful shutdown with HTTP draining and database disconnect",
+    "Expose /api/health/liveness and /api/health/readiness",
+    "Add correlation ID and structured logger support",
+    "Harden CSV formula injection protection",
+    "Harden startup production secrets validation",
+    "Prepare evidence-based index optimization report (no deletions)"
+  ]
+}

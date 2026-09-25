@@ -1,0 +1,11 @@
+{
+  "manifestVersion": "1.0.0",
+  "runId": "phase3-20260913-150500",
+  "phase": "Phase 3",
+  "createdAt": "2026-09-13T10:05:13.977Z",
+  "databaseName": "school-management-system",
+  "targetNotificationId": "6aa5ad3d06abfd0205323555",
+  "targetAuditLogsCount": 9,
+  "expectedTenantId": "6aa5a3a2771a68376318390c",
+  "targetDirectory": "C:\\Users\\BK Magsi\\Downloads\\school-management-system\\backups\\migration-phase3-20260913-150500"
+}

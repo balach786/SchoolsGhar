@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-09-13T10:38:05.045Z",
+  "databaseConnected": true,
+  "totalCollections": 48,
+  "activeTenantId": "6aa5a3a2771a68376318390c",
+  "missingTenantIdCount": 0,
+  "invalidTenantRefCount": 0,
+  "crossRefMismatches": 0,
+  "existingStudentsCount": 40,
+  "existingRollNumberDuplicates": 0,
+  "verificationStatus": "PASS"
+}

@@ -1,0 +1,7 @@
+{
+  "jwtAlgorithm": "HS256",
+  "passwordHash": "bcryptjs (10 rounds)",
+  "frontendTokenStorage": "localStorage (sms_access_token, sms_refresh_token)",
+  "transport": "Authorization: Bearer <token> header",
+  "authSessionTtl": "TTL index on expiresAt (expires: 0)"
+}

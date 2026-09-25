@@ -1,0 +1,1 @@
+[{"_id":{"$oid":"6aa5b0488eac4e7bd13c93f2"},"name":"A","classId":{"$oid":"6aa5a6ae771a683763183db8"},"sessionId":{"$oid":"6aa5a500771a683763183c55"},"tenantId":{"$oid":"6aa5a3a2771a68376318390c"},"capacity":{"$numberInt":"40"},"isActive":true,"isArchived":false,"createdAt":{"$date":{"$numberLong":"1789243464201"}},"updatedAt":{"$date":{"$numberLong":"1789243464201"}}}]

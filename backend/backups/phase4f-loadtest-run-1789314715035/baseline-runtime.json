@@ -1,0 +1,20 @@
+{
+  "nodeVersion": "v24.19.0",
+  "platform": "win32",
+  "arch": "x64",
+  "pid": 14928,
+  "memoryUsage": {
+    "rss": 100696064,
+    "heapTotal": 25665536,
+    "heapUsed": 23237200,
+    "external": 23750618,
+    "arrayBuffers": 20686577
+  },
+  "mongooseVersion": "8.24.4",
+  "driverConnection": {
+    "host": "ac-khgkvzl-shard-00-01.3mpjmll.mongodb.net",
+    "port": 27017,
+    "name": "school-management-system",
+    "readyState": 1
+  }
+}

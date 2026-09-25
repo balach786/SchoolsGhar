@@ -1,0 +1,20 @@
+{
+  "strategy": "Mongoose Discriminator with mandatory teaching discriminator filter",
+  "baseModel": {
+    "name": "Staff",
+    "collection": "staff",
+    "discriminatorKey": "staffType"
+  },
+  "discriminatorModel": {
+    "name": "Teacher",
+    "discriminatorValue": "teaching",
+    "collection": "staff"
+  },
+  "enforcement": {
+    "find": "Automatically constrained by Mongoose discriminator to { staffType: 'teaching' }",
+    "findOne": "Automatically constrained by Mongoose discriminator to { staffType: 'teaching' }",
+    "countDocuments": "Automatically constrained by Mongoose discriminator to { staffType: 'teaching' }",
+    "populate": "Resolves only documents where staffType is 'teaching'",
+    "nonTeachingIsolation": "Non-teaching Staff documents are invisible to Teacher model queries and population"
+  }
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "key": {
+      "tenantId": 1,
+      "examId": 1,
+      "studentId": 1,
+      "version": -1
+    },
+    "unique": true,
+    "name": "tenantId_1_examId_1_studentId_1_version_-1"
+  },
+  {
+    "key": {
+      "tenantId": 1,
+      "examId": 1,
+      "classId": 1
+    },
+    "name": "tenantId_1_examId_1_classId_1"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "collection": "financialidempotencies",
+    "key": {
+      "expiresAt": 1
+    },
+    "options": {
+      "expireAfterSeconds": 0
+    },
+    "reason": "TTL cleanup of expired idempotency keys"
+  },
+  {
+    "collection": "financialidempotencies",
+    "key": {
+      "tenantId": 1,
+      "operation": 1,
+      "idempotencyKey": 1
+    },
+    "options": {
+      "unique": true
+    },
+    "reason": "Per-tenant operation idempotency constraint"
+  },
+  {
+    "collection": "financialreferences",
+    "key": {
+      "tenantId": 1,
+      "paymentMethod": 1,
+      "normalizedReference": 1
+    },
+    "options": {
+      "unique": true
+    },
+    "reason": "Cross-collection reference collision prevention"
+  },
+  {
+    "collection": "paymentreversals",
+    "key": {
+      "tenantId": 1,
+      "reversalReceiptNumber": 1
+    },
+    "options": {
+      "unique": true
+    },
+    "reason": "Reversal receipt uniqueness per tenant"
+  },
+  {
+    "collection": "paymentreversals",
+    "key": {
+      "tenantId": 1,
+      "paymentId": 1
+    },
+    "options": {},
+    "reason": "Lookup reversals by payment"
+  }
+]

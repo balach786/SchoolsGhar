@@ -1,0 +1,14 @@
+{
+  "schoolSettings": {
+    "drop": "tenantId_1 (non-unique if exists)",
+    "create": "{ tenantId: 1 } unique"
+  },
+  "studentsRollNumber": {
+    "rule": "Rule A+D",
+    "sectionedIndex": "{ tenantId: 1, sessionId: 1, classId: 1, sectionId: 1, rollNumber: 1 } partial unique",
+    "unsectionedIndex": "{ tenantId: 1, sessionId: 1, classId: 1, rollNumber: 1 } partial unique"
+  },
+  "classesSectionsSubjects": {
+    "status": "evaluate per Section 4A.6 - defer if redundant"
+  }
+}

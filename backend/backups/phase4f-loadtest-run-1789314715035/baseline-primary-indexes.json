@@ -1,0 +1,2884 @@
+{
+  "capturedAt": "2026-09-13T15:51:55.044Z",
+  "primaryDbName": "school-management-system",
+  "totalCollections": 53,
+  "totalPhysicalIndexes": 255,
+  "indexesByCollection": {
+    "examtypes": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_name_1",
+        "key": {
+          "tenantId": 1,
+          "name": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_isActive_1",
+        "key": {
+          "tenantId": 1,
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "financialidempotencies": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "expiresAt_1",
+        "key": {
+          "expiresAt": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": 0
+      },
+      {
+        "name": "tenantId_1_operation_1_idempotencyKey_1",
+        "key": {
+          "tenantId": 1,
+          "operation": 1,
+          "idempotencyKey": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "admitcardoverrides": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_studentId_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "studentId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "paymentreversals": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "paymentId_1",
+        "key": {
+          "paymentId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "studentId_1",
+        "key": {
+          "studentId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_reversalReceiptNumber_1",
+        "key": {
+          "tenantId": 1,
+          "reversalReceiptNumber": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_paymentId_1",
+        "key": {
+          "tenantId": 1,
+          "paymentId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_createdAt_-1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "studentexamfees": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_examId_1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "examId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_status_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "status": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_classId_1_sectionId_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "classId": 1,
+          "sectionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_sessionId_1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "classes": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "sessionId_1",
+        "key": {
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_isArchived_1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "isArchived": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "studentattendances": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_sessionId_1_attendanceDate_1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "sessionId": 1,
+          "attendanceDate": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_classId_1_sectionId_1_attendanceDate_1",
+        "key": {
+          "tenantId": 1,
+          "classId": 1,
+          "sectionId": 1,
+          "attendanceDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_attendanceDate_1",
+        "key": {
+          "tenantId": 1,
+          "attendanceDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "tenantroleoverrides": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_roleId_1",
+        "key": {
+          "tenantId": 1,
+          "roleId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "academicsessions": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_isActive_1",
+        "key": {
+          "tenantId": 1,
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_isArchived_1",
+        "key": {
+          "tenantId": 1,
+          "isArchived": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "subscriptionhistories": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_createdAt_-1",
+        "key": {
+          "tenantId": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "examattendances": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examScheduleId_1_studentId_1",
+        "key": {
+          "tenantId": 1,
+          "examScheduleId": 1,
+          "studentId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_studentId_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "studentId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examScheduleId_1_status_1",
+        "key": {
+          "tenantId": 1,
+          "examScheduleId": 1,
+          "status": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "examfees": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_classId_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "classId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "subjects": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "sessionId_1",
+        "key": {
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "classIds_1",
+        "key": {
+          "classIds": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "teacherIds_1",
+        "key": {
+          "teacherIds": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_isArchived_1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "isArchived": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "salaryrecords": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_teacherId_1_salaryMonth_1_sessionId_1",
+        "key": {
+          "tenantId": 1,
+          "teacherId": 1,
+          "salaryMonth": 1,
+          "sessionId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_status_1_sessionId_1",
+        "key": {
+          "tenantId": 1,
+          "status": 1,
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_salaryMonth_1",
+        "key": {
+          "tenantId": 1,
+          "salaryMonth": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "results": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_studentId_1_version_-1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "studentId": 1,
+          "version": -1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_classId_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "classId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "receiptcounters": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "platformnotifications": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "type_1",
+        "key": {
+          "type": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "isRead_1",
+        "key": {
+          "isRead": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "isRead_1_createdAt_-1",
+        "key": {
+          "isRead": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "feestructures": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_classId_1_feeType_1_month_1_title_1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "classId": 1,
+          "feeType": 1,
+          "month": 1,
+          "title": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_classId_1_isArchived_1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "classId": 1,
+          "isArchived": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "roles": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "slug_1",
+        "key": {
+          "slug": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "isActive_1",
+        "key": {
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "examexpenses": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_expenseDate_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "expenseDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_category_1",
+        "key": {
+          "tenantId": 1,
+          "category": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_expenseDate_1",
+        "key": {
+          "tenantId": 1,
+          "expenseDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "auditlogs": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "createdAt_1",
+        "key": {
+          "createdAt": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_userId_1_createdAt_-1",
+        "key": {
+          "tenantId": 1,
+          "userId": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_createdAt_-1",
+        "key": {
+          "tenantId": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "scope_1",
+        "key": {
+          "scope": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "scope_1_createdAt_-1",
+        "key": {
+          "scope": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "marks": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_sessionId_1_examId_1_subjectId_1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "sessionId": 1,
+          "examId": 1,
+          "subjectId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_subjectId_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "subjectId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_examId_1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "examId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "leaverequests": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_requesterId_1_createdAt_-1",
+        "key": {
+          "tenantId": 1,
+          "requesterId": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_status_1_createdAt_1",
+        "key": {
+          "tenantId": 1,
+          "status": 1,
+          "createdAt": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "notices": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_createdAt_-1_isArchived_1",
+        "key": {
+          "tenantId": 1,
+          "createdAt": -1,
+          "isArchived": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_audienceType_1_isArchived_1",
+        "key": {
+          "tenantId": 1,
+          "audienceType": 1,
+          "isArchived": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_isPinned_1_createdAt_-1",
+        "key": {
+          "tenantId": 1,
+          "isPinned": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "paymentmethods": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "slug_1",
+        "key": {
+          "slug": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "isActive_1",
+        "key": {
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "displayOrder_1_isActive_1",
+        "key": {
+          "displayOrder": 1,
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "datahistories": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "type_1",
+        "key": {
+          "type": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "module_1",
+        "key": {
+          "module": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_createdAt_-1",
+        "key": {
+          "tenantId": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_module_1_type_1",
+        "key": {
+          "tenantId": 1,
+          "module": 1,
+          "type": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "gradescales": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_name_1",
+        "key": {
+          "tenantId": 1,
+          "name": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_isDefault_1",
+        "key": {
+          "tenantId": 1,
+          "isDefault": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "subscriptionplans": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "slug_1",
+        "key": {
+          "slug": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "isActive_1",
+        "key": {
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "displayOrder_1_isActive_1",
+        "key": {
+          "displayOrder": 1,
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "studenthistories": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_classId_1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "classId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_eventDate_-1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "eventDate": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_eventDate_-1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "eventDate": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "expenses": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_date_1",
+        "key": {
+          "tenantId": 1,
+          "date": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_category_1_date_1",
+        "key": {
+          "tenantId": 1,
+          "category": 1,
+          "date": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "sessionId_1",
+        "key": {
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "assignments": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_classId_1_isArchived_1_dueDate_1",
+        "key": {
+          "tenantId": 1,
+          "classId": 1,
+          "isArchived": 1,
+          "dueDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_teacherId_1_isArchived_1",
+        "key": {
+          "tenantId": 1,
+          "teacherId": 1,
+          "isArchived": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sectionId_1",
+        "key": {
+          "tenantId": 1,
+          "sectionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "sessionId_1",
+        "key": {
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "schoolclosures": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_dateString_1_applicableTo_1",
+        "key": {
+          "tenantId": 1,
+          "dateString": 1,
+          "applicableTo": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_date_1",
+        "key": {
+          "tenantId": 1,
+          "date": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "studentfees": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_feeStructureId_1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "feeStructureId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_sessionId_1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_classId_1_sectionId_1_status_1",
+        "key": {
+          "tenantId": 1,
+          "classId": 1,
+          "sectionId": 1,
+          "status": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_status_1_sessionId_1",
+        "key": {
+          "tenantId": 1,
+          "status": 1,
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "financialreferences": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_paymentMethod_1_normalizedReference_1",
+        "key": {
+          "tenantId": 1,
+          "paymentMethod": 1,
+          "normalizedReference": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "submissions": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_assignmentId_1_studentId_1",
+        "key": {
+          "tenantId": 1,
+          "assignmentId": 1,
+          "studentId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_submittedAt_-1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "submittedAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_assignmentId_1_submittedAt_1",
+        "key": {
+          "tenantId": 1,
+          "assignmentId": 1,
+          "submittedAt": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "students": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "userId_1",
+        "key": {
+          "userId": 1
+        },
+        "unique": true,
+        "sparse": true,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_admissionNumber_1",
+        "key": {
+          "tenantId": 1,
+          "admissionNumber": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_classId_1_sectionId_1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "classId": 1,
+          "sectionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_isArchived_1_isActive_1",
+        "key": {
+          "tenantId": 1,
+          "isArchived": 1,
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_classId_1_sectionId_1_rollNumber_1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "classId": 1,
+          "sectionId": 1,
+          "rollNumber": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": {
+          "isArchived": false,
+          "sectionId": {
+            "$type": "objectId"
+          },
+          "rollNumber": {
+            "$type": "string",
+            "$gt": ""
+          }
+        },
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_classId_1_rollNumber_1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "classId": 1,
+          "rollNumber": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": {
+          "isArchived": false,
+          "sectionId": null,
+          "rollNumber": {
+            "$type": "string",
+            "$gt": ""
+          }
+        },
+        "expireAfterSeconds": null
+      }
+    ],
+    "timetables": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_classId_1_sectionId_1_dayOfWeek_1",
+        "key": {
+          "tenantId": 1,
+          "classId": 1,
+          "sectionId": 1,
+          "dayOfWeek": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_teacherId_1_dayOfWeek_1",
+        "key": {
+          "tenantId": 1,
+          "teacherId": 1,
+          "dayOfWeek": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "subscriptionpayments": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "submittedBy_1",
+        "key": {
+          "submittedBy": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "status_1",
+        "key": {
+          "status": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_createdAt_-1",
+        "key": {
+          "tenantId": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "status_1_createdAt_-1",
+        "key": {
+          "status": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "notifications": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_userId_1_isRead_1_createdAt_-1",
+        "key": {
+          "tenantId": 1,
+          "userId": 1,
+          "isRead": 1,
+          "createdAt": -1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_isRead_1_createdAt_1",
+        "key": {
+          "tenantId": 1,
+          "isRead": 1,
+          "createdAt": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "exams": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_name_1_sessionId_1_classId_1",
+        "key": {
+          "tenantId": 1,
+          "name": 1,
+          "sessionId": 1,
+          "classId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_sessionId_1_classId_1",
+        "key": {
+          "tenantId": 1,
+          "sessionId": 1,
+          "classId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_isPublished_1",
+        "key": {
+          "tenantId": 1,
+          "isPublished": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_status_1",
+        "key": {
+          "tenantId": 1,
+          "status": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_startDate_1_endDate_1",
+        "key": {
+          "tenantId": 1,
+          "startDate": 1,
+          "endDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "tenants": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "slug_1",
+        "key": {
+          "slug": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "ownerUserId_1",
+        "key": {
+          "ownerUserId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "status_1",
+        "key": {
+          "status": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "subscriptionStatus_1",
+        "key": {
+          "subscriptionStatus": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "isSuspended_1",
+        "key": {
+          "isSuspended": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "subscriptionEndsAt_1",
+        "key": {
+          "subscriptionEndsAt": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "trialEndsAt_1",
+        "key": {
+          "trialEndsAt": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "isDemo_1",
+        "key": {
+          "isDemo": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "demoBatchId_1",
+        "key": {
+          "demoBatchId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "staff": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "staffType_1",
+        "key": {
+          "staffType": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_employeeId_1",
+        "key": {
+          "tenantId": 1,
+          "employeeId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "userId_1",
+        "key": {
+          "userId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": {
+          "userId": {
+            "$type": "objectId"
+          }
+        },
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_staffType_1_isArchived_1_isActive_1",
+        "key": {
+          "tenantId": 1,
+          "staffType": 1,
+          "isArchived": 1,
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "sections": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "classId_1",
+        "key": {
+          "classId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "sessionId_1",
+        "key": {
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_classId_1_isArchived_1",
+        "key": {
+          "tenantId": 1,
+          "classId": 1,
+          "isArchived": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "examfeepayments": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_receiptNumber_1",
+        "key": {
+          "tenantId": 1,
+          "receiptNumber": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentExamFeeId_1_paymentDate_1",
+        "key": {
+          "tenantId": 1,
+          "studentExamFeeId": 1,
+          "paymentDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_paymentDate_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "paymentDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "teachers": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "assignedClasses_1",
+        "key": {
+          "assignedClasses": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "assignedSubjects_1",
+        "key": {
+          "assignedSubjects": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "userId_1",
+        "key": {
+          "userId": 1
+        },
+        "unique": true,
+        "sparse": true,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_employeeId_1",
+        "key": {
+          "tenantId": 1,
+          "employeeId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_isArchived_1_isActive_1",
+        "key": {
+          "tenantId": 1,
+          "isArchived": 1,
+          "isActive": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "users": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "email_1",
+        "key": {
+          "email": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "roleId_1",
+        "key": {
+          "roleId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "isPlatformAdmin_1",
+        "key": {
+          "isPlatformAdmin": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "examschedules": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_classId_1_subjectId_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "classId": 1,
+          "subjectId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_examId_1_examDate_1",
+        "key": {
+          "tenantId": 1,
+          "examId": 1,
+          "examDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_classId_1_examDate_1",
+        "key": {
+          "tenantId": 1,
+          "classId": 1,
+          "examDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "payments": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_receiptNumber_1",
+        "key": {
+          "tenantId": 1,
+          "receiptNumber": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentFeeId_1_paymentDate_1",
+        "key": {
+          "tenantId": 1,
+          "studentFeeId": 1,
+          "paymentDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_paymentDate_1",
+        "key": {
+          "tenantId": 1,
+          "paymentDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_studentId_1_sessionId_1",
+        "key": {
+          "tenantId": 1,
+          "studentId": 1,
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "exportpresets": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_name_1",
+        "key": {
+          "tenantId": 1,
+          "name": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "incomes": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_date_1",
+        "key": {
+          "tenantId": 1,
+          "date": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_category_1_date_1",
+        "key": {
+          "tenantId": 1,
+          "category": 1,
+          "date": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "sessionId_1",
+        "key": {
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "authsessions": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "user_1",
+        "key": {
+          "user": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tokenHash_1",
+        "key": {
+          "tokenHash": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "expiresAt_1",
+        "key": {
+          "expiresAt": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": 0
+      }
+    ],
+    "schoolsettings": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ],
+    "teacherattendances": [
+      {
+        "name": "_id_",
+        "key": {
+          "_id": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1",
+        "key": {
+          "tenantId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_teacherId_1_attendanceDate_1",
+        "key": {
+          "tenantId": 1,
+          "teacherId": 1,
+          "attendanceDate": 1
+        },
+        "unique": true,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "tenantId_1_attendanceDate_1",
+        "key": {
+          "tenantId": 1,
+          "attendanceDate": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      },
+      {
+        "name": "sessionId_1",
+        "key": {
+          "sessionId": 1
+        },
+        "unique": false,
+        "sparse": false,
+        "partialFilterExpression": null,
+        "expireAfterSeconds": null
+      }
+    ]
+  }
+}

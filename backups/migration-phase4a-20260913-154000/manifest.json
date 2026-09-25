@@ -1,0 +1,19 @@
+{
+  "manifestVersion": "1.0.0",
+  "runId": "phase4a-20260913-154000",
+  "phase": "Phase 4A",
+  "createdAt": "2026-09-13T10:38:05.047Z",
+  "databaseName": "school-management-system",
+  "targetDirectory": "C:\\Users\\BK Magsi\\Downloads\\school-management-system\\backups\\migration-phase4a-20260913-154000",
+  "files": [
+    "manifest.json",
+    "collection-counts-before.json",
+    "model-schema-state-before.json",
+    "index-state-before.json",
+    "code-version-before.json",
+    "planned-schema-actions.json",
+    "planned-index-actions.json",
+    "security-verification-before.json",
+    "rollback-instructions.md"
+  ]
+}

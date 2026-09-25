@@ -1,0 +1,18 @@
+{
+  "LOAD_TEST_ALLOWED": true,
+  "ALLOWED_HOSTS": [
+    "localhost",
+    "127.0.0.1"
+  ],
+  "TARGET_DATABASE_ALLOWLIST": [
+    "school-management-system-loadtest"
+  ],
+  "PROTECTED_DATABASES": [
+    "school-management-system",
+    "production",
+    "live"
+  ],
+  "MAX_VIRTUAL_USERS": 50,
+  "MAX_STAGE_DURATION_SECONDS": 120,
+  "FAIL_SAFE_ERROR_THRESHOLD_PERCENT": 2
+}

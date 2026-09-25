@@ -1,0 +1,338 @@
+[
+  {
+    "file": "AcademicSession.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "AdmitCardOverride.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Assignment.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "AuditLog.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "AuthSession.ts",
+    "hasTenantId": false,
+    "tenantIdType": "None",
+    "tenantIdRequired": false,
+    "fieldIndex": false
+  },
+  {
+    "file": "Class.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "DataHistory.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": true,
+    "fieldIndex": true
+  },
+  {
+    "file": "Exam.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "ExamAttendance.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "ExamExpense.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "ExamFee.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "ExamFeePayment.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "ExamSchedule.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "ExamType.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Expense.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "ExportPreset.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": true,
+    "fieldIndex": true
+  },
+  {
+    "file": "FeeStructure.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "GradeScale.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Income.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "LeaveRequest.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Mark.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Notice.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Notification.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": true,
+    "fieldIndex": true
+  },
+  {
+    "file": "Payment.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "PaymentMethod.ts",
+    "hasTenantId": false,
+    "tenantIdType": "None",
+    "tenantIdRequired": false,
+    "fieldIndex": false
+  },
+  {
+    "file": "PlatformNotification.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": false
+  },
+  {
+    "file": "ReceiptCounter.ts",
+    "hasTenantId": false,
+    "tenantIdType": "None",
+    "tenantIdRequired": false,
+    "fieldIndex": false
+  },
+  {
+    "file": "Role.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "SalaryRecord.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "SchoolClosure.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "SchoolSettings.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Section.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Student.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "StudentAttendance.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "StudentExamFee.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "StudentFee.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "StudentHistory.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Subject.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Submission.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "SubscriptionHistory.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": true,
+    "fieldIndex": true
+  },
+  {
+    "file": "SubscriptionPayment.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": true,
+    "fieldIndex": true
+  },
+  {
+    "file": "SubscriptionPlan.ts",
+    "hasTenantId": false,
+    "tenantIdType": "None",
+    "tenantIdRequired": false,
+    "fieldIndex": false
+  },
+  {
+    "file": "Teacher.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "TeacherAttendance.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "Tenant.ts",
+    "hasTenantId": false,
+    "tenantIdType": "None",
+    "tenantIdRequired": false,
+    "fieldIndex": false
+  },
+  {
+    "file": "TenantRoleOverride.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": true,
+    "fieldIndex": false
+  },
+  {
+    "file": "Timetable.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  },
+  {
+    "file": "User.ts",
+    "hasTenantId": true,
+    "tenantIdType": "ObjectId",
+    "tenantIdRequired": false,
+    "fieldIndex": true
+  }
+]

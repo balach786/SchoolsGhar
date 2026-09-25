@@ -1,0 +1,42 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "email": 1
+    },
+    "name": "email_1",
+    "background": true,
+    "unique": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "roleId": 1
+    },
+    "name": "roleId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1
+    },
+    "name": "tenantId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "isPlatformAdmin": 1
+    },
+    "name": "isPlatformAdmin_1",
+    "background": true
+  }
+]

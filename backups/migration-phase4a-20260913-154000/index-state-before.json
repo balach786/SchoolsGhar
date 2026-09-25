@@ -1,0 +1,2091 @@
+{
+  "examtypes": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "name": 1
+      },
+      "name": "tenantId_1_name_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isActive": 1
+      },
+      "name": "tenantId_1_isActive_1",
+      "background": true
+    }
+  ],
+  "admitcardoverrides": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "studentId": 1
+      },
+      "name": "tenantId_1_examId_1_studentId_1",
+      "background": true,
+      "unique": true
+    }
+  ],
+  "studentexamfees": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "examId": 1
+      },
+      "name": "tenantId_1_studentId_1_examId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "status": 1
+      },
+      "name": "tenantId_1_examId_1_status_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "classId": 1,
+        "sectionId": 1
+      },
+      "name": "tenantId_1_examId_1_classId_1_sectionId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1
+      },
+      "name": "tenantId_1_studentId_1_sessionId_1",
+      "background": true
+    }
+  ],
+  "classes": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "sessionId": 1
+      },
+      "name": "sessionId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "isArchived": 1
+      },
+      "name": "tenantId_1_sessionId_1_isArchived_1",
+      "background": true
+    }
+  ],
+  "studentattendances": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1,
+        "attendanceDate": 1
+      },
+      "name": "tenantId_1_studentId_1_sessionId_1_attendanceDate_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "classId": 1,
+        "sectionId": 1,
+        "attendanceDate": 1
+      },
+      "name": "tenantId_1_classId_1_sectionId_1_attendanceDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "attendanceDate": 1
+      },
+      "name": "tenantId_1_attendanceDate_1",
+      "background": true
+    }
+  ],
+  "tenantroleoverrides": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "roleId": 1
+      },
+      "name": "tenantId_1_roleId_1",
+      "background": true,
+      "unique": true
+    }
+  ],
+  "academicsessions": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isActive": 1
+      },
+      "name": "tenantId_1_isActive_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isArchived": 1
+      },
+      "name": "tenantId_1_isArchived_1",
+      "background": true
+    }
+  ],
+  "subscriptionhistories": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "createdAt": -1
+      },
+      "name": "tenantId_1_createdAt_-1",
+      "background": true
+    }
+  ],
+  "examattendances": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examScheduleId": 1,
+        "studentId": 1
+      },
+      "name": "tenantId_1_examScheduleId_1_studentId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "studentId": 1
+      },
+      "name": "tenantId_1_examId_1_studentId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examScheduleId": 1,
+        "status": 1
+      },
+      "name": "tenantId_1_examScheduleId_1_status_1",
+      "background": true
+    }
+  ],
+  "examfees": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "classId": 1
+      },
+      "name": "tenantId_1_examId_1_classId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1
+      },
+      "name": "tenantId_1_examId_1",
+      "background": true
+    }
+  ],
+  "subjects": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "sessionId": 1
+      },
+      "name": "sessionId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "classIds": 1
+      },
+      "name": "classIds_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "teacherIds": 1
+      },
+      "name": "teacherIds_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "isArchived": 1
+      },
+      "name": "tenantId_1_sessionId_1_isArchived_1",
+      "background": true
+    }
+  ],
+  "salaryrecords": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "teacherId": 1,
+        "salaryMonth": 1,
+        "sessionId": 1
+      },
+      "name": "tenantId_1_teacherId_1_salaryMonth_1_sessionId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "status": 1,
+        "sessionId": 1
+      },
+      "name": "tenantId_1_status_1_sessionId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "salaryMonth": 1
+      },
+      "name": "tenantId_1_salaryMonth_1",
+      "background": true
+    }
+  ],
+  "receiptcounters": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    }
+  ],
+  "platformnotifications": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "type": 1
+      },
+      "name": "type_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "isRead": 1
+      },
+      "name": "isRead_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "isRead": 1,
+        "createdAt": -1
+      },
+      "name": "isRead_1_createdAt_-1",
+      "background": true
+    }
+  ],
+  "feestructures": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "classId": 1,
+        "feeType": 1,
+        "month": 1,
+        "title": 1
+      },
+      "name": "tenantId_1_sessionId_1_classId_1_feeType_1_month_1_title_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "classId": 1,
+        "isArchived": 1
+      },
+      "name": "tenantId_1_sessionId_1_classId_1_isArchived_1",
+      "background": true
+    }
+  ],
+  "roles": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "slug": 1
+      },
+      "name": "slug_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "isActive": 1
+      },
+      "name": "isActive_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    }
+  ],
+  "examexpenses": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "expenseDate": 1
+      },
+      "name": "tenantId_1_examId_1_expenseDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "category": 1
+      },
+      "name": "tenantId_1_category_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "expenseDate": 1
+      },
+      "name": "tenantId_1_expenseDate_1",
+      "background": true
+    }
+  ],
+  "auditlogs": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "createdAt": 1
+      },
+      "name": "createdAt_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "userId": 1,
+        "createdAt": -1
+      },
+      "name": "tenantId_1_userId_1_createdAt_-1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "createdAt": -1
+      },
+      "name": "tenantId_1_createdAt_-1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "scope": 1
+      },
+      "name": "scope_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "scope": 1,
+        "createdAt": -1
+      },
+      "name": "scope_1_createdAt_-1",
+      "background": true
+    }
+  ],
+  "marks": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1,
+        "examId": 1,
+        "subjectId": 1
+      },
+      "name": "tenantId_1_studentId_1_sessionId_1_examId_1_subjectId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "subjectId": 1
+      },
+      "name": "tenantId_1_examId_1_subjectId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "examId": 1
+      },
+      "name": "tenantId_1_studentId_1_examId_1",
+      "background": true
+    }
+  ],
+  "leaverequests": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "requesterId": 1,
+        "createdAt": -1
+      },
+      "name": "tenantId_1_requesterId_1_createdAt_-1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "status": 1,
+        "createdAt": 1
+      },
+      "name": "tenantId_1_status_1_createdAt_1",
+      "background": true
+    }
+  ],
+  "notices": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "createdAt": -1,
+        "isArchived": 1
+      },
+      "name": "tenantId_1_createdAt_-1_isArchived_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "audienceType": 1,
+        "isArchived": 1
+      },
+      "name": "tenantId_1_audienceType_1_isArchived_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isPinned": 1,
+        "createdAt": -1
+      },
+      "name": "tenantId_1_isPinned_1_createdAt_-1",
+      "background": true
+    }
+  ],
+  "paymentmethods": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "slug": 1
+      },
+      "name": "slug_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "isActive": 1
+      },
+      "name": "isActive_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "displayOrder": 1,
+        "isActive": 1
+      },
+      "name": "displayOrder_1_isActive_1",
+      "background": true
+    }
+  ],
+  "datahistories": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "type": 1
+      },
+      "name": "type_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "module": 1
+      },
+      "name": "module_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "createdAt": -1
+      },
+      "name": "tenantId_1_createdAt_-1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "module": 1,
+        "type": 1
+      },
+      "name": "tenantId_1_module_1_type_1",
+      "background": true
+    }
+  ],
+  "gradescales": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "name": 1
+      },
+      "name": "tenantId_1_name_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isDefault": 1
+      },
+      "name": "tenantId_1_isDefault_1",
+      "background": true
+    }
+  ],
+  "subscriptionplans": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "slug": 1
+      },
+      "name": "slug_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "isActive": 1
+      },
+      "name": "isActive_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "displayOrder": 1,
+        "isActive": 1
+      },
+      "name": "displayOrder_1_isActive_1",
+      "background": true
+    }
+  ],
+  "studenthistories": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "classId": 1
+      },
+      "name": "tenantId_1_sessionId_1_classId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "eventDate": -1
+      },
+      "name": "tenantId_1_studentId_1_eventDate_-1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "eventDate": -1
+      },
+      "name": "tenantId_1_sessionId_1_eventDate_-1",
+      "background": true
+    }
+  ],
+  "expenses": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "date": 1
+      },
+      "name": "tenantId_1_date_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "category": 1,
+        "date": 1
+      },
+      "name": "tenantId_1_category_1_date_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "sessionId": 1
+      },
+      "name": "sessionId_1",
+      "background": true
+    }
+  ],
+  "assignments": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "classId": 1,
+        "isArchived": 1,
+        "dueDate": 1
+      },
+      "name": "tenantId_1_classId_1_isArchived_1_dueDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "teacherId": 1,
+        "isArchived": 1
+      },
+      "name": "tenantId_1_teacherId_1_isArchived_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sectionId": 1
+      },
+      "name": "tenantId_1_sectionId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "sessionId": 1
+      },
+      "name": "sessionId_1",
+      "background": true
+    }
+  ],
+  "schoolclosures": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "dateString": 1,
+        "applicableTo": 1
+      },
+      "name": "tenantId_1_dateString_1_applicableTo_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "date": 1
+      },
+      "name": "tenantId_1_date_1",
+      "background": true
+    }
+  ],
+  "studentfees": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "feeStructureId": 1
+      },
+      "name": "tenantId_1_studentId_1_feeStructureId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1
+      },
+      "name": "tenantId_1_studentId_1_sessionId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "classId": 1,
+        "sectionId": 1,
+        "status": 1
+      },
+      "name": "tenantId_1_classId_1_sectionId_1_status_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "status": 1,
+        "sessionId": 1
+      },
+      "name": "tenantId_1_status_1_sessionId_1",
+      "background": true
+    }
+  ],
+  "submissions": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "assignmentId": 1,
+        "studentId": 1
+      },
+      "name": "tenantId_1_assignmentId_1_studentId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "submittedAt": -1
+      },
+      "name": "tenantId_1_studentId_1_submittedAt_-1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "assignmentId": 1,
+        "submittedAt": 1
+      },
+      "name": "tenantId_1_assignmentId_1_submittedAt_1",
+      "background": true
+    }
+  ],
+  "students": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "userId": 1
+      },
+      "name": "userId_1",
+      "background": true,
+      "unique": true,
+      "sparse": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "admissionNumber": 1
+      },
+      "name": "tenantId_1_admissionNumber_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "classId": 1,
+        "sectionId": 1
+      },
+      "name": "tenantId_1_sessionId_1_classId_1_sectionId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isArchived": 1,
+        "isActive": 1
+      },
+      "name": "tenantId_1_isArchived_1_isActive_1",
+      "background": true
+    }
+  ],
+  "timetables": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "classId": 1,
+        "sectionId": 1,
+        "dayOfWeek": 1
+      },
+      "name": "tenantId_1_classId_1_sectionId_1_dayOfWeek_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "teacherId": 1,
+        "dayOfWeek": 1
+      },
+      "name": "tenantId_1_teacherId_1_dayOfWeek_1",
+      "background": true
+    }
+  ],
+  "subscriptionpayments": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "submittedBy": 1
+      },
+      "name": "submittedBy_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "status": 1
+      },
+      "name": "status_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "createdAt": -1
+      },
+      "name": "tenantId_1_createdAt_-1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "status": 1,
+        "createdAt": -1
+      },
+      "name": "status_1_createdAt_-1",
+      "background": true
+    }
+  ],
+  "notifications": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "userId": 1,
+        "isRead": 1,
+        "createdAt": -1
+      },
+      "name": "tenantId_1_userId_1_isRead_1_createdAt_-1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isRead": 1,
+        "createdAt": 1
+      },
+      "name": "tenantId_1_isRead_1_createdAt_1",
+      "background": true
+    }
+  ],
+  "exams": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "name": 1,
+        "sessionId": 1,
+        "classId": 1
+      },
+      "name": "tenantId_1_name_1_sessionId_1_classId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "classId": 1
+      },
+      "name": "tenantId_1_sessionId_1_classId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isPublished": 1
+      },
+      "name": "tenantId_1_isPublished_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "status": 1
+      },
+      "name": "tenantId_1_status_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "startDate": 1,
+        "endDate": 1
+      },
+      "name": "tenantId_1_startDate_1_endDate_1",
+      "background": true
+    }
+  ],
+  "tenants": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "slug": 1
+      },
+      "name": "slug_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "ownerUserId": 1
+      },
+      "name": "ownerUserId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "status": 1
+      },
+      "name": "status_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "subscriptionStatus": 1
+      },
+      "name": "subscriptionStatus_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "isSuspended": 1
+      },
+      "name": "isSuspended_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "subscriptionEndsAt": 1
+      },
+      "name": "subscriptionEndsAt_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "trialEndsAt": 1
+      },
+      "name": "trialEndsAt_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "isDemo": 1
+      },
+      "name": "isDemo_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "demoBatchId": 1
+      },
+      "name": "demoBatchId_1",
+      "background": true
+    }
+  ],
+  "sections": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "classId": 1
+      },
+      "name": "classId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "sessionId": 1
+      },
+      "name": "sessionId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "classId": 1,
+        "isArchived": 1
+      },
+      "name": "tenantId_1_classId_1_isArchived_1",
+      "background": true
+    }
+  ],
+  "examfeepayments": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "receiptNumber": 1
+      },
+      "name": "tenantId_1_receiptNumber_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentExamFeeId": 1,
+        "paymentDate": 1
+      },
+      "name": "tenantId_1_studentExamFeeId_1_paymentDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "paymentDate": 1
+      },
+      "name": "tenantId_1_examId_1_paymentDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1
+      },
+      "name": "tenantId_1_studentId_1",
+      "background": true
+    }
+  ],
+  "teachers": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "assignedClasses": 1
+      },
+      "name": "assignedClasses_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "assignedSubjects": 1
+      },
+      "name": "assignedSubjects_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "userId": 1
+      },
+      "name": "userId_1",
+      "background": true,
+      "unique": true,
+      "sparse": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "employeeId": 1
+      },
+      "name": "tenantId_1_employeeId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isArchived": 1,
+        "isActive": 1
+      },
+      "name": "tenantId_1_isArchived_1_isActive_1",
+      "background": true
+    }
+  ],
+  "users": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "email": 1
+      },
+      "name": "email_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "roleId": 1
+      },
+      "name": "roleId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "isPlatformAdmin": 1
+      },
+      "name": "isPlatformAdmin_1",
+      "background": true
+    }
+  ],
+  "examschedules": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "classId": 1,
+        "subjectId": 1
+      },
+      "name": "tenantId_1_examId_1_classId_1_subjectId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "examDate": 1
+      },
+      "name": "tenantId_1_examId_1_examDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "classId": 1,
+        "examDate": 1
+      },
+      "name": "tenantId_1_classId_1_examDate_1",
+      "background": true
+    }
+  ],
+  "payments": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "receiptNumber": 1
+      },
+      "name": "tenantId_1_receiptNumber_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentFeeId": 1,
+        "paymentDate": 1
+      },
+      "name": "tenantId_1_studentFeeId_1_paymentDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "paymentDate": 1
+      },
+      "name": "tenantId_1_paymentDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1
+      },
+      "name": "tenantId_1_studentId_1_sessionId_1",
+      "background": true
+    }
+  ],
+  "exportpresets": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "name": 1
+      },
+      "name": "tenantId_1_name_1",
+      "background": true,
+      "unique": true
+    }
+  ],
+  "incomes": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "date": 1
+      },
+      "name": "tenantId_1_date_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "category": 1,
+        "date": 1
+      },
+      "name": "tenantId_1_category_1_date_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "sessionId": 1
+      },
+      "name": "sessionId_1",
+      "background": true
+    }
+  ],
+  "authsessions": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "user": 1
+      },
+      "name": "user_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tokenHash": 1
+      },
+      "name": "tokenHash_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "expiresAt": 1
+      },
+      "name": "expiresAt_1",
+      "background": true,
+      "expireAfterSeconds": 0
+    }
+  ],
+  "schoolsettings": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    }
+  ],
+  "teacherattendances": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "teacherId": 1,
+        "attendanceDate": 1
+      },
+      "name": "tenantId_1_teacherId_1_attendanceDate_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "attendanceDate": 1
+      },
+      "name": "tenantId_1_attendanceDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "sessionId": 1
+      },
+      "name": "sessionId_1",
+      "background": true
+    }
+  ]
+}

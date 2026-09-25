@@ -1,0 +1,52 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1
+    },
+    "name": "tenantId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "type": 1
+    },
+    "name": "type_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "module": 1
+    },
+    "name": "module_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "createdAt": -1
+    },
+    "name": "tenantId_1_createdAt_-1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "module": 1,
+      "type": 1
+    },
+    "name": "tenantId_1_module_1_type_1",
+    "background": true
+  }
+]

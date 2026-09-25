@@ -1,0 +1,40 @@
+{
+  "totalOverlappingPrefixPairs": 107,
+  "candidatesForIsolatedLoadTestBenchmark": [
+    {
+      "collection": "financialreferences",
+      "name": "tenantId_1_paymentMethod_1_normalizedReference_1",
+      "reason": "Uniqueness already enforced by custom _id"
+    },
+    {
+      "collection": "financialidempotencies",
+      "name": "tenantId_1_operation_1_idempotencyKey_1",
+      "reason": "Uniqueness already enforced by custom _id"
+    },
+    {
+      "collection": "paymentreversals",
+      "name": "paymentId_1",
+      "reason": "Un-scoped index; queries use tenantId_1_paymentId_1"
+    },
+    {
+      "collection": "paymentreversals",
+      "name": "studentId_1",
+      "reason": "Un-scoped index; queries use tenantId_1_studentId_1_createdAt_-1"
+    },
+    {
+      "collection": "auditlogs",
+      "name": "scope_1",
+      "reason": "Subsumed by scope_1_createdAt_-1"
+    },
+    {
+      "collection": "platformnotifications",
+      "name": "isRead_1",
+      "reason": "Subsumed by isRead_1_createdAt_-1"
+    },
+    {
+      "collection": "subscriptionpayments",
+      "name": "status_1",
+      "reason": "Subsumed by status_1_createdAt_-1"
+    }
+  ]
+}

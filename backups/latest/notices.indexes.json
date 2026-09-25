@@ -1,0 +1,47 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1
+    },
+    "name": "tenantId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "createdAt": -1,
+      "isArchived": 1
+    },
+    "name": "tenantId_1_createdAt_-1_isArchived_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "audienceType": 1,
+      "isArchived": 1
+    },
+    "name": "tenantId_1_audienceType_1_isArchived_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "isPinned": 1,
+      "createdAt": -1
+    },
+    "name": "tenantId_1_isPinned_1_createdAt_-1",
+    "background": true
+  }
+]

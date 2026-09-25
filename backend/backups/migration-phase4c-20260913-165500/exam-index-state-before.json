@@ -1,0 +1,252 @@
+{
+  "exams": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "name": 1,
+        "sessionId": 1,
+        "classId": 1
+      },
+      "name": "tenantId_1_name_1_sessionId_1_classId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "classId": 1
+      },
+      "name": "tenantId_1_sessionId_1_classId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isPublished": 1
+      },
+      "name": "tenantId_1_isPublished_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "status": 1
+      },
+      "name": "tenantId_1_status_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "startDate": 1,
+        "endDate": 1
+      },
+      "name": "tenantId_1_startDate_1_endDate_1",
+      "background": true
+    }
+  ],
+  "marks": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1,
+        "examId": 1,
+        "subjectId": 1
+      },
+      "name": "tenantId_1_studentId_1_sessionId_1_examId_1_subjectId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "subjectId": 1
+      },
+      "name": "tenantId_1_examId_1_subjectId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "examId": 1
+      },
+      "name": "tenantId_1_studentId_1_examId_1",
+      "background": true
+    }
+  ],
+  "examschedules": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "classId": 1,
+        "subjectId": 1
+      },
+      "name": "tenantId_1_examId_1_classId_1_subjectId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "examDate": 1
+      },
+      "name": "tenantId_1_examId_1_examDate_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "classId": 1,
+        "examDate": 1
+      },
+      "name": "tenantId_1_classId_1_examDate_1",
+      "background": true
+    }
+  ],
+  "examattendances": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examScheduleId": 1,
+        "studentId": 1
+      },
+      "name": "tenantId_1_examScheduleId_1_studentId_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "studentId": 1
+      },
+      "name": "tenantId_1_examId_1_studentId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "examScheduleId": 1,
+        "status": 1
+      },
+      "name": "tenantId_1_examScheduleId_1_status_1",
+      "background": true
+    }
+  ],
+  "gradescales": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1
+      },
+      "name": "tenantId_1",
+      "background": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "name": 1
+      },
+      "name": "tenantId_1_name_1",
+      "background": true,
+      "unique": true
+    },
+    {
+      "v": 2,
+      "key": {
+        "tenantId": 1,
+        "isDefault": 1
+      },
+      "name": "tenantId_1_isDefault_1",
+      "background": true
+    }
+  ]
+}

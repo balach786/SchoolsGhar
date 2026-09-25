@@ -1,0 +1,297 @@
+{
+  "timestamp": "2026-09-13T07:43:29.456Z",
+  "database": "school-management-system",
+  "backupDirectory": "C:\\Users\\BK Magsi\\Downloads\\school-management-system\\backups\\backup-2026-09-13T07-43-29-456Z",
+  "totalCollections": 48,
+  "totalDocuments": 94,
+  "collections": [
+    {
+      "name": "academicsessions",
+      "documentCount": 1,
+      "indexCount": 4,
+      "fileSizeKB": 0.4
+    },
+    {
+      "name": "admitcardoverrides",
+      "documentCount": 0,
+      "indexCount": 3,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "assignments",
+      "documentCount": 0,
+      "indexCount": 5,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "auditlogs",
+      "documentCount": 9,
+      "indexCount": 5,
+      "fileSizeKB": 2.84
+    },
+    {
+      "name": "authsessions",
+      "documentCount": 17,
+      "indexCount": 4,
+      "fileSizeKB": 5.13
+    },
+    {
+      "name": "classes",
+      "documentCount": 1,
+      "indexCount": 4,
+      "fileSizeKB": 0.31
+    },
+    {
+      "name": "datahistories",
+      "documentCount": 4,
+      "indexCount": 6,
+      "fileSizeKB": 2.01
+    },
+    {
+      "name": "examattendances",
+      "documentCount": 0,
+      "indexCount": 5,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "examexpenses",
+      "documentCount": 0,
+      "indexCount": 5,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "examfeepayments",
+      "documentCount": 0,
+      "indexCount": 6,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "examfees",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "exams",
+      "documentCount": 0,
+      "indexCount": 7,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "examschedules",
+      "documentCount": 0,
+      "indexCount": 5,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "examtypes",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "expenses",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "exportpresets",
+      "documentCount": 0,
+      "indexCount": 3,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "feestructures",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "gradescales",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "incomes",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "leaverequests",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "marks",
+      "documentCount": 0,
+      "indexCount": 5,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "notices",
+      "documentCount": 0,
+      "indexCount": 5,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "notifications",
+      "documentCount": 1,
+      "indexCount": 4,
+      "fileSizeKB": 0.29
+    },
+    {
+      "name": "paymentmethods",
+      "documentCount": 3,
+      "indexCount": 4,
+      "fileSizeKB": 1.41
+    },
+    {
+      "name": "payments",
+      "documentCount": 0,
+      "indexCount": 6,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "platformnotifications",
+      "documentCount": 1,
+      "indexCount": 4,
+      "fileSizeKB": 0.3
+    },
+    {
+      "name": "receiptcounters",
+      "documentCount": 0,
+      "indexCount": 1,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "roles",
+      "documentCount": 7,
+      "indexCount": 4,
+      "fileSizeKB": 9.93
+    },
+    {
+      "name": "salaryrecords",
+      "documentCount": 0,
+      "indexCount": 5,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "schoolclosures",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "schoolsettings",
+      "documentCount": 1,
+      "indexCount": 2,
+      "fileSizeKB": 0.61
+    },
+    {
+      "name": "sections",
+      "documentCount": 1,
+      "indexCount": 5,
+      "fileSizeKB": 0.36
+    },
+    {
+      "name": "studentattendances",
+      "documentCount": 0,
+      "indexCount": 5,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "studentexamfees",
+      "documentCount": 0,
+      "indexCount": 6,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "studentfees",
+      "documentCount": 0,
+      "indexCount": 6,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "studenthistories",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "students",
+      "documentCount": 40,
+      "indexCount": 6,
+      "fileSizeKB": 28.23
+    },
+    {
+      "name": "subjects",
+      "documentCount": 0,
+      "indexCount": 6,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "submissions",
+      "documentCount": 0,
+      "indexCount": 5,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "subscriptionhistories",
+      "documentCount": 2,
+      "indexCount": 3,
+      "fileSizeKB": 0.74
+    },
+    {
+      "name": "subscriptionpayments",
+      "documentCount": 0,
+      "indexCount": 6,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "subscriptionplans",
+      "documentCount": 3,
+      "indexCount": 4,
+      "fileSizeKB": 1.8
+    },
+    {
+      "name": "teacherattendances",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "teachers",
+      "documentCount": 0,
+      "indexCount": 7,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "tenantroleoverrides",
+      "documentCount": 0,
+      "indexCount": 2,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "tenants",
+      "documentCount": 1,
+      "indexCount": 10,
+      "fileSizeKB": 0.68
+    },
+    {
+      "name": "timetables",
+      "documentCount": 0,
+      "indexCount": 4,
+      "fileSizeKB": 0
+    },
+    {
+      "name": "users",
+      "documentCount": 2,
+      "indexCount": 5,
+      "fileSizeKB": 0.93
+    }
+  ]
+}

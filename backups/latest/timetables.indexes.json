@@ -1,0 +1,38 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1
+    },
+    "name": "tenantId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "classId": 1,
+      "sectionId": 1,
+      "dayOfWeek": 1
+    },
+    "name": "tenantId_1_classId_1_sectionId_1_dayOfWeek_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "teacherId": 1,
+      "dayOfWeek": 1
+    },
+    "name": "tenantId_1_teacherId_1_dayOfWeek_1",
+    "background": true
+  }
+]

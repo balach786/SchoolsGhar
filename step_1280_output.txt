@@ -1,0 +1,209 @@
+Created At: 2026-09-18T20:07:21+05:00
+Completed At: 2026-09-18T20:07:21+05:00
+File Path: `file:///c:/Users/BK%20Magsi/Downloads/school-management-system/frontend/src/pages/FeeSetupPage.tsx`
+Total Lines: 941
+Total Bytes: 35738
+Showing lines 250 to 450
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+250:     setBusy(true);
+251:     try {
+252:       const basePayload: Record<string, any> = {
+253:         title: formTitle.trim(),
+254:         description: formDesc.trim() || undefined,
+255:       };
+256: 
+257:       if (formFeeType === 'monthly_tuition' && formMonth) {
+258:         basePayload.month = formMonth;
+259:       } else {
+260:         basePayload.month = null;
+261:       }
+262: 
+263:       basePayload.effectiveFromMonth = formEffectiveFromMonth || null;
+264:       basePayload.effectiveFromYear = formEffectiveFromYear || null;
+265: 
+266:       if (hasDueDate && formDueDate) {
+267:         basePayload.dueDate = new Date(formDueDate).toISOString();
+268:       }
+269: 
+270:       if (editing) {
+271:         const amt = parseFloat(formRows[0].amountPkr);
+272:         await api.patch(`/fee-structures/${editing._id}`, {
+273:           ...basePayload,
+274:           amount: toPaisa(amt),
+275:         });
+276:         toast.success('Fee structure updated successfully');
+277:       } else {
+278:         const promises = formRows.map(row => {
+279:           return api.post('/fee-structures', {
+280:             ...basePayload,
+281:             sessionId: formSessionId,
+282:             classId: row.classId,
+283:             feeType: formFeeType,
+284:             amount: toPaisa(parseFloat(row.amountPkr)),
+285:           });
+286:         });
+287:         await Promise.all(promises);
+288:         toast.success(`${formRows.length} Fee structure(s) created successfully`);
+289:       }
+290:       setFormOpen(false);
+291:       loadStructures();
+292:     } catch (err: any) {
+293:       toast.error(apiErrorMessage(err));
+294:     } finally {
+295:       setBusy(false);
+296:     }
+297:   }
+298: 
+299:   // Pre-check eligible student count when generation dialog opens or month/year changes
+300:   const loadGenPreCheck = useCallback(async (target: FeeRow, m: number, y: number) => {
+301:     setGenCheckLoading(true);
+302:     try {
+303:       // Count eligible students (active, non-archived, in this class/session)
+304:       const stuRes = await api.get<ApiListResponse<{ _id: string }>>(
+305:         `/students?sessionId=${target.sessionId}&classId=${target.classId}&limit=1&isActive=true`
+306:       );
+307:       const eligibleTotal = stuRes.data?.pagination?.total ?? 0;
+308:       setGenEligibleCount(eligibleTotal);
+309: 
+310:       // Count already-generated invoices for this month/year
+311:       const feeRes = await api.get<ApiListResponse<{ _id: string }>>(
+312:         `/student-fees?sessionId=${target.sessionId}&classId=${target.classId}&feeType=monthly_tuition&month=${m}&limit=1`
+313:       );
+314:       setGenExistingCount(feeRes.data?.pagination?.total ?? 0);
+315:     } catch {
+316:       setGenEligibleCount(null);
+317:       setGenExistingCount(null);
+318:     } finally {
+319:       setGenCheckLoading(false);
+320:     }
+321:   }, []);
+322: 
+323:   async function handleBatchGenerate() {
+324:     if (!generateTarget) return;
+325:     setGenBusy(true);
+326:     try {
+327:       const payload = {
+328:         sessionId: generateTarget.sessionId,
+329:         classId: generateTarget.classId,
+330:         feeStructureId: generateTarget._id,
+331:         month: genMonth,
+332:         year: genYear,
+333:       };
+334: 
+335:       const res = await api.post<{ success: boolean; data: { created: number; skipped: number } }>(
+336:         '/student-fees/generate',
+337:         payload
+338:       );
+339: 
+340:       const { created, skipped } = res.data.data;
+341:       toast.success(
+342:         `Generated ${created} invoices successfully! (${skipped} already existing were skipped)`,
+343:         { duration: 5000 }
+344:       );
+345:       setGenerateTarget(null);
+346:     } catch (err: any) {
+347:       toast.error(apiErrorMessage(err));
+348:     } finally {
+349:       setGenBusy(false);
+350:     }
+351:   }
+352: 
+353:   async function toggleArchive(row: FeeRow) {
+354:     try {
+355:       if (row.isArchived) {
+356:         await api.post(`/fee-structures/${row._id}/restore`);
+357:         toast.success('Fee structure restored');
+358:       } else {
+359:         await api.post(`/fee-structures/${row._id}/archive`);
+360:         toast.success('Fee structure archived');
+361:       }
+362:       setArchiveTarget(null);
+363:       loadStructures();
+364:     } catch (err: any) {
+365:       toast.error(apiErrorMessage(err));
+366:     }
+367:   }
+368: 
+369:   const columns: Column<FeeRow>[] = [
+370:     {
+371:       key: 'title',
+372:       header: 'Structure Title',
+373:       cell: (row) => (
+374:         <div className="leading-tight">
+375:           <p className="font-semibold text-foreground">{row.title}</p>
+376:           <p className="text-xs text-muted-foreground">{FEE_TYPES[row.feeType] ?? row.feeType}</p>
+377:         </div>
+378:       ),
+379:     },
+380:     {
+381:       key: 'class',
+382:       header: 'Class / Session',
+383:       cell: (row) => (
+384:         <div className="leading-tight">
+385:           <p className="font-medium text-foreground">{row.className || 'Class'}</p>
+386:           <p className="text-[11px] text-muted-foreground">{row.sessionName || 'Session'}</p>
+387:         </div>
+388:       ),
+389:     },
+390:     {
+391:       key: 'amount',
+392:       header: 'Base Amount',
+393:       cell: (row) => (
+394:         <span className="font-bold text-foreground">{formatCurrency(row.amount)}</span>
+395:       ),
+396:     },
+397:     {
+398:       key: 'month',
+399:       header: 'Month / Schedule',
+400:       cell: (row) => (
+401:         <span className="text-xs text-muted-foreground">
+402:           {row.feeType === 'monthly_tuition' && row.month
+403:             ? MONTHS[row.month - 1]
+404:             : row.feeType === 'admission_fee'
+405:             ? 'One-Time / Admission'
+406:             : 'As Scheduled'}
+407:         </span>
+408:       ),
+409:     },
+410:     {
+411:       key: 'status',
+412:       header: 'Status',
+413:       cell: (row) => (
+414:         <Badge
+415:           variant={row.isArchived ? 'outline' : row.isActive ? 'default' : 'secondary'}
+416:           className={
+417:             row.isArchived
+418:               ? 'border-rose-300 text-rose-600 bg-rose-50 dark:bg-rose-950/40 text-[10px]'
+419:               : row.isActive
+420:               ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px]'
+421:               : 'text-[10px]'
+422:           }
+423:         >
+424:           {row.isArchived ? 'Archived' : row.isActive ? 'Active' : 'Inactive'}
+425:         </Badge>
+426:       ),
+427:     },
+428:     {
+429:       key: 'actions',
+430:       header: 'Actions',
+431:       className: 'text-right',
+432:       headerClassName: 'text-right',
+433:       cell: (row) => (
+434:         <div className="flex items-center justify-end gap-1.5">
+435:           {row.feeType === 'monthly_tuition' && !row.isArchived && (
+436:             <Button
+437:               variant="outline"
+438:               size="sm"
+439:               onClick={() => {
+440:                 const m = row.month || new Date().getMonth() + 1;
+441:                 const y = new Date().getFullYear();
+442:                 setGenerateTarget(row);
+443:                 setGenMonth(m);
+444:                 setGenYear(y);
+445:                 setGenEligibleCount(null);
+446:                 setGenExistingCount(null);
+447:                 loadGenPreCheck(row, m, y);
+448:               }}
+449:               className="h-8 gap-1 text-xs border-primary/40 text-primary hover:bg-primary/5"
+450:             >
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.

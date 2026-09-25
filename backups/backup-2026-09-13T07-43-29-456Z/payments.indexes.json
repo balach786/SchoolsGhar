@@ -1,0 +1,56 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1
+    },
+    "name": "tenantId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "receiptNumber": 1
+    },
+    "name": "tenantId_1_receiptNumber_1",
+    "background": true,
+    "unique": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "studentFeeId": 1,
+      "paymentDate": 1
+    },
+    "name": "tenantId_1_studentFeeId_1_paymentDate_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "paymentDate": 1
+    },
+    "name": "tenantId_1_paymentDate_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "studentId": 1,
+      "sessionId": 1
+    },
+    "name": "tenantId_1_studentId_1_sessionId_1",
+    "background": true
+  }
+]

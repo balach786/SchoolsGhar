@@ -1,0 +1,6 @@
+{
+  "examSchemaNotes": "Exam model uses subjects array with { subjectId, maxMarks, passMarks } and gradeScaleId.",
+  "markSchemaNotes": "Mark model records tenantId, examId, sessionId, studentId, subjectId, marksObtained, isAbsent.",
+  "examScheduleSchemaNotes": "ExamSchedule records examId, classId, subjectId, totalMarks, passingMarks.",
+  "examAttendanceSchemaNotes": "ExamAttendance records examScheduleId, studentId, status (present/absent/leave)."
+}

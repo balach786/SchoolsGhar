@@ -1,0 +1,48 @@
+{
+  "runId": "phase2-20260913-145000",
+  "timestamp": "2026-09-13T09:50:12.685Z",
+  "indexesToCreate": [
+    {
+      "collection": "studenthistories",
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "eventDate": -1
+      },
+      "name": "tenantId_1_studentId_1_eventDate_-1",
+      "unique": false
+    },
+    {
+      "collection": "studenthistories",
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "eventDate": -1
+      },
+      "name": "tenantId_1_sessionId_1_eventDate_-1",
+      "unique": false
+    }
+  ],
+  "indexesToDrop": [
+    {
+      "collection": "studenthistories",
+      "name": "tenantId_1_studentId_1_sessionId_1",
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1
+      },
+      "unique": true
+    }
+  ],
+  "codeFilesToModify": [
+    "backend/src/models/StudentHistory.ts",
+    "backend/src/models/Student.ts",
+    "backend/src/models/AuditLog.ts",
+    "backend/src/validators/academic.validators.ts",
+    "backend/src/controllers/student.controller.ts",
+    "backend/src/controllers/platformAdmin.controller.ts",
+    "backend/src/services/audit.service.ts",
+    "backend/src/services/dataTransfer/import.service.ts"
+  ]
+}

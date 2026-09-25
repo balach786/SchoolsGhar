@@ -1,0 +1,1 @@
+[{"_id":{"$oid":"6aa5ad3d06abfd0205323555"},"userId":{"$oid":"6aa5a3a2771a68376318390d"},"type":"subscription_extended","title":"Subscription Extended","message":"Your school subscription has been extended until 12/22/2026.","isRead":false,"createdAt":{"$date":{"$numberLong":"1789242685490"}}}]

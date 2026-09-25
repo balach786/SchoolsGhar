@@ -1,0 +1,29 @@
+{
+  "physicalCollection": "staff",
+  "discriminatorKey": "staffType",
+  "fields": {
+    "_id": "ObjectId",
+    "tenantId": "ObjectId (ref: Tenant, required)",
+    "employeeId": "String (required, uppercase, trim)",
+    "staffType": "String (enum: ['teaching', 'non_teaching'], required)",
+    "designation": "String (required, trim)",
+    "department": "String (optional, trim)",
+    "fullName": "String (required, trim)",
+    "profilePhotoUrl": "String (optional)",
+    "gender": "String (enum: ['male', 'female', 'other'], optional)",
+    "email": "String (lowercase, trim, optional)",
+    "phone": "String (trim, optional)",
+    "address": "String (trim, optional)",
+    "dateOfBirth": "Date (optional)",
+    "joiningDate": "Date (required)",
+    "qualification": "String (trim, optional)",
+    "salary": "Number (integer paisa, default: 0)",
+    "documents": "Array of FileRef",
+    "userId": "ObjectId (ref: User, optional, omitted when no login)",
+    "specialization": "String (optional, teaching-specific)",
+    "isActive": "Boolean (default: true)",
+    "isArchived": "Boolean (default: false)",
+    "timestamps": "true"
+  },
+  "canonicalAssignmentsRule": "Class.classTeacherId and Subject.teacherIds remain canonical. No independent writable assignedClasses/assignedSubjects arrays persisted in Staff."
+}

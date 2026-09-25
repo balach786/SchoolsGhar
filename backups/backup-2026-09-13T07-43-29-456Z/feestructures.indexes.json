@@ -1,0 +1,42 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1
+    },
+    "name": "tenantId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "sessionId": 1,
+      "classId": 1,
+      "feeType": 1,
+      "month": 1,
+      "title": 1
+    },
+    "name": "tenantId_1_sessionId_1_classId_1_feeType_1_month_1_title_1",
+    "background": true,
+    "unique": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "sessionId": 1,
+      "classId": 1,
+      "isArchived": 1
+    },
+    "name": "tenantId_1_sessionId_1_classId_1_isArchived_1",
+    "background": true
+  }
+]

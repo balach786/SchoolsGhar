@@ -1,0 +1,5 @@
+{
+  "action": "dropDatabase",
+  "targetDatabase": "school-management-system-loadtest",
+  "verification": "re-check primary database counts against baseline-primary-counts.json"
+}

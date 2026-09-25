@@ -1,0 +1,59 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1
+    },
+    "name": "tenantId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "studentId": 1,
+      "examId": 1
+    },
+    "name": "tenantId_1_studentId_1_examId_1",
+    "background": true,
+    "unique": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "examId": 1,
+      "status": 1
+    },
+    "name": "tenantId_1_examId_1_status_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "examId": 1,
+      "classId": 1,
+      "sectionId": 1
+    },
+    "name": "tenantId_1_examId_1_classId_1_sectionId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "studentId": 1,
+      "sessionId": 1
+    },
+    "name": "tenantId_1_studentId_1_sessionId_1",
+    "background": true
+  }
+]

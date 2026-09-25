@@ -1,0 +1,43 @@
+{
+  "paymentEndpoints": [
+    "POST /api/payments",
+    "GET /api/payments",
+    "GET /api/payments/:id",
+    "GET /api/payments/:id/receipt",
+    "PATCH /api/payments/:id"
+  ],
+  "studentFeeEndpoints": [
+    "GET /api/student-fees",
+    "GET /api/student-fees/:id",
+    "POST /api/student-fees/generate",
+    "PATCH /api/student-fees/:id/adjust",
+    "GET /api/student-fees/ledger"
+  ],
+  "examFeeEndpoints": [
+    "GET /api/exam-fees",
+    "POST /api/exam-fees",
+    "POST /api/exam-fees/generate",
+    "GET /api/exam-fees/students",
+    "POST /api/exam-fees/collect",
+    "GET /api/exam-fees/receipt/:paymentId",
+    "GET /api/exam-fees/history/:studentId"
+  ],
+  "salaryEndpoints": [
+    "GET /api/salaries",
+    "GET /api/salaries/:id",
+    "POST /api/salaries",
+    "PATCH /api/salaries/:id",
+    "POST /api/salaries/:id/mark-paid"
+  ],
+  "dashboardFinanceEndpoints": [
+    "GET /api/finance/dashboard",
+    "GET /api/finance/reports/daily-collection",
+    "GET /api/finance/reports/monthly-collection",
+    "GET /api/finance/reports/pending-fees",
+    "GET /api/finance/reports/income",
+    "GET /api/finance/reports/expenses",
+    "GET /api/finance/reports/salaries",
+    "GET /api/finance/reports/income-vs-expense",
+    "GET /api/finance/reports/student-ledger"
+  ]
+}

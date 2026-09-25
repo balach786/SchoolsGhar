@@ -1,0 +1,24 @@
+{
+  "model": "Teacher",
+  "physicalCollection": "teachers",
+  "paths": {
+    "_id": { "type": "ObjectId" },
+    "tenantId": { "type": "ObjectId", "ref": "Tenant", "required": true, "index": true },
+    "employeeId": { "type": "String", "required": true, "uppercase": true, "trim": true, "maxlength": 20 },
+    "fullName": { "type": "String", "required": true, "trim": true, "maxlength": 80 },
+    "profilePhotoUrl": { "type": "String", "maxlength": 500 },
+    "email": { "type": "String", "trim": true, "lowercase": true, "maxlength": 120 },
+    "phone": { "type": "String", "trim": true, "maxlength": 24 },
+    "qualification": { "type": "String", "trim": true, "maxlength": 120 },
+    "joiningDate": { "type": "Date", "required": true },
+    "assignedClasses": { "type": ["ObjectId"], "ref": "Class", "default": [], "index": true },
+    "assignedSubjects": { "type": ["ObjectId"], "ref": "Subject", "default": [], "index": true },
+    "userId": { "type": "ObjectId", "ref": "User", "unique": true, "sparse": true },
+    "salary": { "type": "Number", "default": 0, "min": 0 },
+    "documents": { "type": "Array", "schema": "fileRefSchema", "default": [] },
+    "isActive": { "type": "Boolean", "default": true },
+    "isArchived": { "type": "Boolean", "default": false },
+    "createdAt": { "type": "Date" },
+    "updatedAt": { "type": "Date" }
+  }
+}

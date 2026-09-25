@@ -1,0 +1,1242 @@
+{
+  "runAt": "2026-09-13T09:03:13.587Z",
+  "database": "school-management-system",
+  "tenantIdAudit": [
+    {
+      "collection": "tenants",
+      "totalDocuments": 1,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "schoolsettings",
+      "totalDocuments": 1,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "tenantroleoverrides",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "users",
+      "totalDocuments": 2,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "teachers",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "academicsessions",
+      "totalDocuments": 1,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "classes",
+      "totalDocuments": 1,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "sections",
+      "totalDocuments": 1,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "subjects",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "students",
+      "totalDocuments": 40,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "studenthistories",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "studentattendances",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "teacherattendances",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "timetables",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "schoolclosures",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "exams",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "examtypes",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "gradescales",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "examschedules",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "marks",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "examattendances",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "admitcardoverrides",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "feestructures",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "studentfees",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "payments",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "receiptcounters",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "examfees",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "studentexamfees",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "examfeepayments",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "incomes",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "expenses",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "examexpenses",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "salaryrecords",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "assignments",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "submissions",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "notices",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "notifications",
+      "totalDocuments": 1,
+      "missingTenantIdCount": 1,
+      "missingIds": [
+        "6aa5ad3d06abfd0205323555"
+      ]
+    },
+    {
+      "collection": "leaverequests",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "exportpresets",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "datahistories",
+      "totalDocuments": 4,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "auditlogs",
+      "totalDocuments": 9,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "subscriptionpayments",
+      "totalDocuments": 0,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    },
+    {
+      "collection": "subscriptionhistories",
+      "totalDocuments": 2,
+      "missingTenantIdCount": 0,
+      "missingIds": []
+    }
+  ],
+  "duplicateScans": [
+    {
+      "collection": "classes",
+      "fields": [
+        "tenantId",
+        "sessionId",
+        "name"
+      ],
+      "totalDocuments": 1,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "sections",
+      "fields": [
+        "tenantId",
+        "sessionId",
+        "classId",
+        "name"
+      ],
+      "totalDocuments": 1,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "subjects",
+      "fields": [
+        "tenantId",
+        "sessionId",
+        "code"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "studentfees",
+      "fields": [
+        "tenantId",
+        "studentId",
+        "feeStructureId"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "marks",
+      "fields": [
+        "tenantId",
+        "studentId",
+        "sessionId",
+        "examId",
+        "subjectId"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "teachers",
+      "fields": [
+        "tenantId",
+        "employeeId"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "students",
+      "fields": [
+        "tenantId",
+        "admissionNumber"
+      ],
+      "totalDocuments": 40,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "payments",
+      "fields": [
+        "tenantId",
+        "receiptNumber"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "studenthistories",
+      "fields": [
+        "tenantId",
+        "studentId",
+        "sessionId"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "schoolclosures",
+      "fields": [
+        "tenantId",
+        "dateString",
+        "applicableTo"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "feestructures",
+      "fields": [
+        "tenantId",
+        "sessionId",
+        "classId",
+        "feeType",
+        "month",
+        "title"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "exams",
+      "fields": [
+        "tenantId",
+        "name",
+        "sessionId",
+        "classId"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "examfees",
+      "fields": [
+        "tenantId",
+        "examId",
+        "classId"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "studentexamfees",
+      "fields": [
+        "tenantId",
+        "studentId",
+        "examId"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    },
+    {
+      "collection": "salaryrecords",
+      "fields": [
+        "tenantId",
+        "teacherId",
+        "salaryMonth",
+        "sessionId"
+      ],
+      "totalDocuments": 0,
+      "duplicateGroups": 0,
+      "conflictingDocumentCount": 0,
+      "details": []
+    }
+  ],
+  "sessionMatching": [
+    {
+      "collection": "teacherattendances",
+      "sourceDateField": "attendanceDate",
+      "totalScanned": 0,
+      "matchedCount": 0,
+      "ambiguousCount": 0,
+      "noMatchCount": 0,
+      "sampleAmbiguous": [],
+      "sampleNoMatch": [],
+      "sampleMatched": []
+    },
+    {
+      "collection": "incomes",
+      "sourceDateField": "date",
+      "totalScanned": 0,
+      "matchedCount": 0,
+      "ambiguousCount": 0,
+      "noMatchCount": 0,
+      "sampleAmbiguous": [],
+      "sampleNoMatch": [],
+      "sampleMatched": []
+    },
+    {
+      "collection": "expenses",
+      "sourceDateField": "date",
+      "totalScanned": 0,
+      "matchedCount": 0,
+      "ambiguousCount": 0,
+      "noMatchCount": 0,
+      "sampleAmbiguous": [],
+      "sampleNoMatch": [],
+      "sampleMatched": []
+    },
+    {
+      "collection": "assignments",
+      "sourceDateField": "createdAt",
+      "totalScanned": 0,
+      "matchedCount": 0,
+      "ambiguousCount": 0,
+      "noMatchCount": 0,
+      "sampleAmbiguous": [],
+      "sampleNoMatch": [],
+      "sampleMatched": []
+    }
+  ],
+  "indexAudits": [
+    {
+      "collection": "studenthistories",
+      "totalIndexes": 4,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_studentId_1_sessionId_1",
+          "key": {
+            "tenantId": 1,
+            "studentId": 1,
+            "sessionId": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_sessionId_1_classId_1",
+          "key": {
+            "tenantId": 1,
+            "sessionId": 1,
+            "classId": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "schoolsettings",
+      "totalIndexes": 2,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "teachers",
+      "totalIndexes": 7,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "assignedClasses_1",
+          "key": {
+            "assignedClasses": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "assignedSubjects_1",
+          "key": {
+            "assignedSubjects": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "userId_1",
+          "key": {
+            "userId": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_employeeId_1",
+          "key": {
+            "tenantId": 1,
+            "employeeId": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_isArchived_1_isActive_1",
+          "key": {
+            "tenantId": 1,
+            "isArchived": 1,
+            "isActive": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "students",
+      "totalIndexes": 6,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "userId_1",
+          "key": {
+            "userId": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_admissionNumber_1",
+          "key": {
+            "tenantId": 1,
+            "admissionNumber": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_sessionId_1_classId_1_sectionId_1",
+          "key": {
+            "tenantId": 1,
+            "sessionId": 1,
+            "classId": 1,
+            "sectionId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_isArchived_1_isActive_1",
+          "key": {
+            "tenantId": 1,
+            "isArchived": 1,
+            "isActive": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "classes",
+      "totalIndexes": 4,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "sessionId_1",
+          "key": {
+            "sessionId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_sessionId_1_isArchived_1",
+          "key": {
+            "tenantId": 1,
+            "sessionId": 1,
+            "isArchived": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "sections",
+      "totalIndexes": 5,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "classId_1",
+          "key": {
+            "classId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "sessionId_1",
+          "key": {
+            "sessionId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_classId_1_isArchived_1",
+          "key": {
+            "tenantId": 1,
+            "classId": 1,
+            "isArchived": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "subjects",
+      "totalIndexes": 6,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "sessionId_1",
+          "key": {
+            "sessionId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "classIds_1",
+          "key": {
+            "classIds": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "teacherIds_1",
+          "key": {
+            "teacherIds": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_sessionId_1_isArchived_1",
+          "key": {
+            "tenantId": 1,
+            "sessionId": 1,
+            "isArchived": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "studentattendances",
+      "totalIndexes": 5,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_studentId_1_sessionId_1_attendanceDate_1",
+          "key": {
+            "tenantId": 1,
+            "studentId": 1,
+            "sessionId": 1,
+            "attendanceDate": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_classId_1_sectionId_1_attendanceDate_1",
+          "key": {
+            "tenantId": 1,
+            "classId": 1,
+            "sectionId": 1,
+            "attendanceDate": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_attendanceDate_1",
+          "key": {
+            "tenantId": 1,
+            "attendanceDate": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "teacherattendances",
+      "totalIndexes": 4,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_teacherId_1_attendanceDate_1",
+          "key": {
+            "tenantId": 1,
+            "teacherId": 1,
+            "attendanceDate": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_attendanceDate_1",
+          "key": {
+            "tenantId": 1,
+            "attendanceDate": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "exams",
+      "totalIndexes": 7,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_name_1_sessionId_1_classId_1",
+          "key": {
+            "tenantId": 1,
+            "name": 1,
+            "sessionId": 1,
+            "classId": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_sessionId_1_classId_1",
+          "key": {
+            "tenantId": 1,
+            "sessionId": 1,
+            "classId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_isPublished_1",
+          "key": {
+            "tenantId": 1,
+            "isPublished": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_status_1",
+          "key": {
+            "tenantId": 1,
+            "status": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_startDate_1_endDate_1",
+          "key": {
+            "tenantId": 1,
+            "startDate": 1,
+            "endDate": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "marks",
+      "totalIndexes": 5,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_studentId_1_sessionId_1_examId_1_subjectId_1",
+          "key": {
+            "tenantId": 1,
+            "studentId": 1,
+            "sessionId": 1,
+            "examId": 1,
+            "subjectId": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_examId_1_subjectId_1",
+          "key": {
+            "tenantId": 1,
+            "examId": 1,
+            "subjectId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_studentId_1_examId_1",
+          "key": {
+            "tenantId": 1,
+            "studentId": 1,
+            "examId": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "feestructures",
+      "totalIndexes": 4,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_sessionId_1_classId_1_feeType_1_month_1_title_1",
+          "key": {
+            "tenantId": 1,
+            "sessionId": 1,
+            "classId": 1,
+            "feeType": 1,
+            "month": 1,
+            "title": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_sessionId_1_classId_1_isArchived_1",
+          "key": {
+            "tenantId": 1,
+            "sessionId": 1,
+            "classId": 1,
+            "isArchived": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "studentfees",
+      "totalIndexes": 6,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_studentId_1_feeStructureId_1",
+          "key": {
+            "tenantId": 1,
+            "studentId": 1,
+            "feeStructureId": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_studentId_1_sessionId_1",
+          "key": {
+            "tenantId": 1,
+            "studentId": 1,
+            "sessionId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_classId_1_sectionId_1_status_1",
+          "key": {
+            "tenantId": 1,
+            "classId": 1,
+            "sectionId": 1,
+            "status": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_status_1_sessionId_1",
+          "key": {
+            "tenantId": 1,
+            "status": 1,
+            "sessionId": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "payments",
+      "totalIndexes": 6,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_receiptNumber_1",
+          "key": {
+            "tenantId": 1,
+            "receiptNumber": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_studentFeeId_1_paymentDate_1",
+          "key": {
+            "tenantId": 1,
+            "studentFeeId": 1,
+            "paymentDate": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_paymentDate_1",
+          "key": {
+            "tenantId": 1,
+            "paymentDate": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_studentId_1_sessionId_1",
+          "key": {
+            "tenantId": 1,
+            "studentId": 1,
+            "sessionId": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "salaryrecords",
+      "totalIndexes": 5,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_teacherId_1_salaryMonth_1_sessionId_1",
+          "key": {
+            "tenantId": 1,
+            "teacherId": 1,
+            "salaryMonth": 1,
+            "sessionId": 1
+          },
+          "unique": true
+        },
+        {
+          "name": "tenantId_1_status_1_sessionId_1",
+          "key": {
+            "tenantId": 1,
+            "status": 1,
+            "sessionId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_salaryMonth_1",
+          "key": {
+            "tenantId": 1,
+            "salaryMonth": 1
+          },
+          "unique": false
+        }
+      ]
+    },
+    {
+      "collection": "auditlogs",
+      "totalIndexes": 5,
+      "indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "createdAt_1",
+          "key": {
+            "createdAt": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1",
+          "key": {
+            "tenantId": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_userId_1_createdAt_-1",
+          "key": {
+            "tenantId": 1,
+            "userId": 1,
+            "createdAt": -1
+          },
+          "unique": false
+        },
+        {
+          "name": "tenantId_1_createdAt_-1",
+          "key": {
+            "tenantId": 1,
+            "createdAt": -1
+          },
+          "unique": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+[
+  {
+    "collection": "payments",
+    "field": "receiptPdfUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "subscriptionpayments",
+    "field": "paymentProofUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "assignments",
+    "field": "attachments",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "assignments",
+    "field": "attachmentUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "submissions",
+    "field": "attachments",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "submissions",
+    "field": "fileUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "notices",
+    "field": "attachments",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "notices",
+    "field": "attachmentUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "users",
+    "field": "profilePhotoUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "students",
+    "field": "profilePhotoUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "students",
+    "field": "documents",
+    "referenceCount": 40,
+    "sampleValues": [
+      [],
+      [],
+      []
+    ]
+  },
+  {
+    "collection": "staff",
+    "field": "profilePhotoUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "staff",
+    "field": "documents",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "schoolsettings",
+    "field": "logoUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  },
+  {
+    "collection": "schoolsettings",
+    "field": "faviconUrl",
+    "referenceCount": 0,
+    "sampleValues": []
+  }
+]

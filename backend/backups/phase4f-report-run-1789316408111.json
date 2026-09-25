@@ -1,0 +1,262 @@
+{
+  "startedAt": "2026-09-13T16:15:20.210Z",
+  "environment": "MongoDB Atlas M0 (Shared Cluster)",
+  "databaseName": "school-management-system-loadtest",
+  "safetyVerified": true,
+  "indexesSynced": 255,
+  "datasetA": {
+    "schools": 5,
+    "studentsPerSchool": 100,
+    "staffPerSchool": 10
+  },
+  "feeGeneration": {
+    "totalGenerated": 500,
+    "duplicateRejections": 5
+  },
+  "queryMappings": {
+    "studentAttendance": {
+      "field": "attendanceDate",
+      "winningIndex": "tenantId_1_classId_1_sectionId_1_attendanceDate_1"
+    },
+    "studentRollLookup": {
+      "queryIncludesSessionId": false,
+      "winningIndex": "tenantId_1_sessionId_1_classId_1_sectionId_1"
+    },
+    "paymentStudentHistory": {
+      "winningIndex": "tenantId_1_paymentDate_1",
+      "inMemorySort": true
+    }
+  },
+  "feeGenerationStress": {
+    "totalGenerated": 500,
+    "duplicateRejections": 5
+  },
+  "resultPublication": {
+    "publicationDurations": {
+      "100": 350,
+      "300": 367,
+      "500": 497
+    },
+    "latestReadLatencyMs": 107
+  },
+  "exportBenchmark": {
+    "exportDurationMs": 11727,
+    "concurrentQueryLatencyMs": 109,
+    "archiveSizeBytes": 1274616,
+    "modeBDecryptionVerified": true
+  },
+  "indexAB": {
+    "financialReferences": {
+      "withRedundantCompoundMs": 115,
+      "withoutRedundantCompoundMs": 113,
+      "improvementPercent": 2
+    }
+  },
+  "summaries": {
+    "auth_me": {
+      "scenario": "auth_me",
+      "totalRequests": 180,
+      "successCount": 180,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0.6,
+      "p50Ms": 208.7,
+      "p95Ms": 219.8,
+      "p99Ms": 227.8,
+      "maxMs": 229,
+      "minMs": 206
+    },
+    "dashboard_fanout": {
+      "scenario": "dashboard_fanout",
+      "totalRequests": 65,
+      "successCount": 65,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0.2,
+      "p50Ms": 2729.4,
+      "p95Ms": 5071.2,
+      "p99Ms": 5294.6,
+      "maxMs": 5294.6,
+      "minMs": 689.2
+    },
+    "student_list_paginated": {
+      "scenario": "student_list_paginated",
+      "totalRequests": 90,
+      "successCount": 90,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0.3,
+      "p50Ms": 211.5,
+      "p95Ms": 741.4,
+      "p99Ms": 1446.6,
+      "maxMs": 1446.6,
+      "minMs": 105.2
+    },
+    "student_lookup_exact": {
+      "scenario": "student_lookup_exact",
+      "totalRequests": 90,
+      "successCount": 90,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0.3,
+      "p50Ms": 192.3,
+      "p95Ms": 220.5,
+      "p99Ms": 828.2,
+      "maxMs": 828.2,
+      "minMs": 102.6
+    },
+    "student_search_regex": {
+      "scenario": "student_search_regex",
+      "totalRequests": 90,
+      "successCount": 90,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0.3,
+      "p50Ms": 220.3,
+      "p95Ms": 873.7,
+      "p99Ms": 1191.1,
+      "maxMs": 1191.1,
+      "minMs": 103.6
+    },
+    "attendance_bulk_write_40": {
+      "scenario": "attendance_bulk_write_40",
+      "totalRequests": 35,
+      "successCount": 35,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0.1,
+      "p50Ms": 146.3,
+      "p95Ms": 188.4,
+      "p99Ms": 189.5,
+      "maxMs": 189.5,
+      "minMs": 125.9
+    },
+    "attendance_class_daily_read": {
+      "scenario": "attendance_class_daily_read",
+      "totalRequests": 35,
+      "successCount": 35,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0.1,
+      "p50Ms": 107.6,
+      "p95Ms": 212.4,
+      "p99Ms": 214.5,
+      "maxMs": 214.5,
+      "minMs": 103.3
+    },
+    "fee_generation_batch": {
+      "scenario": "fee_generation_batch",
+      "totalRequests": 10,
+      "successCount": 10,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0,
+      "p50Ms": 116.1,
+      "p95Ms": 544.8,
+      "p99Ms": 544.8,
+      "maxMs": 544.8,
+      "minMs": 114.4
+    },
+    "payment_acid_transaction": {
+      "scenario": "payment_acid_transaction",
+      "totalRequests": 55,
+      "successCount": 55,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0.2,
+      "p50Ms": 9787.8,
+      "p95Ms": 21598.3,
+      "p99Ms": 24598.8,
+      "maxMs": 24598.8,
+      "minMs": 937.6
+    },
+    "result_publish_cohort_100": {
+      "scenario": "result_publish_cohort_100",
+      "totalRequests": 1,
+      "successCount": 1,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0,
+      "p50Ms": 349.7,
+      "p95Ms": 349.7,
+      "p99Ms": 349.7,
+      "maxMs": 349.7,
+      "minMs": 349.7
+    },
+    "result_publish_cohort_300": {
+      "scenario": "result_publish_cohort_300",
+      "totalRequests": 1,
+      "successCount": 1,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0,
+      "p50Ms": 366.5,
+      "p95Ms": 366.5,
+      "p99Ms": 366.5,
+      "maxMs": 366.5,
+      "minMs": 366.5
+    },
+    "result_publish_cohort_500": {
+      "scenario": "result_publish_cohort_500",
+      "totalRequests": 1,
+      "successCount": 1,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0,
+      "p50Ms": 496.6,
+      "p95Ms": 496.6,
+      "p99Ms": 496.6,
+      "maxMs": 496.6,
+      "minMs": 496.6
+    },
+    "result_read_latest_snapshot": {
+      "scenario": "result_read_latest_snapshot",
+      "totalRequests": 1,
+      "successCount": 0,
+      "errorCount": 1,
+      "errorRatePercent": 100,
+      "rps": 0,
+      "p50Ms": 107,
+      "p95Ms": 107,
+      "p99Ms": 107,
+      "maxMs": 107,
+      "minMs": 107
+    },
+    "export_tenant_mode_b": {
+      "scenario": "export_tenant_mode_b",
+      "totalRequests": 1,
+      "successCount": 1,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0,
+      "p50Ms": 11727,
+      "p95Ms": 11727,
+      "p99Ms": 11727,
+      "maxMs": 11727,
+      "minMs": 11727
+    },
+    "tenant_isolation_concurrency": {
+      "scenario": "tenant_isolation_concurrency",
+      "totalRequests": 180,
+      "successCount": 180,
+      "errorCount": 0,
+      "errorRatePercent": 0,
+      "rps": 0.6,
+      "p50Ms": 321.7,
+      "p95Ms": 546.9,
+      "p99Ms": 840.1,
+      "maxMs": 867.3,
+      "minMs": 309.6
+    }
+  },
+  "primaryBaselinePreserved": true,
+  "primaryPostVerifyCounts": {
+    "students": 40,
+    "tenants": 2,
+    "users": 3,
+    "feeStructures": 1,
+    "results": 0,
+    "studentFees": 0,
+    "payments": 0
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "negativeAmounts": 0,
+  "overpaidObligations": 0,
+  "inconsistentStatuses": 0,
+  "duplicateReceipts": 0,
+  "orphanTenantReferences": 0,
+  "allCollectionsEmpty": true
+}

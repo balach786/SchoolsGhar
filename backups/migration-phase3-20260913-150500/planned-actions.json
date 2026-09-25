@@ -1,0 +1,53 @@
+{
+  "runId": "phase3-20260913-150500",
+  "phase": "Phase 3 — Targeted Data Corrections, Tenant Scoping & Export Foundation",
+  "actions": [
+    {
+      "action": "PATCH_ORPHAN_NOTIFICATION",
+      "targetId": "6aa5ad3d06abfd0205323555",
+      "collection": "notifications",
+      "fieldsToSet": {
+        "tenantId": "6aa5a3a2771a68376318390c"
+      }
+    },
+    {
+      "action": "PATCH_LEGACY_AUDIT_LOG_SCOPE",
+      "collection": "auditlogs",
+      "filter": {
+        "tenantId": "6aa5a3a2771a68376318390c",
+        "$or": [
+          {
+            "scope": {
+              "$exists": false
+            }
+          },
+          {
+            "scope": null
+          }
+        ]
+      },
+      "fieldsToSet": {
+        "scope": "tenant"
+      },
+      "expectedCount": 9
+    },
+    {
+      "action": "REFURE_SCHOOL_SETTINGS_LOOKUP",
+      "description": "Remove generic fallback to _id: \"main\", enforce { tenantId: req.user.tenantId } canonical query"
+    },
+    {
+      "action": "ADD_OPTIONAL_SESSION_ID",
+      "models": [
+        "TeacherAttendance",
+        "Income",
+        "Expense",
+        "Assignment"
+      ],
+      "description": "Add optional sessionId reference to schemas and populate for new records"
+    },
+    {
+      "action": "BUILD_EXPORT_REGISTRY_AND_SERVICE",
+      "description": "Implement TenantExportService with Mode A (School Data Export) and Mode B (Disaster Recovery Backup)"
+    }
+  ]
+}

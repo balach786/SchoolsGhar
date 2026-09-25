@@ -1,0 +1,31 @@
+const fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript');
+const React=require('react'), {renderToStaticMarkup}=require('react-dom/server');
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const resolve=Module._resolveFilename,load=Module._load;
+let state;
+Module._resolveFilename=function(request,parent,...rest){return resolve.call(this,request.startsWith('@/')?path.resolve(__dirname,'../src',request.slice(2)):request,parent,...rest);};
+Module._load=function(request,...rest){
+ if(request==='@/context/AuthContext')return {useAuth:()=>state};
+ if(request==='react-router-dom')return {useLocation:()=>({pathname:'/users'}),Navigate:p=>React.createElement('span',{'data-redirect':p.to}),Link:p=>React.createElement('a',{href:p.to},p.children)};
+ return load.call(this,request,...rest);
+};
+for(const ext of ['.ts','.tsx'])require.extensions[ext]=(mod,file)=>mod._compile(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true,target:ts.ScriptTarget.ES2020}}).outputText,file);
+const {hasSchoolPermission}=require('../src/lib/permissions.ts');
+const {visibleNavigation,NAV_SECTIONS}=require('../src/config/navigation.ts');
+const {ProtectedRoute}=require('../src/components/ProtectedRoute.tsx');
+const {DEFAULT_ROLE_PERMISSIONS,PERMISSION_MODULES}=require('../../backend/src/config/permissions.ts');
+const {revealVariants,sidebarVariants,staggerVariants}=require('../src/lib/motion.ts');
+const user=role=>({_id:'test',name:'Test User',email:'test@school.test',tenantId:'school-a',role,isActive:true,permissions:DEFAULT_ROLE_PERMISSIONS[role]});
+function renderGuard(u,extra={}){state={user:u,isAuthenticated:!!u,loading:false,permissionsLoading:false,can:(m,a)=>hasSchoolPermission(u,m,a),...extra};return renderToStaticMarkup(React.createElement(ProtectedRoute,{perm:{module:'users'}},'Authorized Users content'));}
+test('initial restore never flashes forbidden content',()=>{const html=renderGuard(null,{loading:true});assert.match(html,/Restoring your session/);assert.doesNotMatch(html,/Access Restricted/);});
+test('permission refresh waits before denying access',()=>{const html=renderGuard(user('teacher'),{permissionsLoading:true});assert.match(html,/Restoring your session/);assert.doesNotMatch(html,/Access Restricted/);});
+test('authorized refresh preserves page and form content',()=>assert.match(renderGuard(user('admin'),{permissionsLoading:true}),/Authorized Users content/));
+test('School Admin and Super Admin can open Users',()=>{for(const role of ['admin','super_admin'])assert.match(renderGuard(user(role)),/Authorized Users content/);});
+test('unauthorized direct route renders useful 403 without content',()=>{const html=renderGuard(user('student'));assert.match(html,/Access Restricted/);assert.match(html,/Back to Dashboard/);assert.doesNotMatch(html,/Authorized Users content/);});
+test('platform account redirects to its own dashboard',()=>assert.match(renderGuard({...user('super_admin'),isPlatformAdmin:true}),/data-redirect="\/platform-admin\/dashboard"/));
+test('logged-out user redirects to login',()=>assert.match(renderGuard(null),/data-redirect="\/login"/));
+test('all six school roles show only allowed navigation',()=>{for(const role of Object.keys(DEFAULT_ROLE_PERMISSIONS)){const u=user(role);for(const item of visibleNavigation(u).flatMap(s=>s.items)){if(item.perm)assert.ok(hasSchoolPermission(u,item.perm.module,item.perm.action),role+' '+item.to);}}});
+test('unauthorized roles and platform never see Users navigation',()=>{for(const role of ['teacher','student','accountant','receptionist','platform_admin'])assert.equal(visibleNavigation(user(role)).flatMap(s=>s.items).some(i=>i.to==='/users'),false);});
+test('inactive or tenantless identities cannot bypass school gates',()=>{assert.equal(hasSchoolPermission({...user('super_admin'),tenantId:undefined},'users'),false);assert.equal(hasSchoolPermission({...user('super_admin'),isActive:false},'users'),false);});
+test('navigation uses canonical backend permission vocabulary',()=>{for(const item of NAV_SECTIONS.flatMap(s=>s.items)){if(!item.perm)continue;const def=PERMISSION_MODULES.find(m=>m.module===item.perm.module);assert.ok(def,item.to);assert.ok(def.actions.includes(item.perm.action??'view'),item.to);}});
+test('reduced motion has no hidden content, translation or stagger',()=>{assert.deepEqual(revealVariants(true).hidden,{opacity:1,x:0,y:0,scale:1});assert.deepEqual(sidebarVariants(true).hidden,{opacity:1,x:0});assert.equal(staggerVariants(true).visible.transition.staggerChildren,0);});

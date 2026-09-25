@@ -1,0 +1,47 @@
+[
+  {
+    "suite": "foundation",
+    "exit": 1
+  },
+  {
+    "suite": "auth",
+    "exit": null,
+    "error": "spawnSync C:\\Program Files\\nodejs\\node.exe ETIMEDOUT"
+  },
+  {
+    "suite": "academic",
+    "exit": 0
+  },
+  {
+    "suite": "attendance",
+    "exit": 0
+  },
+  {
+    "suite": "exams",
+    "exit": 0
+  },
+  {
+    "suite": "finance",
+    "exit": 0
+  },
+  {
+    "suite": "prompt7",
+    "exit": 0
+  },
+  {
+    "suite": "prompt9",
+    "exit": 1
+  },
+  {
+    "suite": "prompt10",
+    "exit": 1
+  },
+  {
+    "suite": "saas",
+    "exit": 3221226505
+  },
+  {
+    "suite": "isolation_and_billing",
+    "exit": 3221226505
+  }
+]

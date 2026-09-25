@@ -1,0 +1,52 @@
+{
+  "stagedDatasets": [
+    {
+      "name": "Dataset A (Micro)",
+      "schools": 5,
+      "studentsPerSchool": 100,
+      "staffPerSchool": 10
+    },
+    {
+      "name": "Dataset B (Small)",
+      "schools": 5,
+      "studentsPerSchool": 300,
+      "staffPerSchool": 20
+    }
+  ],
+  "concurrencyStages": [
+    {
+      "stage": 1,
+      "vus": 5,
+      "durationSec": 20
+    },
+    {
+      "stage": 2,
+      "vus": 10,
+      "durationSec": 30
+    },
+    {
+      "stage": 3,
+      "vus": 25,
+      "durationSec": 30
+    },
+    {
+      "stage": 4,
+      "vus": 50,
+      "durationSec": 30
+    }
+  ],
+  "scenarios": [
+    "auth_overhead",
+    "student_list_pagination_regex",
+    "bulk_attendance",
+    "dashboard_fanout",
+    "fee_generation_scale",
+    "payment_concurrency_race",
+    "receipt_counter_contention",
+    "result_publication_and_read",
+    "export_event_loop_responsiveness",
+    "reconciliation_scale",
+    "multi_tenant_isolation_assertions",
+    "index_ab_benchmarks"
+  ]
+}

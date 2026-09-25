@@ -1,0 +1,294 @@
+    return (
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <PageHeader title="Fee Structures" description="Manage class fee structures" />
+        <FeesNavHeader />
+
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Select value={sessionId} onValueChange={setSessionId}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select Session" />
+              </SelectTrigger>
+              <SelectContent>
+                {sessions.map(s => (
+                  <SelectItem key={s._id} value={s._id}>{s.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={feeType} onValueChange={setFeeType}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Fee Type" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(FEE_TYPES).map(([k, v]) => (
+                  <SelectItem key={k} value={k}>{v}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={classId} onValueChange={setClassId}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="All Classes" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Classes</SelectItem>
+                {classes.map(c => (
+                  <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button onClick={openCreate} className="gap-2">
+            <Plus className="h-4 w-4" />
+            Create Structure
+          </Button>
+        </div>
+
+        <DataTable
+          columns={columns}
+          data={structures}
+          loading={loading}
+          pagination={pagination}
+          onPageChange={setPage}
+          onLimitChange={setLimit}
+        />
+
+        {/* Create / Edit Form Dialog */}
+        <Dialog open={formOpen} onOpenChange={setFormOpen}>
+          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{editing ? 'Edit Fee Structure' : 'Create Fee Structure'}</DialogTitle>
+              <DialogDescription>
+                {editing ? 'Update the details for this fee structure.' : 'Set up a new fee structure for classes.'}
+              </DialogDescription>
+            </DialogHeader>
+
+            <form onSubmit={handleSaveStructure} className="space-y-4 pt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Academic Session</Label>
+                  <Select value={formSessionId} onValueChange={setFormSessionId} disabled={!!editing}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {sessions.map(s => <SelectItem key={s._id} value={s._id}>{s.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Fee Type</Label>
+                  <Select value={formFeeType} onValueChange={setFormFeeType} disabled={!!editing}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(FEE_TYPES).map(([k, v]) => (
+                        <SelectItem key={k} value={k}>{v}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Structure Title</Label>
+                <Input
+                  value={formTitle}
+                  onChange={e => setFormTitle(e.target.value)}
+                  placeholder="e.g. Monthly Tuition Fee 2024"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Description (Optional)</Label>
+                <Input
+                  value={formDesc}
+                  onChange={e => setFormDesc(e.target.value)}
+                  placeholder="Additional details..."
+                />
+              </div>
+
+              {(formFeeType === 'monthly_tuition' || formFeeType === 'monthly_transport' || formFeeType === 'hostel_fee') && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Applicable Month (1-12)</Label>
+                    <Select
+                      value={formMonth ? String(formMonth) : ""}
+                      onValueChange={v => setFormMonth(v ? Number(v) : null)}
+                    >
+                      <SelectTrigger><SelectValue placeholder="All Months" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value=" ">All Months (Default)</SelectItem>
+                        {MONTHS.map((m, i) => (
+                          <SelectItem key={i+1} value={String(i+1)}>{m}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-2 pt-4">
+                <div className="flex items-center justify-between mb-2">
+                  <Label>Class Amounts</Label>
+                  {!editing && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setFormRows([...formRows, { classId: classes[0]?._id ?? '', amountPkr: '' }])}
+                    >
+                      <Plus className="h-4 w-4 mr-2" /> Add Class
+                    </Button>
+                  )}
+                </div>
+                
+                {formRows.map((row, idx) => (
+                  <div key={idx} className="flex items-center gap-2 mb-2">
+                    <Select
+                      value={row.classId}
+                      onValueChange={v => {
+                        const newRows = [...formRows];
+                        newRows[idx].classId = v;
+                        setFormRows(newRows);
+                      }}
+                      disabled={!!editing}
+                    >
+                      <SelectTrigger className="w-[200px]"><SelectValue placeholder="Class" /></SelectTrigger>
+                      <SelectContent>
+                        {classes.map(c => <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    
+                    <div className="relative flex-1">
+                      <span className="absolute left-3 top-2.5 text-sm text-muted-foreground">Rs</span>
+                      <Input
+                        type="number"
+                        min="0"
+                        step="1"
+                        className="pl-8"
+                        placeholder="Amount"
+                        value={row.amountPkr}
+                        onChange={e => {
+                          const newRows = [...formRows];
+                          newRows[idx].amountPkr = e.target.value;
+                          setFormRows(newRows);
+                        }}
+                      />
+                    </div>
+
+                    {!editing && formRows.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="text-rose-500"
+                        onClick={() => {
+                          const newRows = [...formRows];
+                          newRows.splice(idx, 1);
+                          setFormRows(newRows);
+                        }}
+                      >
+                        <Archive className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <DialogFooter className="pt-4">
+                <Button type="button" variant="outline" onClick={() => setFormOpen(false)}>Cancel</Button>
+                <Button type="submit" disabled={busy}>
+                  {busy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+                  {editing ? 'Save Changes' : 'Create'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Generate Dialog */}
+        <Dialog open={!!generateTarget} onOpenChange={open => !open && setGenerateTarget(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Generate Monthly Invoices</DialogTitle>
+              <DialogDescription>
+                Generate fees for {generateTarget?.className} - {FEE_TYPES[generateTarget?.feeType || '']}
+              </DialogDescription>
+            </DialogHeader>
+
+            {genCheckLoading ? (
+              <div className="py-8 flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+            ) : (
+              <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Month</Label>
+                    <Select value={String(genMonth)} onValueChange={v => setGenMonth(Number(v))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {MONTHS.map((m, i) => (
+                          <SelectItem key={i+1} value={String(i+1)}>{m}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Year</Label>
+                    <Select value={String(genYear)} onValueChange={v => setGenYear(Number(v))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {[0, 1, 2].map(offset => {
+                          const y = new Date().getFullYear() + offset - 1;
+                          return <SelectItem key={y} value={String(y)}>{y}</SelectItem>;
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="rounded-md border p-4 bg-muted/30 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Eligible Active Students:</span>
+                    <span className="font-medium">{genEligibleCount ?? '-'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Already Generated:</span>
+                    <span className="font-medium text-amber-600">{genExistingCount ?? '-'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm border-t pt-2 mt-2">
+                    <span className="text-muted-foreground">To Generate Now:</span>
+                    <span className="font-bold text-primary">
+                      {genEligibleCount !== null && genExistingCount !== null 
+                        ? Math.max(0, genEligibleCount - genExistingCount) 
+                        : '-'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setGenerateTarget(null)}>Cancel</Button>
+              <Button onClick={handleBatchGenerate} disabled={genBusy || genCheckLoading}>
+                {genBusy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+                Generate Invoices
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Archive Dialog */}
+        <ConfirmDialog
+          open={!!archiveTarget}
+          onOpenChange={open => !open && setArchiveTarget(null)}
+          title={archiveTarget?.isArchived ? 'Restore Fee Structure?' : 'Archive Fee Structure?'}
+          description={archiveTarget?.isArchived 
+            ? 'This will make the fee structure active again.' 
+            : 'Archived structures will not be used for new students but existing invoices remain intact.'}
+          onConfirm={() => toggleArchive(archiveTarget!)}
+          confirmText={archiveTarget?.isArchived ? 'Restore' : 'Archive'}
+          variant={archiveTarget?.isArchived ? 'default' : 'destructive'}
+        />
+      </div>
+    );
+  }

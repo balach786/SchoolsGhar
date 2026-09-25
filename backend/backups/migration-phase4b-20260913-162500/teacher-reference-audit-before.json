@@ -1,0 +1,14 @@
+{
+  "auditDate": "2026-09-13T11:25:00.000Z",
+  "teachersCount": 0,
+  "foreignReferences": {
+    "classes_classTeacherId": 0,
+    "subjects_teacherIds": 0,
+    "teacherattendances_teacherId": 0,
+    "salaryrecords_teacherId": 0,
+    "timetables_teacherId": 0,
+    "assignments_teacherId": 0
+  },
+  "orphanStatus": "CLEAN",
+  "blockingRisk": "NONE"
+}

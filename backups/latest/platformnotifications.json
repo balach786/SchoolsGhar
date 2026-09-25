@@ -1,0 +1,1 @@
+[{"_id":{"$oid":"6aa5a3a3771a683763183913"},"type":"new_customer","title":"New School Registered","message":"BKM School has registered for a 7-day free trial. Contact: balach937@gmail.com","tenantId":{"$oid":"6aa5a3a2771a68376318390c"},"isRead":false,"createdAt":{"$date":{"$numberLong":"1789240227418"}}}]

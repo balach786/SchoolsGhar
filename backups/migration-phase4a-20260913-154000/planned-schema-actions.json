@@ -1,0 +1,54 @@
+{
+  "phase": "Phase 4A",
+  "tenantModelsToEnforce": [
+    "AcademicSession",
+    "AdmitCardOverride",
+    "Assignment",
+    "Class",
+    "Exam",
+    "ExamAttendance",
+    "ExamExpense",
+    "ExamFee",
+    "ExamFeePayment",
+    "ExamSchedule",
+    "ExamType",
+    "Expense",
+    "FeeStructure",
+    "GradeScale",
+    "Income",
+    "LeaveRequest",
+    "Mark",
+    "Notice",
+    "Payment",
+    "SalaryRecord",
+    "SchoolClosure",
+    "SchoolSettings",
+    "Section",
+    "Student",
+    "StudentAttendance",
+    "StudentExamFee",
+    "StudentFee",
+    "StudentHistory",
+    "Subject",
+    "Submission",
+    "Teacher",
+    "TeacherAttendance",
+    "Timetable"
+  ],
+  "schoolSettingsChanges": {
+    "removeDefaultMain": true,
+    "keepIdAsStringTenantId": true,
+    "readOnlyGetSettings": true
+  },
+  "sessionTrustChanges": [
+    "Assignment: derive sessionId from class.sessionId; reject conflicts",
+    "TeacherAttendance: validate exact session coverage; reject 0 (400) or >1 (409)",
+    "Income/Expense: validate sessionId belongs to tenant if supplied"
+  ],
+  "auditLogChanges": {
+    "failClosed": true,
+    "precedenceActorTenantId": true,
+    "stripClientMetadataTenantId": true,
+    "requireTargetTenantIdForPlatformAdmin": true
+  }
+}

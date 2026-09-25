@@ -1,0 +1,794 @@
+[
+  {
+    "_id": "6aa693613d054f242e4da91f",
+    "tenantId": "6aa6935d3d054f242e4da8ca",
+    "examId": "6aa693603d054f242e4da907",
+    "studentId": "6aa6935f3d054f242e4da8fe",
+    "sessionId": "6aa6935d3d054f242e4da8cd",
+    "classId": "6aa6935e3d054f242e4da8d7",
+    "sectionId": "6aa6935e3d054f242e4da8e2",
+    "version": 1,
+    "studentSnapshot": {
+      "fullName": "Safety Student A",
+      "admissionNumber": "SAFE-A-1789301599729",
+      "rollNumber": "01",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 80
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa6935e3d054f242e4da8ea",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa693603d054f242e4da90a",
+        "marksObtained": 85,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 85
+      }
+    ],
+    "totalObtained": 85,
+    "totalMaximum": 100,
+    "percentage": 85,
+    "overallGrade": "A",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "cdc7b80e042a621db7d27ec1589d4a864403bd65ecc21a87a20b8230d85bec34",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:13:21.849Z",
+    "publishedBy": "6aa6935d3d054f242e4da8cc",
+    "createdAt": "2026-09-13T12:13:21.972Z",
+    "updatedAt": "2026-09-13T12:13:21.972Z"
+  },
+  {
+    "_id": "6aa693613d054f242e4da920",
+    "tenantId": "6aa6935d3d054f242e4da8ca",
+    "examId": "6aa693603d054f242e4da907",
+    "studentId": "6aa6935f3d054f242e4da901",
+    "sessionId": "6aa6935d3d054f242e4da8cd",
+    "classId": "6aa6935e3d054f242e4da8d7",
+    "sectionId": "6aa6935e3d054f242e4da8e2",
+    "version": 1,
+    "studentSnapshot": {
+      "fullName": "Safety Student B",
+      "admissionNumber": "SAFE-B-1789301599841",
+      "rollNumber": "02",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 80
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa6935e3d054f242e4da8ea",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa693603d054f242e4da90a",
+        "marksObtained": 70,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 70
+      }
+    ],
+    "totalObtained": 70,
+    "totalMaximum": 100,
+    "percentage": 70,
+    "overallGrade": "B",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "26f156ddff475481f3b3e7f614bd6f3fb8b3811991cc0668c496544e2d4e16d6",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:13:21.849Z",
+    "publishedBy": "6aa6935d3d054f242e4da8cc",
+    "createdAt": "2026-09-13T12:13:21.973Z",
+    "updatedAt": "2026-09-13T12:13:21.973Z"
+  },
+  {
+    "_id": "6aa693633d054f242e4da93a",
+    "tenantId": "6aa6935d3d054f242e4da8ca",
+    "examId": "6aa693603d054f242e4da907",
+    "studentId": "6aa6935f3d054f242e4da8fe",
+    "sessionId": "6aa6935d3d054f242e4da8cd",
+    "classId": "6aa6935e3d054f242e4da8d7",
+    "sectionId": "6aa6935e3d054f242e4da8e2",
+    "version": 2,
+    "studentSnapshot": {
+      "fullName": "Safety Student A",
+      "admissionNumber": "SAFE-A-1789301599729",
+      "rollNumber": "01",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 80
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa6935e3d054f242e4da8ea",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa693603d054f242e4da90a",
+        "marksObtained": 92,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 92
+      }
+    ],
+    "totalObtained": 92,
+    "totalMaximum": 100,
+    "percentage": 92,
+    "overallGrade": "A",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "36684fd5ad17b72b60ddf611363edc32e2a9fccde652be1b9518ad620f483f4f",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:13:23.413Z",
+    "publishedBy": "6aa6935d3d054f242e4da8cc",
+    "createdAt": "2026-09-13T12:13:23.417Z",
+    "updatedAt": "2026-09-13T12:13:23.417Z"
+  },
+  {
+    "_id": "6aa693653d054f242e4da94d",
+    "tenantId": "6aa6935d3d054f242e4da8ca",
+    "examId": "6aa693603d054f242e4da907",
+    "studentId": "6aa6935f3d054f242e4da8fe",
+    "sessionId": "6aa6935d3d054f242e4da8cd",
+    "classId": "6aa6935e3d054f242e4da8d7",
+    "sectionId": "6aa6935e3d054f242e4da8e2",
+    "version": 3,
+    "studentSnapshot": {
+      "fullName": "Mutated Student Name XYZ",
+      "admissionNumber": "SAFE-A-1789301599729",
+      "rollNumber": "999",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 95
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa6935e3d054f242e4da8ea",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa693603d054f242e4da90a",
+        "marksObtained": 99,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 99
+      }
+    ],
+    "totalObtained": 99,
+    "totalMaximum": 100,
+    "percentage": 99,
+    "overallGrade": "A",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "1db5f4286c5075211d58b47ef3693f813aaa57912edba2473fe87391d5e6e280",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:13:25.198Z",
+    "publishedBy": "6aa6935d3d054f242e4da8cc",
+    "createdAt": "2026-09-13T12:13:25.204Z",
+    "updatedAt": "2026-09-13T12:13:25.204Z"
+  },
+  {
+    "_id": "6aa69397318c5b3be320976a",
+    "tenantId": "6aa5a3a2771a68376318390c",
+    "examId": "6aa69395318c5b3be3209749",
+    "studentId": "6aa69395318c5b3be320973c",
+    "sessionId": "6aa69393318c5b3be3209718",
+    "classId": "6aa69394318c5b3be3209722",
+    "sectionId": "6aa69394318c5b3be320972d",
+    "version": 1,
+    "studentSnapshot": {
+      "fullName": "Safety Student A",
+      "admissionNumber": "SAFE-A-1789301653129",
+      "rollNumber": "01",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 80
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa69394318c5b3be3209735",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa69395318c5b3be320974d",
+        "marksObtained": 85,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 85
+      }
+    ],
+    "totalObtained": 85,
+    "totalMaximum": 100,
+    "percentage": 85,
+    "overallGrade": "A",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "62949fe4e5e26594ece479fff980ab159139f5ca8b3fd3ec2296e57ac2404ba1",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:14:15.336Z",
+    "publishedBy": "6aa69393318c5b3be3209717",
+    "createdAt": "2026-09-13T12:14:15.457Z",
+    "updatedAt": "2026-09-13T12:14:15.457Z"
+  },
+  {
+    "_id": "6aa69397318c5b3be320976b",
+    "tenantId": "6aa5a3a2771a68376318390c",
+    "examId": "6aa69395318c5b3be3209749",
+    "studentId": "6aa69395318c5b3be3209740",
+    "sessionId": "6aa69393318c5b3be3209718",
+    "classId": "6aa69394318c5b3be3209722",
+    "sectionId": "6aa69394318c5b3be320972d",
+    "version": 1,
+    "studentSnapshot": {
+      "fullName": "Safety Student B",
+      "admissionNumber": "SAFE-B-1789301653304",
+      "rollNumber": "02",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 80
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa69394318c5b3be3209735",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa69395318c5b3be320974d",
+        "marksObtained": 70,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 70
+      }
+    ],
+    "totalObtained": 70,
+    "totalMaximum": 100,
+    "percentage": 70,
+    "overallGrade": "B",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "99cff0834308995647701ef31a65956bb0f096b276511e8758a81bbe18eb7699",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:14:15.336Z",
+    "publishedBy": "6aa69393318c5b3be3209717",
+    "createdAt": "2026-09-13T12:14:15.458Z",
+    "updatedAt": "2026-09-13T12:14:15.458Z"
+  },
+  {
+    "_id": "6aa69398318c5b3be3209785",
+    "tenantId": "6aa5a3a2771a68376318390c",
+    "examId": "6aa69395318c5b3be3209749",
+    "studentId": "6aa69395318c5b3be320973c",
+    "sessionId": "6aa69393318c5b3be3209718",
+    "classId": "6aa69394318c5b3be3209722",
+    "sectionId": "6aa69394318c5b3be320972d",
+    "version": 2,
+    "studentSnapshot": {
+      "fullName": "Safety Student A",
+      "admissionNumber": "SAFE-A-1789301653129",
+      "rollNumber": "01",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 80
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa69394318c5b3be3209735",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa69395318c5b3be320974d",
+        "marksObtained": 92,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 92
+      }
+    ],
+    "totalObtained": 92,
+    "totalMaximum": 100,
+    "percentage": 92,
+    "overallGrade": "A",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "095d3e719e81d365b0883c4f03383d259412095d290d40235921a2bd5059e390",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:14:16.897Z",
+    "publishedBy": "6aa69393318c5b3be3209717",
+    "createdAt": "2026-09-13T12:14:16.902Z",
+    "updatedAt": "2026-09-13T12:14:16.902Z"
+  },
+  {
+    "_id": "6aa6939a318c5b3be3209798",
+    "tenantId": "6aa5a3a2771a68376318390c",
+    "examId": "6aa69395318c5b3be3209749",
+    "studentId": "6aa69395318c5b3be320973c",
+    "sessionId": "6aa69393318c5b3be3209718",
+    "classId": "6aa69394318c5b3be3209722",
+    "sectionId": "6aa69394318c5b3be320972d",
+    "version": 3,
+    "studentSnapshot": {
+      "fullName": "Mutated Student Name XYZ",
+      "admissionNumber": "SAFE-A-1789301653129",
+      "rollNumber": "999",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 95
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa69394318c5b3be3209735",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa69395318c5b3be320974d",
+        "marksObtained": 99,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 99
+      }
+    ],
+    "totalObtained": 99,
+    "totalMaximum": 100,
+    "percentage": 99,
+    "overallGrade": "A",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "b884c87657eba83e4e2a2f1e5c7d4a94d99d63b771891f43a83dd21e11916184",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:14:18.708Z",
+    "publishedBy": "6aa69393318c5b3be3209717",
+    "createdAt": "2026-09-13T12:14:18.713Z",
+    "updatedAt": "2026-09-13T12:14:18.713Z"
+  },
+  {
+    "_id": "6aa693c3411f82fa044441de",
+    "tenantId": "6aa5a3a2771a68376318390c",
+    "examId": "6aa693c1411f82fa044441c8",
+    "studentId": "6aa693c1411f82fa044441c0",
+    "sessionId": "6aa693be411f82fa0444418c",
+    "classId": "6aa693bf411f82fa04444197",
+    "sectionId": "6aa693c0411f82fa044441a1",
+    "version": 1,
+    "studentSnapshot": {
+      "fullName": "Safety Student A",
+      "admissionNumber": "SAFE-A-1789301697062",
+      "rollNumber": "01",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 80
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa693c0411f82fa044441a9",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa693c1411f82fa044441ca",
+        "marksObtained": 85,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 85
+      }
+    ],
+    "totalObtained": 85,
+    "totalMaximum": 100,
+    "percentage": 85,
+    "overallGrade": "A",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "4079e887ea350e27655aa777ea82b2da53612dd00dff6a4676af2f27b5836994",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:14:59.143Z",
+    "publishedBy": "6aa693be411f82fa0444418b",
+    "createdAt": "2026-09-13T12:14:59.264Z",
+    "updatedAt": "2026-09-13T12:14:59.264Z"
+  },
+  {
+    "_id": "6aa693c3411f82fa044441df",
+    "tenantId": "6aa5a3a2771a68376318390c",
+    "examId": "6aa693c1411f82fa044441c8",
+    "studentId": "6aa693c1411f82fa044441c3",
+    "sessionId": "6aa693be411f82fa0444418c",
+    "classId": "6aa693bf411f82fa04444197",
+    "sectionId": "6aa693c0411f82fa044441a1",
+    "version": 1,
+    "studentSnapshot": {
+      "fullName": "Safety Student B",
+      "admissionNumber": "SAFE-B-1789301697174",
+      "rollNumber": "02",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 80
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa693c0411f82fa044441a9",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa693c1411f82fa044441ca",
+        "marksObtained": 70,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 70
+      }
+    ],
+    "totalObtained": 70,
+    "totalMaximum": 100,
+    "percentage": 70,
+    "overallGrade": "B",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "ebd5fee9f27f56caa58b118c4b5227ac4cd4e7837761b8a0796746f15097b146",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:14:59.143Z",
+    "publishedBy": "6aa693be411f82fa0444418b",
+    "createdAt": "2026-09-13T12:14:59.265Z",
+    "updatedAt": "2026-09-13T12:14:59.265Z"
+  },
+  {
+    "_id": "6aa693c4411f82fa044441f9",
+    "tenantId": "6aa5a3a2771a68376318390c",
+    "examId": "6aa693c1411f82fa044441c8",
+    "studentId": "6aa693c1411f82fa044441c0",
+    "sessionId": "6aa693be411f82fa0444418c",
+    "classId": "6aa693bf411f82fa04444197",
+    "sectionId": "6aa693c0411f82fa044441a1",
+    "version": 2,
+    "studentSnapshot": {
+      "fullName": "Safety Student A",
+      "admissionNumber": "SAFE-A-1789301697062",
+      "rollNumber": "01",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 80
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa693c0411f82fa044441a9",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa693c1411f82fa044441ca",
+        "marksObtained": 92,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 92
+      }
+    ],
+    "totalObtained": 92,
+    "totalMaximum": 100,
+    "percentage": 92,
+    "overallGrade": "A",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "d3f8c25435debeaedb0d445dfa635192b2e75eb1f205524b7c0f6055ef93de4d",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:15:00.674Z",
+    "publishedBy": "6aa693be411f82fa0444418b",
+    "createdAt": "2026-09-13T12:15:00.678Z",
+    "updatedAt": "2026-09-13T12:15:00.678Z"
+  },
+  {
+    "_id": "6aa693c6411f82fa0444420c",
+    "tenantId": "6aa5a3a2771a68376318390c",
+    "examId": "6aa693c1411f82fa044441c8",
+    "studentId": "6aa693c1411f82fa044441c0",
+    "sessionId": "6aa693be411f82fa0444418c",
+    "classId": "6aa693bf411f82fa04444197",
+    "sectionId": "6aa693c0411f82fa044441a1",
+    "version": 3,
+    "studentSnapshot": {
+      "fullName": "Mutated Student Name XYZ",
+      "admissionNumber": "SAFE-A-1789301697062",
+      "rollNumber": "999",
+      "className": "Class Safety 1",
+      "sectionName": "Section A",
+      "sessionName": "Safety Test Session 2026"
+    },
+    "examSnapshot": {
+      "examName": "Safety Exam 1",
+      "gradeScaleName": "Standard Safety Scale",
+      "gradeScaleBoundaries": [
+        {
+          "grade": "A",
+          "minPercentage": 95
+        },
+        {
+          "grade": "B",
+          "minPercentage": 60
+        },
+        {
+          "grade": "C",
+          "minPercentage": 40
+        },
+        {
+          "grade": "F",
+          "minPercentage": 0
+        }
+      ]
+    },
+    "subjects": [
+      {
+        "subjectId": "6aa693c0411f82fa044441a9",
+        "subjectName": "Safety Math",
+        "subjectCode": "SMTH",
+        "examScheduleId": "6aa693c1411f82fa044441ca",
+        "marksObtained": 99,
+        "maximumMarks": 100,
+        "passMarks": 40,
+        "attendanceStatus": "present",
+        "passed": true,
+        "percentage": 99
+      }
+    ],
+    "totalObtained": 99,
+    "totalMaximum": 100,
+    "percentage": 99,
+    "overallGrade": "A",
+    "passed": true,
+    "failedSubjectCount": 0,
+    "sourceChecksum": "6afd9123b2259831cd4add3564f362d633682f13f39742c184463b74b472ff17",
+    "calculationVersion": 1,
+    "publishedAt": "2026-09-13T12:15:02.527Z",
+    "publishedBy": "6aa693be411f82fa0444418b",
+    "createdAt": "2026-09-13T12:15:02.531Z",
+    "updatedAt": "2026-09-13T12:15:02.531Z"
+  }
+]

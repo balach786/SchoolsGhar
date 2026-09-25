@@ -1,0 +1,1 @@
+[{"_id":{"$oid":"6aa5a6ae771a683763183db8"},"tenantId":{"$oid":"6aa5a3a2771a68376318390c"},"name":"CLASS 01","code":"A 1","sessionId":{"$oid":"6aa5a500771a683763183c55"},"isActive":true,"isArchived":false,"createdAt":{"$date":{"$numberLong":"1789241006214"}},"updatedAt":{"$date":{"$numberLong":"1789241006214"}}}]

@@ -1,0 +1,9 @@
+{
+  "authRateLimitMax": "200",
+  "authRateLimitWindowMs": "900000",
+  "apiRateLimitMax": "5000",
+  "apiRateLimitWindowMs": "60000",
+  "uploadDir": "uploads",
+  "paymentProofMaxSize": "5242880",
+  "hasStaticUploadMount": true
+}

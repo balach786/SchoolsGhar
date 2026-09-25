@@ -1,0 +1,411 @@
+{
+  "feestructures": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1",
+      "key": {
+        "tenantId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_sessionId_1_classId_1_feeType_1_month_1_title_1",
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "classId": 1,
+        "feeType": 1,
+        "month": 1,
+        "title": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "tenantId_1_sessionId_1_classId_1_isArchived_1",
+      "key": {
+        "tenantId": 1,
+        "sessionId": 1,
+        "classId": 1,
+        "isArchived": 1
+      },
+      "unique": false
+    }
+  ],
+  "studentfees": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1",
+      "key": {
+        "tenantId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_studentId_1_feeStructureId_1",
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "feeStructureId": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "tenantId_1_studentId_1_sessionId_1",
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_classId_1_sectionId_1_status_1",
+      "key": {
+        "tenantId": 1,
+        "classId": 1,
+        "sectionId": 1,
+        "status": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_status_1_sessionId_1",
+      "key": {
+        "tenantId": 1,
+        "status": 1,
+        "sessionId": 1
+      },
+      "unique": false
+    }
+  ],
+  "payments": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1",
+      "key": {
+        "tenantId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_receiptNumber_1",
+      "key": {
+        "tenantId": 1,
+        "receiptNumber": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "tenantId_1_studentFeeId_1_paymentDate_1",
+      "key": {
+        "tenantId": 1,
+        "studentFeeId": 1,
+        "paymentDate": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_paymentDate_1",
+      "key": {
+        "tenantId": 1,
+        "paymentDate": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_studentId_1_sessionId_1",
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1
+      },
+      "unique": false
+    }
+  ],
+  "examfees": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1",
+      "key": {
+        "tenantId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_examId_1_classId_1",
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "classId": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "tenantId_1_examId_1",
+      "key": {
+        "tenantId": 1,
+        "examId": 1
+      },
+      "unique": false
+    }
+  ],
+  "studentexamfees": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1",
+      "key": {
+        "tenantId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_studentId_1_examId_1",
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "examId": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "tenantId_1_examId_1_status_1",
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "status": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_examId_1_classId_1_sectionId_1",
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "classId": 1,
+        "sectionId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_studentId_1_sessionId_1",
+      "key": {
+        "tenantId": 1,
+        "studentId": 1,
+        "sessionId": 1
+      },
+      "unique": false
+    }
+  ],
+  "examfeepayments": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1",
+      "key": {
+        "tenantId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_receiptNumber_1",
+      "key": {
+        "tenantId": 1,
+        "receiptNumber": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "tenantId_1_studentExamFeeId_1_paymentDate_1",
+      "key": {
+        "tenantId": 1,
+        "studentExamFeeId": 1,
+        "paymentDate": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_examId_1_paymentDate_1",
+      "key": {
+        "tenantId": 1,
+        "examId": 1,
+        "paymentDate": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_studentId_1",
+      "key": {
+        "tenantId": 1,
+        "studentId": 1
+      },
+      "unique": false
+    }
+  ],
+  "incomes": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1",
+      "key": {
+        "tenantId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_date_1",
+      "key": {
+        "tenantId": 1,
+        "date": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_category_1_date_1",
+      "key": {
+        "tenantId": 1,
+        "category": 1,
+        "date": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "sessionId_1",
+      "key": {
+        "sessionId": 1
+      },
+      "unique": false
+    }
+  ],
+  "expenses": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1",
+      "key": {
+        "tenantId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_date_1",
+      "key": {
+        "tenantId": 1,
+        "date": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_category_1_date_1",
+      "key": {
+        "tenantId": 1,
+        "category": 1,
+        "date": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "sessionId_1",
+      "key": {
+        "sessionId": 1
+      },
+      "unique": false
+    }
+  ],
+  "salaryrecords": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1",
+      "key": {
+        "tenantId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_teacherId_1_salaryMonth_1_sessionId_1",
+      "key": {
+        "tenantId": 1,
+        "teacherId": 1,
+        "salaryMonth": 1,
+        "sessionId": 1
+      },
+      "unique": true
+    },
+    {
+      "name": "tenantId_1_status_1_sessionId_1",
+      "key": {
+        "tenantId": 1,
+        "status": 1,
+        "sessionId": 1
+      },
+      "unique": false
+    },
+    {
+      "name": "tenantId_1_salaryMonth_1",
+      "key": {
+        "tenantId": 1,
+        "salaryMonth": 1
+      },
+      "unique": false
+    }
+  ],
+  "receiptcounters": [
+    {
+      "name": "_id_",
+      "key": {
+        "_id": 1
+      },
+      "unique": false
+    }
+  ]
+}

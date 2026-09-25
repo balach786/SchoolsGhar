@@ -1,0 +1,9 @@
+{
+  "publicUploadsPath": "/uploads",
+  "authRoutesMount": "/api/auth",
+  "hasDedicatedAuthLimiter": false,
+  "hasGlobalLimiter": true,
+  "hasLivenessEndpoint": false,
+  "hasReadinessEndpoint": false,
+  "hasCombinedHealth": true
+}

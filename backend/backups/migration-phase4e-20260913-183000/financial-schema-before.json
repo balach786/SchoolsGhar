@@ -1,0 +1,165 @@
+{
+  "FeeStructure": {
+    "fields": [
+      "tenantId",
+      "sessionId",
+      "classId",
+      "feeType",
+      "title",
+      "amount",
+      "month",
+      "dueDate",
+      "description",
+      "isActive",
+      "isArchived",
+      "createdBy"
+    ],
+    "moneyUnit": "integer paisa"
+  },
+  "StudentFee": {
+    "fields": [
+      "tenantId",
+      "studentId",
+      "sessionId",
+      "classId",
+      "sectionId",
+      "feeStructureId",
+      "feeType",
+      "month",
+      "originalAmount",
+      "discountAmount",
+      "scholarshipAmount",
+      "fineAmount",
+      "netPayable",
+      "amountPaid",
+      "remainingBalance",
+      "status",
+      "dueDate",
+      "createdBy"
+    ],
+    "moneyUnit": "integer paisa",
+    "hasSnapshotTitle": false
+  },
+  "Payment": {
+    "fields": [
+      "tenantId",
+      "studentId",
+      "studentFeeId",
+      "sessionId",
+      "amount",
+      "paymentMethod",
+      "paymentDate",
+      "receiptNumber",
+      "reference",
+      "notes",
+      "collectedBy"
+    ],
+    "moneyUnit": "integer paisa",
+    "immutability": "append-only posted"
+  },
+  "ReceiptCounter": {
+    "fields": [
+      "_id",
+      "seq"
+    ],
+    "keyFormat": "${tenantId}:${prefix}-${year}"
+  },
+  "ExamFee": {
+    "fields": [
+      "tenantId",
+      "examId",
+      "sessionId",
+      "classId",
+      "amount",
+      "dueDate",
+      "defaultFine",
+      "discountAllowed",
+      "scholarshipAllowed",
+      "isActive"
+    ],
+    "moneyUnit": "integer paisa"
+  },
+  "StudentExamFee": {
+    "fields": [
+      "tenantId",
+      "examId",
+      "studentId",
+      "sessionId",
+      "classId",
+      "sectionId",
+      "originalAmount",
+      "discountAmount",
+      "scholarshipAmount",
+      "fineAmount",
+      "netPayable",
+      "amountPaid",
+      "remainingBalance",
+      "status",
+      "dueDate",
+      "createdBy"
+    ],
+    "moneyUnit": "integer paisa"
+  },
+  "ExamFeePayment": {
+    "fields": [
+      "tenantId",
+      "studentExamFeeId",
+      "studentId",
+      "examId",
+      "amount",
+      "paymentMethod",
+      "paymentDate",
+      "receiptNumber",
+      "reference",
+      "notes",
+      "collectedBy"
+    ],
+    "moneyUnit": "integer paisa"
+  },
+  "Income": {
+    "fields": [
+      "tenantId",
+      "sessionId",
+      "category",
+      "title",
+      "amount",
+      "date",
+      "description",
+      "reference",
+      "createdBy",
+      "isArchived"
+    ],
+    "moneyUnit": "integer paisa"
+  },
+  "Expense": {
+    "fields": [
+      "tenantId",
+      "sessionId",
+      "category",
+      "title",
+      "amount",
+      "date",
+      "description",
+      "reference",
+      "createdBy",
+      "isArchived"
+    ],
+    "moneyUnit": "integer paisa"
+  },
+  "SalaryRecord": {
+    "fields": [
+      "tenantId",
+      "teacherId",
+      "sessionId",
+      "salaryMonth",
+      "baseAmount",
+      "adjustmentAmount",
+      "netAmount",
+      "status",
+      "paymentDate",
+      "paymentMethod",
+      "notes"
+    ],
+    "moneyUnit": "integer paisa"
+  }
+}

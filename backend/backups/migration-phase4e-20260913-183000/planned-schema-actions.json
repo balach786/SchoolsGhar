@@ -1,0 +1,28 @@
+[
+  {
+    "target": "StudentFee",
+    "action": "ADD_FIELD",
+    "field": "title",
+    "type": "String",
+    "required": false,
+    "description": "Immutable historical fee title snapshot copied from FeeStructure at generation"
+  },
+  {
+    "target": "FinancialIdempotency",
+    "action": "CREATE_MODEL",
+    "collection": "financialidempotencies",
+    "description": "Durable idempotency record for money operations"
+  },
+  {
+    "target": "FinancialReference",
+    "action": "CREATE_MODEL",
+    "collection": "financialreferences",
+    "description": "Shared reservation registry for external non-cash payment references"
+  },
+  {
+    "target": "PaymentReversal",
+    "action": "CREATE_MODEL",
+    "collection": "paymentreversals",
+    "description": "Append-only ledger for fee refunds and payment reversals"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "runId": "20260913-181000",
+  "description": "Pre-cleanup snapshot of 12 test Result artifacts from testPhase4cSafety.ts",
+  "targetCollection": "results",
+  "artifactsCount": 12,
+  "databaseName": "school-management-system",
+  "createdAt": "2026-09-13T13:04:54.026Z"
+}

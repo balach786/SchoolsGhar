@@ -1,0 +1,36 @@
+{
+  "startedAt": "2026-09-13T15:59:25.965Z",
+  "environment": "MongoDB Atlas M0 (Shared Cluster)",
+  "databaseName": "school-management-system-loadtest",
+  "safetyVerified": true,
+  "indexesSynced": 0,
+  "datasetA": {
+    "schools": 5,
+    "studentsPerSchool": 100,
+    "staffPerSchool": 10
+  },
+  "queryMappings": {
+    "studentAttendance": {
+      "field": "attendanceDate",
+      "winningIndex": "COLLSCAN"
+    },
+    "studentRollLookup": {
+      "queryIncludesSessionId": false,
+      "winningIndex": "COLLSCAN"
+    },
+    "paymentStudentHistory": {
+      "winningIndex": "COLLSCAN",
+      "inMemorySort": false
+    }
+  },
+  "primaryBaselinePreserved": true,
+  "primaryPostVerifyCounts": {
+    "students": 40,
+    "tenants": 2,
+    "users": 3,
+    "feeStructures": 1,
+    "results": 0,
+    "studentFees": 0,
+    "payments": 0
+  }
+}

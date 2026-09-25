@@ -1,0 +1,19 @@
+{
+  "runId": "phase4e-20260913-183000",
+  "timestamp": "20260913-183000",
+  "status": "PRE_MIGRATION_SNAPSHOT_TAKEN",
+  "financialCollectionsEmpty": true,
+  "files": [
+    "manifest.json",
+    "collection-counts-before.json",
+    "financial-schema-before.json",
+    "financial-index-state-before.json",
+    "financial-route-state-before.json",
+    "financial-integrity-audit-before.json",
+    "finance-service-before.json",
+    "code-version-before.json",
+    "planned-schema-actions.json",
+    "planned-index-actions.json",
+    "rollback-instructions.md"
+  ]
+}

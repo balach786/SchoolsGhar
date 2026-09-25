@@ -1,0 +1,63 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "assignedClasses": 1
+    },
+    "name": "assignedClasses_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "assignedSubjects": 1
+    },
+    "name": "assignedSubjects_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "userId": 1
+    },
+    "name": "userId_1",
+    "background": true,
+    "unique": true,
+    "sparse": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1
+    },
+    "name": "tenantId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "employeeId": 1
+    },
+    "name": "tenantId_1_employeeId_1",
+    "background": true,
+    "unique": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "tenantId": 1,
+      "isArchived": 1,
+      "isActive": 1
+    },
+    "name": "tenantId_1_isArchived_1_isActive_1",
+    "background": true
+  }
+]

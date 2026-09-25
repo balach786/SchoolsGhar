@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "totalObtainedFormula": "sum(marksObtained for scored subjects where not absent)",
+  "totalMaxFormula": "sum(maxMarks for all subjects configured in Exam)",
+  "percentageFormula": "round2((totalObtained / totalMax) * 100)",
+  "passFailFormula": "overall passed = failedSubjectCount === 0 && all required subjects present and passed",
+  "overallGradeFormula": "gradeForPercentage(scale.boundaries, percentage)",
+  "rankFormula": "deferred / not persisted in Phase 4C V1"
+}

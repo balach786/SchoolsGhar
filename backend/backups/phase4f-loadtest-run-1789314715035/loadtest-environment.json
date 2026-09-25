@@ -1,0 +1,11 @@
+{
+  "targetLoadTestDatabase": "school-management-system-loadtest",
+  "primaryDatabaseProtected": "school-management-system",
+  "deploymentTier": "MongoDB Atlas M0 (Shared Cluster)",
+  "resourceConstraints": {
+    "maxSharedStorageMB": 512,
+    "maxGlobalConnections": 500,
+    "maxConcurrentVUs": 50,
+    "maxStageDurationSec": 120
+  }
+}

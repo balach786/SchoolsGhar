@@ -1,0 +1,24 @@
+[
+  {
+    "collection": "staff",
+    "key": { "tenantId": 1, "employeeId": 1 },
+    "options": { "unique": true, "name": "tenantId_1_employeeId_1" },
+    "reason": "Enforces tenant-scoped employeeId uniqueness across active and archived staff"
+  },
+  {
+    "collection": "staff",
+    "key": { "userId": 1 },
+    "options": {
+      "unique": true,
+      "name": "userId_1",
+      "partialFilterExpression": { "userId": { "$type": "objectId" } }
+    },
+    "reason": "Enforces 1:1 user account binding to Staff, allowing unlimited Staff without logins"
+  },
+  {
+    "collection": "staff",
+    "key": { "tenantId": 1, "staffType": 1, "isArchived": 1, "isActive": 1 },
+    "options": { "name": "tenantId_1_staffType_1_isArchived_1_isActive_1" },
+    "reason": "Optimizes tenant list/filtering for teaching and non-teaching queries"
+  }
+]
