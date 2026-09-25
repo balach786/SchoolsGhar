@@ -7,7 +7,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
  * - On 401 (expired access token): transparently refreshes ONCE, then retries.
  * - If refresh fails: clears tokens and notifies the app (auth:expired event).
  */
-export const API_BASE_URL = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') || '';
+export const API_BASE_URL = ((import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') || '').replace(/\/api$/, '');
 
 /**
  * Resolves static asset and upload paths.
