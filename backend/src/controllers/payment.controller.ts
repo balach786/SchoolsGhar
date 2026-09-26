@@ -21,10 +21,19 @@ async function resolveNames(req: Request, payments: any[]) {
   const tenantDb = (req as any).tenantDb as mongoose.Connection;
   const { Student, StudentFee, FeeStructure, User } = getTenantModels(tenantDb);
   const ids = (key: string) => Array.from(new Set(payments.map((p) => p[key]).filter(Boolean).map((v: unknown) => String(v))));
+  
+  const allFeeIds = new Set<string>();
+  for (const p of payments) {
+    if (p.studentFeeId) allFeeIds.add(String(p.studentFeeId));
+    if (p.allocations && p.allocations.length > 0) {
+      p.allocations.forEach((a: any) => allFeeIds.add(String(a.studentFeeId)));
+    }
+  }
+
   const [students, users, studentFees] = await Promise.all([
     Student.find(scopeQuery(req, { _id: { $in: ids('studentId') } })).select('fullName admissionNumber rollNumber classId sectionId').lean(),
     User.find(scopeQuery(req, { _id: { $in: ids('collectedBy') } })).select('name').lean(),
-    StudentFee.find(scopeQuery(req, { _id: { $in: ids('studentFeeId') } })).select('feeStructureId feeType month').lean(),
+    StudentFee.find(scopeQuery(req, { _id: { $in: Array.from(allFeeIds) } })).select('feeStructureId feeType month').lean(),
   ]);
   const structureIds = Array.from(new Set(studentFees.map((sf: any) => String(sf.feeStructureId)).filter(Boolean)));
   const structures = await FeeStructure.find(scopeQuery(req, { _id: { $in: structureIds } })).select('title').lean();
@@ -44,12 +53,25 @@ async function resolveNames(req: Request, payments: any[]) {
 
 function withNames(p: any, names: any) {
   const stu = names.studentMap.get(String(p.studentId));
+  
+  let feeTitle = '—';
+  if (p.studentFeeId) {
+    feeTitle = names.feeMap?.get(String(p.studentFeeId)) ?? '—';
+  } else if (p.allocations && p.allocations.length > 0) {
+    if (p.allocations.length === 1) {
+      feeTitle = names.feeMap?.get(String(p.allocations[0].studentFeeId)) ?? '—';
+    } else {
+      const firstTitle = names.feeMap?.get(String(p.allocations[0].studentFeeId)) ?? 'Fee';
+      feeTitle = `${firstTitle} + ${p.allocations.length - 1} more`;
+    }
+  }
+
   return {
     ...publicPayment(p),
     studentName: stu?.fullName ?? '—',
     admissionNumber: stu?.admissionNumber ?? '—',
     collectedByName: names.userMap.get(String(p.collectedBy)) ?? '—',
-    feeTitle: names.feeMap?.get(String(p.studentFeeId)) ?? '—',
+    feeTitle,
   };
 }
 
@@ -71,7 +93,7 @@ export const createPayment = asyncHandler(async (req: AuthRequest, res: Response
   }
   if (!studentId) throw new ApiError(400, 'studentId is required', 'BAD_REQUEST');
 
-  const { payment, fee } = await recordPayment(
+  const { payment, fee, fees } = await recordPayment(
     user,
     { ...req.body, studentId, idempotencyKey },
     tenantId,
@@ -81,7 +103,6 @@ export const createPayment = asyncHandler(async (req: AuthRequest, res: Response
   // Notify the linked student user (if any).
   const student = await Student.findOne(scopeQuery(req, { _id: payment.studentId })).select('userId fullName').lean();
   if (student?.userId) {
-    const newStatus = fee?.status;
     notify(tenantDb, {
       userId: student.userId as never,
       type: NOTIFICATION_TYPES.PAYMENT_RECEIVED,
@@ -90,25 +111,29 @@ export const createPayment = asyncHandler(async (req: AuthRequest, res: Response
       referenceType: 'payment',
       referenceId: String(payment._id),
     });
-    if (newStatus === 'paid') {
-      notify(tenantDb, {
-        userId: student.userId as never,
-        type: NOTIFICATION_TYPES.FEE_PAID,
-        title: 'Fee fully paid',
-        message: 'Your outstanding fee has been fully paid. Thank you!',
-        referenceType: 'studentFee',
-        referenceId: String(payment.studentFeeId),
-      });
-    } else {
-      notify(tenantDb, {
-        userId: student.userId as never,
-        type: NOTIFICATION_TYPES.BALANCE_REMAINING,
-        title: 'Balance remaining',
-        message: `A balance of ${((fee?.remainingBalance ?? 0) / 100).toFixed(2)} remains on this fee.`,
-        referenceType: 'studentFee',
-        referenceId: String(payment.studentFeeId),
-        dedupe: true,
-      });
+
+    const affectedFees = fees || (fee ? [fee] : []);
+    for (const f of affectedFees) {
+      if (f.status === 'paid') {
+        notify(tenantDb, {
+          userId: student.userId as never,
+          type: NOTIFICATION_TYPES.FEE_PAID,
+          title: 'Fee fully paid',
+          message: 'An outstanding fee has been fully paid. Thank you!',
+          referenceType: 'studentFee',
+          referenceId: String(f._id),
+        });
+      } else {
+        notify(tenantDb, {
+          userId: student.userId as never,
+          type: NOTIFICATION_TYPES.BALANCE_REMAINING,
+          title: 'Balance remaining',
+          message: `A balance of ${(f.remainingBalance / 100).toFixed(2)} remains on this fee.`,
+          referenceType: 'studentFee',
+          referenceId: String(f._id),
+          dedupe: true,
+        });
+      }
     }
   }
 
@@ -121,6 +146,13 @@ export const createPayment = asyncHandler(async (req: AuthRequest, res: Response
       netPayable: fee.netPayable,
       status: fee.status,
     } : null,
+    fees: fees ? fees.map((f: any) => ({
+      _id: String(f._id),
+      remainingBalance: f.remainingBalance,
+      amountPaid: f.amountPaid,
+      netPayable: f.netPayable,
+      status: f.status,
+    })) : null,
   }, { message: `Payment recorded — receipt ${payment.receiptNumber}` });
 });
 
@@ -205,27 +237,71 @@ export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Respons
   }
 
   const tenantId = getTenantObjectId(req);
-  const [fee, student, settingsDoc, collector] = await Promise.all([
-    StudentFee.findOne(scopeQuery(req, { _id: payment.studentFeeId })).lean(),
+  const [student, settingsDoc, collector, reversals] = await Promise.all([
     Student.findOne(scopeQuery(req, { _id: payment.studentId })).select('fullName admissionNumber rollNumber classId sectionId sessionId fatherName guardianName gender caste').lean(),
     (tenantId ? SchoolSettings.findOne({ tenantId }).sort({ updatedAt: -1 }).lean() : null),
     User.findOne(scopeQuery(req, { _id: payment.collectedBy })).select('name').lean(),
+    PaymentReversal.find(scopeQuery(req, { paymentId: payment._id })).sort({ createdAt: 1 }).lean(),
   ]);
   const settings = settingsDoc || await SchoolSettings.findById('main').lean() || await SchoolSettings.findOne().lean();
 
-  const [cls, section, session, structure, reversal] = await Promise.all([
+  const [cls, section, session] = await Promise.all([
     student ? Class.findOne(scopeQuery(req, { _id: student.classId })).select('name').lean() : Promise.resolve(null),
     student ? Section.findOne(scopeQuery(req, { _id: student.sectionId })).select('name').lean() : Promise.resolve(null),
     student ? AcademicSession.findOne(scopeQuery(req, { _id: student.sessionId })).select('name').lean() : Promise.resolve(null),
-    fee ? FeeStructure.findOne(scopeQuery(req, { _id: fee.feeStructureId })).select('title').lean() : Promise.resolve(null),
-    PaymentReversal.findOne(scopeQuery(req, { paymentId: payment._id })).lean(),
   ]);
 
-  // Balance after this payment = netPayable - (sum of payments up to & incl. this one).
-  const siblingPayments = await Payment.find(scopeQuery(req, { studentFeeId: payment.studentFeeId })).sort({ paymentDate: 1, createdAt: 1 }).select('amount _id').lean();
-  const paidUpToHere = siblingPayments
-    .filter((p) => String(p._id) === String(payment._id) || new Date(p.paymentDate) <= new Date(payment.paymentDate))
-    .reduce((sum, p) => sum + p.amount, 0);
+  const paymentAllocations = payment.allocations && payment.allocations.length > 0
+    ? payment.allocations
+    : (payment.studentFeeId ? [{ studentFeeId: payment.studentFeeId, amountAllocated: payment.amount }] : []);
+
+  const feeIds = paymentAllocations.map((a: any) => a.studentFeeId);
+  const fees = await StudentFee.find(scopeQuery(req, { _id: { $in: feeIds } })).lean();
+  
+  const structureIds = Array.from(new Set(fees.map((f: any) => f.feeStructureId).filter(Boolean)));
+  const structures = await FeeStructure.find(scopeQuery(req, { _id: { $in: structureIds } })).select('title').lean();
+  const structureMap = new Map(structures.map((s: any) => [String(s._id), s.title]));
+
+  const totalRefunded = reversals.reduce((s: number, r: any) => s + r.amount, 0);
+  const isCancelled = totalRefunded >= payment.amount || reversals.some((r: any) => r.reversalType === 'full_reversal' || r.reversalType === 'void');
+  const firstReversal = reversals.length > 0 ? reversals[reversals.length - 1] : null;
+
+  const allocationsBreakdown = paymentAllocations.map((alloc: any) => {
+    const feeDoc = fees.find((f: any) => String(f._id) === String(alloc.studentFeeId));
+    if (!feeDoc) return { ...alloc, feeTitle: '—' };
+    return {
+      studentFeeId: alloc.studentFeeId,
+      amountAllocated: alloc.amountAllocated,
+      feeTitle: structureMap.get(String(feeDoc.feeStructureId)) || feeDoc.feeType || 'Fee',
+      feeType: feeDoc.feeType,
+      month: feeDoc.billingMonth ?? feeDoc.month ?? null,
+      year: feeDoc.billingYear ?? null,
+      netPayable: feeDoc.netPayable,
+      currentRemainingBalance: feeDoc.remainingBalance
+    };
+  });
+
+  let legacyFee = null;
+  if (payment.studentFeeId) {
+    const f = fees.find((f: any) => String(f._id) === String(payment.studentFeeId));
+    if (f) {
+      legacyFee = {
+        title: structureMap.get(String(f.feeStructureId)) ?? '—',
+        feeType: f.feeType,
+        month: f.billingMonth ?? f.month ?? null,
+        year: f.billingYear ?? null,
+        originalAmount: f.originalAmount,
+        discountAmount: f.discountAmount ?? 0,
+        scholarshipAmount: f.scholarshipAmount ?? 0,
+        otherFeeAmount: f.otherFeeAmount ?? 0,
+        fineAmount: f.fineAmount ?? 0,
+        chargeBreakdown: f.chargeBreakdown ?? null,
+        netPayable: f.netPayable,
+        remainingBalanceAfter: f.remainingBalance,
+        status: f.status,
+      };
+    }
+  }
 
   ok(res, {
     school: settings
@@ -243,15 +319,24 @@ export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Respons
     payment: {
       ...publicPayment(payment as never),
       collectedByName: collector?.name ?? '—',
-      isCancelled: Boolean(reversal),
-      cancellation: reversal
+      isCancelled,
+      allocations: allocationsBreakdown,
+      reversals: reversals.map((r: any) => ({
+        reversalReceiptNumber: r.reversalReceiptNumber,
+        reversalType: r.reversalType,
+        reason: r.reason,
+        amount: r.amount,
+        cancelledAt: r.createdAt,
+        cancelledBy: String(r.initiatedBy),
+      })),
+      cancellation: firstReversal
         ? {
-            reversalReceiptNumber: reversal.reversalReceiptNumber,
-            reversalType: reversal.reversalType,
-            reason: reversal.reason,
-            amount: reversal.amount,
-            cancelledAt: reversal.createdAt,
-            cancelledBy: String(reversal.initiatedBy),
+            reversalReceiptNumber: firstReversal.reversalReceiptNumber,
+            reversalType: firstReversal.reversalType,
+            reason: firstReversal.reason,
+            amount: firstReversal.amount,
+            cancelledAt: firstReversal.createdAt,
+            cancelledBy: String(firstReversal.initiatedBy),
           }
         : null,
     },
@@ -269,23 +354,7 @@ export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Respons
           gender: student.gender,
         }
       : null,
-    fee: fee
-      ? {
-          title: structure?.title ?? '—',
-          feeType: fee.feeType,
-          month: fee.billingMonth ?? fee.month ?? null,
-          year: fee.billingYear ?? null,
-          originalAmount: fee.originalAmount,
-          discountAmount: fee.discountAmount ?? 0,
-          scholarshipAmount: fee.scholarshipAmount ?? 0,
-          otherFeeAmount: fee.otherFeeAmount ?? 0,
-          fineAmount: fee.fineAmount ?? 0,
-          chargeBreakdown: fee.chargeBreakdown ?? null,
-          netPayable: fee.netPayable,
-          remainingBalanceAfter: Math.max(0, fee.netPayable - paidUpToHere),
-          status: fee.status,
-        }
-      : null,
+    fee: legacyFee,
   });
 });
 

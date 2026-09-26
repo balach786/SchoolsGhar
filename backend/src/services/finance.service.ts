@@ -482,9 +482,12 @@ export async function buildLedger(
     if (opts.to) payFilter.paymentDate.$lte = new Date(new Date(opts.to).getTime() + 24 * 3600 * 1000 - 1);
   }
   const payments = await getTenantModels(tenantDb!).Payment.find(payFilter)
-    .select('studentFeeId amount paymentDate receiptNumber paymentMethod allocations status')
+    .select('_id studentFeeId amount paymentDate receiptNumber paymentMethod allocations status')
     .sort({ paymentDate: 1, createdAt: 1 })
     .lean();
+
+  const paymentIds = payments.map((p: any) => p._id);
+  const reversals = await getTenantModels(tenantDb!).PaymentReversal.find({ paymentId: { $in: paymentIds } }).lean();
 
   const structures = await getTenantModels(tenantDb!).FeeStructure.find({
     _id: { $in: fees.map((f) => f.feeStructureId) },
@@ -537,22 +540,30 @@ export async function buildLedger(
           balance: 0,
         });
 
-        // Emit Reversal Row if voided
-        if (p.status === 'voided' || p.status === 'refunded') {
-          // Approximate reversal date as payment date + 1ms to appear right after
-          const voidDate = new Date(new Date(p.paymentDate).getTime() + 1);
+        // Emit Reversal Rows using actual PaymentReversal records
+        const paymentReversals = reversals.filter((r: any) => String(r.paymentId) === String(p._id));
+        for (const rev of paymentReversals) {
+          let revAmountForThisFee = 0;
+          if (p.allocations && p.allocations.length > 0) {
+             // For multi-allocation, partial refunds are not supported, so we fully reverse this fee's allocation
+             revAmountForThisFee = allocatedToFee; 
+          } else {
+             // For single-fee, we use the actual refunded amount from this specific partial or full refund
+             revAmountForThisFee = rev.amount;
+          }
+
           rows.push({
-            date: voidDate.toISOString(),
+            date: new Date(rev.createdAt).toISOString(),
             kind: 'reversal',
             feeType: fee.feeType,
             month: fee.month ?? null,
             title: `Reversal: ${fee.title || titleMap.get(String(fee.feeStructureId)) || '—'}`,
-            charge: allocatedToFee, // A reversal adds back to the charge
+            charge: revAmountForThisFee, // A reversal adds back to the charge
             discount: 0,
             scholarship: 0,
             fine: 0,
             payment: 0,
-            receipt: p.receiptNumber + ' (VOID)',
+            receipt: rev.reversalReceiptNumber,
             balance: 0,
           });
         }
