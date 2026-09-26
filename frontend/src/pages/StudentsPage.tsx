@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { RestoreStudentDialog } from '@/components/RestoreStudentDialog';
 import { toast } from '@/components/ui/sonner';
 import { useAuth } from '@/context/AuthContext';
 import { api, apiErrorMessage, ApiListResponse } from '@/lib/api';
@@ -50,6 +51,7 @@ export function StudentsPage() {
   const [classes, setClasses] = useState<ClassLite[]>([]);
   const [sections, setSections] = useState<SectionLite[]>([]);
   const [archiveTarget, setArchiveTarget] = useState<StudentRow | null>(null);
+  const [restoreTargetDialog, setRestoreTargetDialog] = useState<StudentRow | null>(null);
   const [pendingDuesWarning, setPendingDuesWarning] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -155,7 +157,13 @@ export function StudentsPage() {
                 <DropdownMenuSeparator />
                 {row.isArchived ? (
                   <DropdownMenuItem className="cursor-pointer" onClick={() => {
-                    api.post(`/students/${row._id}/restore`).then(() => { toast.success('Student restored'); load(); }).catch((e) => toast.error(apiErrorMessage(e)));
+                    api.post(`/students/${row._id}/restore`).then(() => { toast.success('Student restored'); load(); }).catch((e) => {
+                      if (e.response?.data?.code === 'RESTORE_INVALID_ACADEMIC_CONTEXT') {
+                        setRestoreTargetDialog(row);
+                      } else {
+                        toast.error(apiErrorMessage(e));
+                      }
+                    });
                   }}>
                     <ArchiveRestore className="h-4 w-4" /> Restore
                   </DropdownMenuItem>
@@ -364,6 +372,16 @@ export function StudentsPage() {
             }
           } finally { setBusy(false); }
         }} />
+      {/* ── Restore Placement Dialog ── */}
+      <RestoreStudentDialog
+        studentId={restoreTargetDialog?._id || null}
+        studentName={restoreTargetDialog?.fullName}
+        onClose={() => setRestoreTargetDialog(null)}
+        onSuccess={load}
+        sessions={sessions}
+        classes={classes}
+        sections={sections}
+      />
     </div>
   );
 }

@@ -103,6 +103,13 @@ export const createStudentSchema = createStudentSchemaBase;
 
 export const updateStudentSchema = createStudentSchemaBase.partial();
 
+export const restoreStudentSchema = z.object({
+  sessionId: objectId.optional(),
+  classId: objectId.optional(),
+  sectionId: objectId.optional().nullable(),
+  rollNumber: z.string().trim().max(12).optional().or(z.literal('')),
+});
+
 export const listStudentsQuerySchema = listQuerySchema.extend({
   gender: z.enum(['male', 'female']).optional(),
   admissionFrom: isoDate.optional(),

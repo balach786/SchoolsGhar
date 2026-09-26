@@ -13,7 +13,7 @@ import { Section } from '../models/Section';
 import { StudentHistory, publicHistory } from '../models/StudentHistory';
 import { StudentFee } from '../models/StudentFee';
 import { ReceiptCounter } from '../models/ReceiptCounter';
-import { requireSession, requireClass, requireSectionOfClass, requireUserLink } from '../services/academic.service';
+import { requireSession, requireClass, requireSectionOfClass, requireUserLink, withUserLinkLock } from '../services/academic.service';
 import { getOwnStudent, getSchoolTodayISO } from '../services/attendance.service';
 import { generateAdmissionNumber } from '../utils/id';
 import { parseDateOrThrow } from '../validators/academic.validators';
@@ -389,8 +389,6 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
     }
   }
 
-  const userId = await requireUserLink(body.userId as string | null | undefined, 'student', undefined, tenantId, undefined, tenantDb);
-
   let student: any;
   let attempts = 0;
   const maxAttempts = isAutoAdmissionNumber ? 5 : 1;
@@ -398,9 +396,13 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
   while (attempts < maxAttempts) {
     attempts++;
     try {
-      const mongoSession = await mongoose.startSession();
-      try {
-        await mongoSession.withTransaction(async () => {
+      await withUserLinkLock(body.userId as string | null | undefined, tenantDb, async (mongoSession) => {
+        let validatedUserId: mongoose.Types.ObjectId | undefined = undefined;
+        if (body.userId) {
+          validatedUserId = await requireUserLink(body.userId as string, 'student', undefined, tenantId, mongoSession, tenantDb);
+        }
+
+        if (mongoSession) {
           const createdStudents = await Student.create([{
             ...body,
             tenantId,
@@ -411,7 +413,7 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
             sessionId: session._id,
             classId: cls._id,
             sectionId: section?._id || undefined,
-            userId,
+            userId: validatedUserId,
             email: body.email || undefined,
             phone: body.phone || undefined,
             documents: body.documents ?? [],
@@ -429,9 +431,7 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
             date: admissionDate || new Date(),
             recordedBy: req.user?._id,
           }], { session: mongoSession });
-        });
-      } catch (err: any) {
-        if (err?.message?.includes('does not support retryable writes') || err?.message?.includes('Transactions are not supported')) {
+        } else {
           student = await Student.create({
             ...body,
             tenantId,
@@ -442,7 +442,7 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
             sessionId: session._id,
             classId: cls._id,
             sectionId: section?._id || undefined,
-            userId,
+            userId: validatedUserId,
             email: body.email || undefined,
             phone: body.phone || undefined,
             documents: body.documents ?? [],
@@ -458,12 +458,8 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
             date: admissionDate || new Date(),
             recordedBy: req.user?._id,
           });
-        } else {
-          throw err;
         }
-      } finally {
-        await mongoSession.endSession();
-      }
+      });
       break;
     } catch (err: any) {
       if (err?.code === 11000) {
@@ -581,48 +577,48 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
   updates.email = body.email || undefined;
   updates.phone = body.phone || undefined;
   let unsetUserId = false;
-  if (body.userId !== undefined) {
-    if (body.userId === null || body.userId === '') {
-      delete updates.userId;
-      unsetUserId = true;
-    } else {
-      updates.userId = await requireUserLink(body.userId as string, 'student', String(student._id), tenantId, undefined, tenantDb);
-    }
-  }
-
   let unsetSectionId = false;
-  if (body.sectionId !== undefined) {
-    if (body.sectionId === null || body.sectionId === '') {
-      delete updates.sectionId;
-      unsetSectionId = true;
-    }
-  }
-
-  Object.assign(student, updates);
-  if (unsetUserId) student.set('userId', undefined);
-  if (unsetSectionId) student.set('sectionId', undefined);
-
-  // Record academic history if placement changed
-  const newSessionId = finalSessionId;
-  const newClassId = finalClassId;
-  const newSectionId = finalSectionId;
-  const academicChanged = sessionChanged || classChanged || sectionChanged;
 
   try {
-    if (academicChanged) {
-      let historyStatus: 'class_changed' | 'section_changed' | 'transferred' = 'class_changed';
-      if (prevSessionId !== newSessionId) {
-        historyStatus = 'transferred';
-      } else if (prevClassId !== newClassId) {
-        historyStatus = 'class_changed';
-      } else if (prevSectionId !== newSectionId) {
-        historyStatus = 'section_changed';
+    await withUserLinkLock(body.userId as string | null | undefined, tenantDb, async (mongoSession) => {
+      if (body.userId !== undefined) {
+        if (body.userId === null || body.userId === '') {
+          delete updates.userId;
+          unsetUserId = true;
+        } else {
+          updates.userId = await requireUserLink(body.userId as string, 'student', String(student._id), tenantId, mongoSession, tenantDb);
+        }
       }
 
-      const session = await mongoose.startSession();
-      try {
-        await session.withTransaction(async () => {
-          await student.save({ session });
+      if (body.sectionId !== undefined) {
+        if (body.sectionId === null || body.sectionId === '') {
+          delete updates.sectionId;
+          unsetSectionId = true;
+        }
+      }
+
+      Object.assign(student, updates);
+      if (unsetUserId) student.set('userId', undefined);
+      if (unsetSectionId) student.set('sectionId', undefined);
+
+      // Record academic history if placement changed
+      const newSessionId = finalSessionId;
+      const newClassId = finalClassId;
+      const newSectionId = finalSectionId;
+      const academicChanged = sessionChanged || classChanged || sectionChanged;
+
+      if (academicChanged) {
+        let historyStatus: 'class_changed' | 'section_changed' | 'transferred' = 'class_changed';
+        if (prevSessionId !== newSessionId) {
+          historyStatus = 'transferred';
+        } else if (prevClassId !== newClassId) {
+          historyStatus = 'class_changed';
+        } else if (prevSectionId !== newSectionId) {
+          historyStatus = 'section_changed';
+        }
+
+        if (mongoSession) {
+          await student.save({ session: mongoSession });
           await StudentHistory.create([{
             tenantId,
             studentId: student._id,
@@ -636,10 +632,8 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
             date: new Date(),
             recordedBy: req.user?._id,
             remarks: 'Academic placement updated via student profile edit.',
-          }], { session });
-        });
-      } catch (err: any) {
-        if (err?.message?.includes('does not support retryable writes') || err?.message?.includes('Transactions are not supported')) {
+          }], { session: mongoSession });
+        } else {
           await student.save();
           await StudentHistory.create({
             tenantId,
@@ -655,15 +649,15 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
             recordedBy: req.user?._id,
             remarks: 'Academic placement updated via student profile edit.',
           });
-        } else {
-          throw err;
         }
-      } finally {
-        await session.endSession();
+      } else {
+        if (mongoSession) {
+          await student.save({ session: mongoSession });
+        } else {
+          await student.save();
+        }
       }
-    } else {
-      await student.save();
-    }
+    });
   } catch (err: any) {
     if (err?.code === 11000) {
       if (err.message.includes('admissionNumber')) throw ApiError.conflict('Admission number already exists in this school', 'ADMISSION_NUMBER_TAKEN');
@@ -742,6 +736,9 @@ export const archiveStudent = asyncHandler(async (req: AuthRequest, res: Respons
       if (!sec || String(sec.sessionId) !== finalSessionId) throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
     }
 
+    const prevClassId = String(student.classId);
+    const prevSectionId = student.sectionId ? String(student.sectionId) : undefined;
+
     if (overrideApplied) {
       await assertRollNumberFree(tenantDb, finalRollNumber, finalSessionId, finalClassId, finalSectionId, tenantIdObj, String(student._id));
       student.sessionId = new mongoose.Types.ObjectId(finalSessionId);
@@ -764,6 +761,8 @@ export const archiveStudent = asyncHandler(async (req: AuthRequest, res: Respons
               sessionId: finalSessionId,
               classId: finalClassId,
               sectionId: finalSectionId,
+              previousClassId: prevClassId,
+              previousSectionId: prevSectionId,
               status: 're_admitted',
               eventDate: new Date(),
               date: new Date(),
@@ -780,6 +779,8 @@ export const archiveStudent = asyncHandler(async (req: AuthRequest, res: Respons
               sessionId: finalSessionId,
               classId: finalClassId,
               sectionId: finalSectionId,
+              previousClassId: prevClassId,
+              previousSectionId: prevSectionId,
               status: 're_admitted',
               eventDate: new Date(),
               date: new Date(),

@@ -19,6 +19,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { RestoreStudentDialog } from '@/components/RestoreStudentDialog';
 import { toast } from '@/components/ui/sonner';
 import { useAuth } from '@/context/AuthContext';
 import { api, apiErrorMessage, ApiListResponse, ApiDataResponse } from '@/lib/api';
@@ -100,6 +101,7 @@ export function StudentProfilePage() {
   const [submitting, setSubmitting] = useState(false);
   const [duplicateWarning, setDuplicateWarning] = useState<{ message: string; values: FormValues } | null>(null);
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [showRestoreDialog, setShowRestoreDialog] = useState(false);
 
   const canEdit = can('students', isNew ? 'create' : 'edit');
   const canArchive = can('students', 'archive');
@@ -413,6 +415,17 @@ export function StudentProfilePage() {
             setSubmitting(false);
           }
         }}
+      />
+
+      {/* ── Restore Placement Dialog ── */}
+      <RestoreStudentDialog
+        studentId={showRestoreDialog ? id || null : null}
+        studentName={student?.fullName}
+        onClose={() => setShowRestoreDialog(false)}
+        onSuccess={loadStudent}
+        sessions={sessions}
+        classes={classes}
+        sections={sections}
       />
     </div>
   );

@@ -12,6 +12,7 @@ import {
   updateSubjectSchema,
   createStudentSchema,
   updateStudentSchema,
+  restoreStudentSchema,
   listStudentsQuerySchema,
   createTeacherSchema,
   updateTeacherSchema,
@@ -86,7 +87,7 @@ router.post('/students', requirePermission('students', 'create'), validate({ bod
 router.get('/students/:id', requirePermission('students', 'view'), studentController.getStudent);
 router.patch('/students/:id', requirePermission('students', 'edit'), validate({ body: updateStudentSchema }), studentController.updateStudent);
 router.post('/students/:id/archive', requirePermission('students', 'archive'), studentController.archiveStudent);
-router.post('/students/:id/restore', requirePermission('students', 'archive'), studentController.archiveStudent);
+router.post('/students/:id/restore', requirePermission('students', 'archive'), validate({ body: restoreStudentSchema }), studentController.archiveStudent);
 router.get('/students/:id/history', requirePermission('students', 'view'), studentController.studentHistory);
 
 // ── Teachers ─────────────────────────────────────────────
