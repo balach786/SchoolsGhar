@@ -1,4 +1,4 @@
-import { Connection, Model } from 'mongoose';
+import mongoose, { Connection, Model } from 'mongoose';
 import { User, IUser } from '../models/User';
 import { Role, IRole } from '../models/Role';
 import { SchoolSettings, ISchoolSettings } from '../models/SchoolSettings';
@@ -117,6 +117,10 @@ export function getTenantModels(tenantDb: Connection): TenantModels {
   
   const Staff = tenantDb.models.Staff || tenantDb.model<IStaff>('Staff', staffSchema, 'staff');
   const Teacher = (Staff.discriminators && Staff.discriminators['Teacher'] as Model<ITeacher>) || Staff.discriminator<ITeacher>('Teacher', teacherDiscriminatorSchema, 'teaching');
+  
+  if (!Staff.discriminators || !Staff.discriminators['non_teaching']) {
+    Staff.discriminator('non_teaching', new mongoose.Schema({}, { _id: false, versionKey: false }), 'non_teaching');
+  }
 
   return {
     User: tenantDb.models.User || tenantDb.model<IUser>('User', User.schema),
