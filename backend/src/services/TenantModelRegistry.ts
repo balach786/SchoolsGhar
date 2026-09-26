@@ -115,11 +115,16 @@ export interface TenantModels {
 
 export function getTenantModels(tenantDb: Connection): TenantModels {
   
-  const Staff = tenantDb.models.Staff || tenantDb.model<IStaff>('Staff', staffSchema, 'staff');
-  const Teacher = (Staff.discriminators && Staff.discriminators['Teacher'] as Model<ITeacher>) || Staff.discriminator<ITeacher>('Teacher', teacherDiscriminatorSchema, 'teaching');
+  let Staff = tenantDb.models.Staff as Model<IStaff>;
+  let Teacher = tenantDb.models.Teacher as Model<ITeacher>;
   
-  if (!Staff.discriminators || !Staff.discriminators['non_teaching']) {
+  if (!Staff) {
+    const tenantStaffSchema = staffSchema.clone();
+    Staff = tenantDb.model<IStaff>('Staff', tenantStaffSchema, 'staff');
+    Teacher = Staff.discriminator<ITeacher>('Teacher', teacherDiscriminatorSchema, 'teaching');
     Staff.discriminator('non_teaching', new mongoose.Schema({}, { _id: false, versionKey: false }), 'non_teaching');
+  } else {
+    Teacher = (Staff.discriminators && Staff.discriminators['Teacher'] as Model<ITeacher>) || (Staff as any);
   }
 
   return {
