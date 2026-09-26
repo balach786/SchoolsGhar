@@ -16,7 +16,7 @@ import {
 import { recordAudit } from '../services/audit.service';
 import { notify, NOTIFICATION_TYPES } from '../services/notification.service';
 import { AuthRequest } from '../types';
-import { scopeQuery } from '../utils/tenantScope';
+import { scopeQuery, getTenantObjectId } from '../utils/tenantScope';
 
 const PAGE_DEFAULT = 20;
 const PAGE_MAX = 100;
@@ -113,8 +113,8 @@ export const getStudentFee = asyncHandler(async (req: AuthRequest, res: Response
   const user = req.user as unknown as AuthedUser;
   const doc = await StudentFee.findOne(scopeQuery(req, { _id: req.params.id }));
   if (!doc) throw ApiError.notFound('Student fee not found');
-  const ownStudentId = await ownStudentScope(user, String(doc.studentId));
-  if (ownStudentId && String(doc.studentId) !== ownStudentId) {
+  const ownStudentId = await ownStudentScope(user, String(doc.studentId), tenantDb);
+  if (ownStudentId && String(doc.studentId) !== String(ownStudentId)) {
     throw ApiError.forbidden('You can only view your own financial records', 'FINANCE_FORBIDDEN');
   }
   const names = await resolveNames(req, [doc]);
@@ -186,12 +186,15 @@ export const adjustFee = asyncHandler(async (req: AuthRequest, res: Response) =>
   const doc = await StudentFee.findOne(scopeQuery(req, { _id: req.params.id }));
   if (!doc) throw ApiError.notFound('Student fee not found');
 
+  const tenantId = getTenantObjectId(req);
+  if (!tenantId) throw ApiError.badRequest('Tenant context required');
+
   const before = {
     discountAmount: doc.discountAmount ?? 0,
     scholarshipAmount: doc.scholarshipAmount ?? 0,
     fineAmount: doc.fineAmount ?? 0,
   };
-  await adjustStudentFee(doc, req.body);
+  await adjustStudentFee(doc, req.body, tenantId, tenantDb);
 
   if (req.body.discountAmount !== undefined) {
     recordAudit('fees', 'DISCOUNT_UPDATED', req.user, String(doc._id), {
@@ -220,7 +223,8 @@ export const feeLedger = asyncHandler(async (req: AuthRequest, res: Response) =>
   const { FeeStructure, StudentFee, Payment, FeeSetting, FeeDiscount, Class, AcademicSession, Student, Section } = getTenantModels(tenantDb);
 
   const user = req.user as unknown as AuthedUser;
-  const studentId = await ownStudentScope(user, req.query.studentId as string | undefined);
+  const tenantId = getTenantObjectId(req);
+  const studentId = await ownStudentScope(user, req.query.studentId as string | undefined, tenantDb);
   if (!studentId) throw ApiError.badRequest('studentId is required', 'STUDENT_REQUIRED');
 
   const student = await Student.findOne(scopeQuery(req, { _id: studentId })).select('fullName admissionNumber rollNumber').lean();
@@ -231,7 +235,7 @@ export const feeLedger = asyncHandler(async (req: AuthRequest, res: Response) =>
     feeType: req.query.feeType as string | undefined,
     from: req.query.from as string | undefined,
     to: req.query.to as string | undefined,
-  });
+  }, String(tenantId), tenantDb);
 
   ok(res, {
     student: { studentId: String(student._id), fullName: student.fullName, admissionNumber: student.admissionNumber, rollNumber: student.rollNumber },
@@ -251,7 +255,7 @@ export const calculateStudentFee = asyncHandler(async (req: AuthRequest, res: Re
   const { FeeStructure, StudentFee, Payment, FeeSetting, FeeDiscount, Class, AcademicSession, Student, Section } = getTenantModels(tenantDb);
 
   const user = req.user as unknown as AuthedUser;
-  const targetStudentId = await ownStudentScope(user, req.query.studentId as string);
+  const targetStudentId = await ownStudentScope(user, req.query.studentId as string, tenantDb);
   if (!targetStudentId) throw ApiError.badRequest('studentId is required', 'STUDENT_REQUIRED');
 
   const { getTenantObjectId } = await import('../utils/tenantScope');

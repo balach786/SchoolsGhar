@@ -193,14 +193,14 @@ export const listPayments = asyncHandler(async (req: AuthRequest, res: Response)
 export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Response) => {
   const tenantDb = (req as any).tenantDb as mongoose.Connection;
   if (!tenantDb) throw new ApiError(500, 'tenantDb connection is required', 'TENANT_DB_MISSING');
-  const { FeeStructure, StudentFee, Payment, FeeSetting, FeeDiscount, Class, AcademicSession, Student, Section, SchoolSettings, User } = getTenantModels(tenantDb);
+  const { FeeStructure, StudentFee, Payment, FeeSetting, FeeDiscount, Class, AcademicSession, Student, Section, SchoolSettings, User, PaymentReversal } = getTenantModels(tenantDb);
 
   const user = req.user as unknown as AuthedUser;
   const payment = await Payment.findOne(scopeQuery(req, { _id: req.params.id }));
   if (!payment) throw ApiError.notFound('Payment not found');
 
-  const ownStudentId = await ownStudentScope(user, String(payment.studentId));
-  if (ownStudentId && String(payment.studentId) !== ownStudentId, tenantDb) {
+  const ownStudentId = await ownStudentScope(user, String(payment.studentId), tenantDb);
+  if (ownStudentId && String(payment.studentId) !== String(ownStudentId)) {
     throw ApiError.forbidden('You can only view your own receipts', 'FINANCE_FORBIDDEN');
   }
 
@@ -218,9 +218,7 @@ export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Respons
     student ? Section.findOne(scopeQuery(req, { _id: student.sectionId })).select('name').lean() : Promise.resolve(null),
     student ? AcademicSession.findOne(scopeQuery(req, { _id: student.sessionId })).select('name').lean() : Promise.resolve(null),
     fee ? FeeStructure.findOne(scopeQuery(req, { _id: fee.feeStructureId })).select('title').lean() : Promise.resolve(null),
-    import('../models/PaymentReversal').then(({ PaymentReversal }) =>
-      PaymentReversal.findOne(scopeQuery(req, { paymentId: payment._id })).lean()
-    ),
+    PaymentReversal.findOne(scopeQuery(req, { paymentId: payment._id })).lean(),
   ]);
 
   // Balance after this payment = netPayable - (sum of payments up to & incl. this one).
@@ -300,8 +298,8 @@ export const getPayment = asyncHandler(async (req: AuthRequest, res: Response) =
   const user = req.user as unknown as AuthedUser;
   const doc = await Payment.findOne(scopeQuery(req, { _id: req.params.id }));
   if (!doc) throw ApiError.notFound('Payment not found');
-  const ownStudentId = await ownStudentScope(user, String(doc.studentId));
-  if (ownStudentId && String(doc.studentId) !== ownStudentId, tenantDb) {
+  const ownStudentId = await ownStudentScope(user, String(doc.studentId), tenantDb);
+  if (ownStudentId && String(doc.studentId) !== String(ownStudentId)) {
     throw ApiError.forbidden('You can only view your own payments', 'FINANCE_FORBIDDEN');
   }
   const names = await resolveNames(req, [doc]);

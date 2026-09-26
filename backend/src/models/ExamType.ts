@@ -65,6 +65,6 @@ export async function ensureDefaultExamTypes(tenantDb: mongoose.Connection, tena
       isActive: true,
       isDefault: true,
     }));
-    await ExamTypeTenant.insertMany(docs, { ordered: false });
+    await ExamTypeTenant.insertMany(docs as any, { ordered: false });
   }
 }

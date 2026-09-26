@@ -372,7 +372,7 @@ export async function recordPayment(
       const paymentDate = input.paymentDate ? new Date(input.paymentDate) : new Date();
 
       // 3. Allocate receipt number within transaction
-      const receiptNumber = await nextReceiptNumber(paymentDate, input.receiptPrefix || 'RCPT', String(tId), session);
+      const receiptNumber = await nextReceiptNumber(paymentDate, input.receiptPrefix || 'RCPT', String(tId), session, tenantDb);
 
       // 4. Create Payment record with allocations
       const [payment] = await getTenantModels(tenantDb!).Payment.create(
@@ -405,7 +405,8 @@ export async function recordPayment(
         'regular_fee',
         payment._id as mongoose.Types.ObjectId,
         receiptNumber,
-        session
+        session,
+        tenantDb
       );
 
       // 6. Record AuditLog inside transaction session
