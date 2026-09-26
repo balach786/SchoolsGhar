@@ -543,3 +543,62 @@ export async function calculateStudentFeeObligations(
     totalRemainingAmount: totalOutstanding,
   };
 }
+
+export function resolveBillingYearForSession(session: any, month: number): number {
+  const startY = session.startDate.getUTCFullYear();
+  const startM = session.startDate.getUTCMonth() + 1;
+  const endY = session.endDate.getUTCFullYear();
+  
+  if (startY === endY) return startY;
+  if (month >= startM) return startY;
+  return endY;
+}
+
+export async function ensureApplicableMonthlyInvoiceForStudent(
+  actor: AuthedUser,
+  input: {
+    tenantId: string | mongoose.Types.ObjectId;
+    studentId: string | mongoose.Types.ObjectId;
+    sessionId: string | mongoose.Types.ObjectId;
+    classId: string | mongoose.Types.ObjectId;
+  },
+  tenantDb: mongoose.Connection
+): Promise<void> {
+  const { FeeStructure, AcademicSession } = getTenantModels(tenantDb);
+  
+  const currentMonth = new Date().getUTCMonth() + 1;
+  const session = await AcademicSession.findById(input.sessionId).lean();
+  if (!session) return;
+  
+  const resolvedBillingYear = resolveBillingYearForSession(session, currentMonth);
+
+  // Find applicable monthly tuition fee structure
+  const structure = await FeeStructure.findOne({
+    tenantId: input.tenantId,
+    sessionId: input.sessionId,
+    classId: input.classId,
+    feeType: 'monthly_tuition',
+    month: currentMonth,
+    isActive: true,
+    isArchived: false,
+  }).select('_id').lean();
+
+  if (!structure) return;
+
+  try {
+    await generateStudentFeesWithSnapshot(
+      actor,
+      {
+        sessionId: String(input.sessionId),
+        classId: String(input.classId),
+        feeStructureId: String(structure._id),
+        studentIds: [String(input.studentId)],
+        month: currentMonth,
+        year: resolvedBillingYear
+      },
+      tenantDb
+    );
+  } catch (error) {
+    console.error(`Failed to generate monthly invoice for newly admitted student ${input.studentId}`, error);
+  }
+}

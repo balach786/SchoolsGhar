@@ -19,6 +19,7 @@ import { generateAdmissionNumber } from '../utils/id';
 import { parseDateOrThrow } from '../validators/academic.validators';
 import { recordAudit } from '../services/audit.service';
 import { scopeQuery, getTenantObjectId } from '../utils/tenantScope';
+import { ensureApplicableMonthlyInvoiceForStudent } from '../services/feeManagement.service';
 
 /** Resolve the class/section/session for display (compact maps). */
 async function resolveContext(tenantDb: mongoose.Connection, students: { sessionId: unknown; classId: unknown; sectionId?: unknown }[]) {
@@ -440,6 +441,19 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
   recordAudit('students', 'STUDENT_CREATED', req.user, String(student._id), {
     admissionNumber: student.admissionNumber,
   });
+
+  // Safely auto-generate applicable monthly fee invoice if the structure already exists
+  await ensureApplicableMonthlyInvoiceForStudent(
+    req.user!,
+    {
+      tenantId: tenantId!,
+      studentId: student._id,
+      sessionId: session._id,
+      classId: cls._id,
+    },
+    tenantDb
+  ).catch(e => console.error(`Background fee generation failed for new student ${student._id}`, e));
+
   created(res, publicStudent(student));
 });
 

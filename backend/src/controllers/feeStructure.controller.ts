@@ -9,17 +9,7 @@ import { resolveFeeContext } from '../services/finance.service';
 import { recordAudit } from '../services/audit.service';
 import { AuthRequest } from '../types';
 import { scopeQuery, getTenantObjectId } from '../utils/tenantScope';
-import { generateStudentFeesWithSnapshot } from '../services/feeManagement.service';
-
-function resolveBillingYearForSession(session: any, month: number): number {
-  const startY = session.startDate.getUTCFullYear();
-  const startM = session.startDate.getUTCMonth() + 1;
-  const endY = session.endDate.getUTCFullYear();
-  
-  if (startY === endY) return startY;
-  if (month >= startM) return startY;
-  return endY;
-}
+import { generateStudentFeesWithSnapshot, resolveBillingYearForSession } from '../services/feeManagement.service';
 
 const PAGE_DEFAULT = 20;
 const PAGE_MAX = 100;
@@ -124,36 +114,8 @@ export const createFeeStructure = asyncHandler(async (req: AuthRequest, res: Res
     });
 
     const docs = await Promise.all(promises);
-    
-    let invoiceGeneration = { created: 0, skipped: 0 };
-    const sessionDoc = await AcademicSession.findById(sessionId).lean();
-    if (sessionDoc) {
-      for (const doc of docs) {
-        if (doc.month) {
-          const resolvedBillingYear = resolveBillingYearForSession(sessionDoc, doc.month);
-          try {
-            const stats = await generateStudentFeesWithSnapshot(
-              req.user!,
-              {
-                sessionId: String(doc.sessionId),
-                classId: String(doc.classId),
-                feeStructureId: String(doc._id),
-                month: doc.month,
-                year: resolvedBillingYear
-              },
-              tenantDb
-            );
-            invoiceGeneration.created += stats.created;
-            invoiceGeneration.skipped += stats.skipped;
-          } catch (e) {
-            console.error('Batch generation failed for month', doc.month, e);
-          }
-        }
-      }
-    }
-
     recordAudit('fees', 'FEE_STRUCTURE_CREATED', req.user, 'batch', { type: 'all_months', classId, amount });
-    return created(res, { count: docs.length, invoiceGeneration }, { message: '12 Fee structures created' });
+    return created(res, { count: docs.length }, { message: '12 Fee structures created' });
   }
 
   // Handle single structure creation
@@ -218,13 +180,20 @@ export const createFeeStructure = asyncHandler(async (req: AuthRequest, res: Res
           tenantDb
         );
         invoiceGeneration = {
+          success: true,
           created: stats.created,
           skipped: stats.skipped,
           month: doc.month,
           year: resolvedBillingYear
         };
-      } catch (e) {
+      } catch (e: any) {
         console.error('Auto-generation of student fees failed:', e);
+        invoiceGeneration = {
+          success: false,
+          created: 0,
+          skipped: 0,
+          errorCode: e.code || e.name || 'UNKNOWN_ERROR',
+        };
       }
     }
   }
