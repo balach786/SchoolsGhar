@@ -139,7 +139,7 @@ async function runHardeningTests() {
 
   let lastAdminBlocked = false;
   try {
-    await executeAdminRemovalWithLock(String(tenantA._id), String(soleAdminUser._id), async (session) => {
+    await executeAdminRemovalWithLock(mongoose.connection, String(tenantA._id), String(soleAdminUser._id), async (session) => {
       soleAdminStaff.isArchived = true;
       soleAdminStaff.isActive = false;
       await soleAdminStaff.save(session ? { session } : undefined);
@@ -178,7 +178,7 @@ async function runHardeningTests() {
   });
 
   // Now remove soleAdminStaff with second admin present
-  await executeAdminRemovalWithLock(String(tenantA._id), String(soleAdminUser._id), async (session) => {
+  await executeAdminRemovalWithLock(mongoose.connection, String(tenantA._id), String(soleAdminUser._id), async (session) => {
     soleAdminStaff.isArchived = true;
     soleAdminStaff.isActive = false;
     await soleAdminStaff.save(session ? { session } : undefined);

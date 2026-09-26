@@ -250,6 +250,7 @@ export async function requireUserLink(
  */
 export async function withUserLinkLock<T>(
   userId: string | null | undefined,
+  tenantDb: mongoose.Connection,
   fn: (session?: mongoose.ClientSession) => Promise<T>
 ): Promise<T> {
   if (!userId) {
@@ -259,7 +260,8 @@ export async function withUserLinkLock<T>(
   try {
     let result: T | undefined;
     await session.withTransaction(async () => {
-      await User.updateOne({ _id: userId }, { $inc: { linkSeq: 1 } }, { session });
+      const models = getTenantModels(tenantDb);
+      await models.User.updateOne({ _id: userId }, { $inc: { linkSeq: 1 } }, { session });
       result = await fn(session);
     });
     return result!;

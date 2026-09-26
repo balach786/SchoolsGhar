@@ -407,6 +407,7 @@ export const archiveTeacher = asyncHandler(async (req: AuthRequest, res: Respons
   if (userToDeactivate && userToDeactivate.isActive) {
     if (isUserActiveAdmin) {
       await executeAdminRemovalWithLock(
+        tenantDb,
         req.user?.tenantId,
         String(userToDeactivate._id),
         async (session) => {

@@ -18,6 +18,7 @@ export interface CollectionSummary {
  * Net Collection = Gross Collection - Reversals (signed, no Math.max(0, net))
  */
 export async function getRegularFeeCollection(
+  tenantDb: mongoose.Connection,
   tenantId: mongoose.Types.ObjectId | string,
   dateRange: { $gte?: Date; $lt?: Date; $lte?: Date } = {}
 ): Promise<CollectionSummary> {
@@ -35,6 +36,8 @@ export async function getRegularFeeCollection(
   if (Object.keys(dateRange).length > 0) {
     reversalMatch.createdAt = dateRange;
   }
+
+  const { Payment, PaymentReversal } = (await import('./TenantModelRegistry')).getTenantModels(tenantDb);
 
   const [paymentAgg, reversalAgg] = await Promise.all([
     Payment.aggregate([
@@ -78,6 +81,7 @@ export async function getRegularFeeCollection(
  * Calculate day-level breakdown for monthly collection report, subtracting reversals per day.
  */
 export async function getMonthlyCollectionBreakdown(
+  tenantDb: mongoose.Connection,
   tenantId: mongoose.Types.ObjectId | string,
   monthStr: string
 ): Promise<{
@@ -90,6 +94,8 @@ export async function getMonthlyCollectionBreakdown(
 }> {
   const tId = typeof tenantId === 'string' ? new mongoose.Types.ObjectId(tenantId) : tenantId;
   const { start, endExclusive } = getSchoolMonthRange(monthStr);
+
+  const { Payment, PaymentReversal } = (await import('./TenantModelRegistry')).getTenantModels(tenantDb);
 
   const [paymentsByDay, reversalsByDay] = await Promise.all([
     Payment.aggregate([

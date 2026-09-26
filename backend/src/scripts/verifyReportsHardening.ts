@@ -183,13 +183,13 @@ async function runVerification() {
 
   // Query August collection
   const augRange = getSchoolMonthRange('2026-08');
-  const augCol = await getRegularFeeCollection(tenantId, {
+  const augCol = await getRegularFeeCollection(mongoose.connection, tenantId, {
     $gte: augRange.start,
     $lt: augRange.endExclusive,
   });
   // Query September collection
   const sepRange = getSchoolMonthRange('2026-09');
-  const sepCol = await getRegularFeeCollection(tenantId, {
+  const sepCol = await getRegularFeeCollection(mongoose.connection, tenantId, {
     $gte: sepRange.start,
     $lt: sepRange.endExclusive,
   });

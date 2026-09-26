@@ -141,7 +141,7 @@ async function main() {
 
   console.log('  Firing 2 simultaneous link attempts for the same userId...');
   const linkAttempt = async (targetStaffId: string) => {
-    return withUserLinkLock(String(sharedUser._id), async (session) => {
+    return withUserLinkLock(String(sharedUser._id), mongoose.connection, async (session) => {
       const validatedUserId = await requireUserLink(
         String(sharedUser._id),
         'teacher',

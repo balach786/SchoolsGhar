@@ -324,6 +324,7 @@ export const archiveStaff = asyncHandler(async (req: AuthRequest, res: Response)
     if (isUserActiveAdmin) {
       // Last-admin invariant check inside Tenant serialization lock
       await executeAdminRemovalWithLock(
+        tenantDb,
         req.user?.tenantId,
         String(userToDeactivate._id),
         async (session) => {

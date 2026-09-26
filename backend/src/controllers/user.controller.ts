@@ -460,6 +460,7 @@ export const updateUser = asyncHandler(async (req: AuthRequest, res: Response) =
   // Execute mutation — serialized if modifying an active admin
   if (willDeactivateOrDemoteAdmin) {
     await executeAdminRemovalWithLock(
+      tenantDb,
       req.user?.tenantId,
       String(user._id),
       async (session) => {
@@ -588,6 +589,7 @@ export const deactivateUser = asyncHandler(async (req: AuthRequest, res: Respons
 
   if (isCurrentlyAdmin && user.isActive && !user.isArchived) {
     await executeAdminRemovalWithLock(
+      tenantDb,
       req.user?.tenantId,
       String(user._id),
       async (session) => {

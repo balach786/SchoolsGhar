@@ -12,6 +12,7 @@ import { ROLE_SLUGS } from '../config/permissions';
  * Reusable across user management, teacher archive, and staff archive.
  */
 export async function executeAdminRemovalWithLock(
+  tenantDb: mongoose.Connection,
   tenantId: string | undefined,
   targetUserId: string,
   applyUpdate: (session?: mongoose.ClientSession) => Promise<void>
@@ -33,6 +34,8 @@ export async function executeAdminRemovalWithLock(
       if (!tenantDoc) {
         throw ApiError.notFound('School tenant not found');
       }
+
+      const { Role, User } = (await import('./TenantModelRegistry')).getTenantModels(tenantDb);
 
       // 2. Query system admin roles
       const adminRoles = await Role.find({
