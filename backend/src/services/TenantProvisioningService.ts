@@ -36,17 +36,44 @@ export class TenantProvisioningService {
       await models.AcademicSession.createIndexes();
       await models.AuthSession.createIndexes();
 
-      // 2. Provision Admin Role
-      let ownerRole = await models.Role.findOne({ slug: ROLE_SLUGS.admin });
-      if (!ownerRole) {
-        ownerRole = await models.Role.create({
-          name: 'School Admin / Principal',
-          slug: ROLE_SLUGS.admin,
-          description: 'Full school administration',
-          isSystemRole: true,
-          isActive: true,
-        });
+      // 2. Provision System Roles
+      const systemRolesToSeed = [
+        { slug: ROLE_SLUGS.superAdmin, name: 'Super Admin', description: 'Platform level administration' },
+        { slug: ROLE_SLUGS.admin, name: 'School Admin / Principal', description: 'Full school administration' },
+        { slug: ROLE_SLUGS.teacher, name: 'Teacher', description: 'Teaching staff' },
+        { slug: ROLE_SLUGS.student, name: 'Student', description: 'Enrolled student' },
+        { slug: ROLE_SLUGS.accountant, name: 'Accountant', description: 'Financial management' },
+        { slug: ROLE_SLUGS.receptionist, name: 'Receptionist', description: 'Front desk operations' },
+      ];
+
+      let ownerRole = null;
+      
+      for (const roleDef of systemRolesToSeed) {
+        const { DEFAULT_ROLE_PERMISSIONS, normalizePermissions } = await import('../config/permissions');
+        let role = await models.Role.findOne({ slug: roleDef.slug });
+        if (!role) {
+          const defaultPerms = DEFAULT_ROLE_PERMISSIONS[roleDef.slug] || {};
+          const normalizedPerms = normalizePermissions(defaultPerms);
+          
+          role = await models.Role.create({
+            name: roleDef.name,
+            slug: roleDef.slug,
+            description: roleDef.description,
+            isSystemRole: true,
+            isActive: true,
+            tenantId: tenant._id,
+            permissions: normalizedPerms,
+          });
+        }
+        if (role.slug === ROLE_SLUGS.admin) {
+          ownerRole = role;
+        }
       }
+
+      if (!ownerRole) {
+        throw new Error('Failed to provision owner role');
+      }
+      
       console.log(`Provisioned Role ID: ${ownerRole._id}`);
 
       // 3. Provision Owner User
