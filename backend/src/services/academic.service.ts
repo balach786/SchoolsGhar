@@ -253,15 +253,21 @@ export async function withUserLinkLock<T>(
   tenantDb: mongoose.Connection,
   fn: (session?: mongoose.ClientSession) => Promise<T>
 ): Promise<T> {
-  if (!userId) {
+  let session: mongoose.ClientSession;
+  try {
+    session = await tenantDb.startSession();
+  } catch (err) {
+    // If the driver completely fails to start a session, run fallback
     return await fn();
   }
-  const session = await mongoose.startSession();
+
   try {
     let result: T | undefined;
     await session.withTransaction(async () => {
-      const models = getTenantModels(tenantDb);
-      await models.User.updateOne({ _id: userId }, { $inc: { linkSeq: 1 } }, { session });
+      if (userId) {
+        const models = getTenantModels(tenantDb);
+        await models.User.updateOne({ _id: userId }, { $inc: { linkSeq: 1 } }, { session });
+      }
       result = await fn(session);
     });
     return result!;

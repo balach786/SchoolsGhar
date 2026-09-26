@@ -12,7 +12,7 @@ interface RestoreStudentDialogProps {
   studentName?: string;
   onClose: () => void;
   onSuccess: () => void;
-  sessions: { _id: string; name: string }[];
+  sessions: { _id: string; name: string; isActive?: boolean }[];
   classes: { _id: string; name: string; sessionId: string }[];
   sections: { _id: string; name: string; classId: string }[];
 }
@@ -25,10 +25,18 @@ export function RestoreStudentDialog({ studentId, studentName, onClose, onSucces
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (studentId && !sessionId && sessions.length > 0) {
-      setSessionId(sessions[0]._id);
+    if (studentId) {
+      setClassId('');
+      setSectionId('');
+      setRollNumber('');
+      if (sessions.length > 0) {
+        const active = sessions.find(s => s.isActive);
+        setSessionId(active ? active._id : sessions[0]._id);
+      } else {
+        setSessionId('');
+      }
     }
-  }, [studentId, sessions, sessionId]);
+  }, [studentId, sessions]);
 
   const sessionClasses = classes.filter(c => c.sessionId === sessionId);
   const classSections = sections.filter(s => s.classId === classId);
@@ -41,7 +49,11 @@ export function RestoreStudentDialog({ studentId, studentName, onClose, onSucces
     setBusy(true);
     try {
       const payload: any = { sessionId, classId };
-      if (sectionId && sectionId !== 'none') payload.sectionId = sectionId;
+      if (classSections.length === 0) {
+        payload.sectionId = null;
+      } else if (sectionId) {
+        payload.sectionId = sectionId === 'none' ? null : sectionId;
+      }
       if (rollNumber) payload.rollNumber = rollNumber;
       await api.post(`/students/${studentId}/restore`, payload);
       toast.success('Student restored and placed successfully');

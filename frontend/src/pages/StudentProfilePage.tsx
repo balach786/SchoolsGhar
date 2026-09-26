@@ -129,7 +129,7 @@ export function StudentProfilePage() {
     }
   }, [id, isNew, navigate]);
 
-  useEffect(() => { if (canEdit || isNew) loadContext(); }, [canEdit, isNew, loadContext]);
+  useEffect(() => { if (canEdit || canArchive || isNew) loadContext(); }, [canEdit, canArchive, isNew, loadContext]);
   useEffect(() => { loadStudent(); }, [loadStudent]);
 
   if (authLoading) return <LoadingOverlay label="Loading..." />;
@@ -157,7 +157,13 @@ export function StudentProfilePage() {
               {canArchive && student.isArchived && (
                 <Button variant="outline" onClick={async () => {
                   try { await api.post(`/students/${id}/restore`); toast.success('Student restored'); loadStudent(); }
-                  catch (e) { toast.error(apiErrorMessage(e)); }
+                  catch (e: any) {
+                    if (e.response?.data?.error?.code === 'RESTORE_INVALID_ACADEMIC_CONTEXT') {
+                      setShowRestoreDialog(true);
+                    } else {
+                      toast.error(apiErrorMessage(e));
+                    }
+                  }
                 }}>
                   <ArchiveRestore className="h-4 w-4" /> Restore
                 </Button>

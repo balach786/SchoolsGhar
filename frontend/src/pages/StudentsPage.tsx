@@ -158,7 +158,7 @@ export function StudentsPage() {
                 {row.isArchived ? (
                   <DropdownMenuItem className="cursor-pointer" onClick={() => {
                     api.post(`/students/${row._id}/restore`).then(() => { toast.success('Student restored'); load(); }).catch((e) => {
-                      if (e.response?.data?.code === 'RESTORE_INVALID_ACADEMIC_CONTEXT') {
+                      if (e.response?.data?.error?.code === 'RESTORE_INVALID_ACADEMIC_CONTEXT') {
                         setRestoreTargetDialog(row);
                       } else {
                         toast.error(apiErrorMessage(e));

@@ -11,7 +11,7 @@ import { getTenantModels } from '../services/TenantModelRegistry';
 
 
 import { ROLE_SLUGS } from '../config/permissions';
-import { requireUserLink } from '../services/academic.service';
+import { requireUserLink, withUserLinkLock } from '../services/academic.service';
 import { parseDateOrThrow } from '../validators/academic.validators';
 import { hasPermission } from '../services/permission.service';
 import { recordAudit } from '../services/audit.service';
@@ -137,32 +137,36 @@ export const createStaff = asyncHandler(async (req: AuthRequest, res: Response) 
   const existing = await Staff.findOne(dupFilter).select('_id').lean();
   if (existing) throw ApiError.conflict('Employee ID already exists in this school', 'EMPLOYEE_ID_TAKEN');
 
-  // Validate optional userId link without coupling designation to RBAC role
-  const linkedUserId = body.userId
-    ? await requireUserLink(body.userId, 'staff', undefined, tenantId, undefined, tenantDb)
-    : undefined;
-
   try {
-    const staff = await Staff.create({
-      tenantId,
-      employeeId: body.employeeId.toUpperCase(),
-      staffType: body.staffType,
-      designation: body.designation,
-      department: body.department,
-      fullName: body.fullName,
-      fatherName: body.fatherName.trim(),
-      caste: body.caste.trim(),
-      gender: body.gender,
-      email: body.email ? body.email.trim().toLowerCase() : undefined,
-      phone: body.phone ? body.phone.trim() : undefined,
-      address: body.address,
-      dateOfBirth: body.dateOfBirth ? parseDateOrThrow(body.dateOfBirth, 'Date of birth') : undefined,
-      joiningDate: parseDateOrThrow(body.joiningDate, 'Joining date'),
-      qualification: body.qualification,
-      specialization: body.specialization,
-      salary: body.salary ?? 0,
-      userId: linkedUserId,
-      documents: body.documents ?? [],
+    const staff = await withUserLinkLock(body.userId as string | null | undefined, tenantDb, async (mongoSession) => {
+      let validatedUserId: mongoose.Types.ObjectId | undefined = undefined;
+      if (body.userId) {
+        validatedUserId = await requireUserLink(body.userId as string, 'staff', undefined, tenantId, mongoSession, tenantDb);
+      }
+      
+      const createdStaff = await Staff.create([{
+        tenantId,
+        employeeId: body.employeeId.toUpperCase(),
+        staffType: body.staffType,
+        designation: body.designation,
+        department: body.department,
+        fullName: body.fullName,
+        fatherName: body.fatherName.trim(),
+        caste: body.caste.trim(),
+        gender: body.gender,
+        email: body.email ? body.email.trim().toLowerCase() : undefined,
+        phone: body.phone ? body.phone.trim() : undefined,
+        address: body.address,
+        dateOfBirth: body.dateOfBirth ? parseDateOrThrow(body.dateOfBirth, 'Date of birth') : undefined,
+        joiningDate: parseDateOrThrow(body.joiningDate, 'Joining date'),
+        qualification: body.qualification,
+        specialization: body.specialization,
+        salary: body.salary ?? 0,
+        userId: validatedUserId,
+        documents: body.documents ?? [],
+      }], { session: mongoSession });
+
+      return createdStaff[0];
     });
 
     recordAudit('users', 'STAFF_CREATED', req.user, String(staff._id), {
@@ -250,20 +254,27 @@ export const updateStaff = asyncHandler(async (req: AuthRequest, res: Response) 
   if (body.phone !== undefined) updates.phone = body.phone ? String(body.phone).trim() : undefined;
 
   let unsetUserId = false;
-  if (body.userId !== undefined) {
-    if (body.userId === null || body.userId === '') {
-      delete updates.userId;
-      unsetUserId = true;
-    } else {
-      updates.userId = await requireUserLink(body.userId as string, 'staff', String(staff._id), tenantId, undefined, tenantDb);
-    }
-  }
-
-  Object.assign(staff, updates);
-  if (unsetUserId) staff.set('userId', undefined);
 
   try {
-    await staff.save();
+    await withUserLinkLock(body.userId as string | null | undefined, tenantDb, async (mongoSession) => {
+      if (body.userId !== undefined) {
+        if (body.userId === null || body.userId === '') {
+          delete updates.userId;
+          unsetUserId = true;
+        } else {
+          updates.userId = await requireUserLink(body.userId as string, 'staff', String(staff._id), tenantId, mongoSession, tenantDb);
+        }
+      }
+
+      Object.assign(staff, updates);
+      if (unsetUserId) staff.set('userId', undefined);
+
+      if (mongoSession) {
+        await staff.save({ session: mongoSession });
+      } else {
+        await staff.save();
+      }
+    });
   } catch (err: any) {
     if (err?.code === 11000 || err?.message?.includes('E11000')) {
       throw ApiError.conflict('Employee ID already exists in this school', 'EMPLOYEE_ID_TAKEN');

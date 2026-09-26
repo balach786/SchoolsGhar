@@ -8,7 +8,7 @@ import { parsePagination } from '../utils/query';
 import { publicTeacher } from '../models/Teacher';
 import { getTenantModels } from '../services/TenantModelRegistry';
 import { ROLE_SLUGS } from '../config/permissions';
-import { requireUserLink } from '../services/academic.service';
+import { requireUserLink, withUserLinkLock } from '../services/academic.service';
 import { parseDateOrThrow } from '../validators/academic.validators';
 import { hasPermission } from '../services/permission.service';
 import { recordAudit } from '../services/audit.service';
@@ -182,23 +182,22 @@ export const createTeacher = asyncHandler(async (req: AuthRequest, res: Response
   const existing = await Staff.findOne(dupFilter).select('_id').lean();
   if (existing) throw ApiError.conflict('Employee ID already exists in this school', 'EMPLOYEE_ID_TAKEN');
 
-  let userId = await requireUserLink(body.userId as string | null | undefined, 'teacher', undefined, tenantId, undefined, tenantDb);
-  const emailVal = body.email ? body.email.trim().toLowerCase() : undefined;
-
-  // If createLogin is enabled, we must create the user atomically
-  if (body.createLogin && !userId) {
-    if (!emailVal) throw ApiError.badRequest('Email is required when creating a login account');
-    const existingUser = await User.findOne({ email: emailVal });
-    if (existingUser) throw ApiError.conflict('A user with this email already exists', 'EMAIL_TAKEN');
-  }
-
-  const session = await tenantDb.startSession();
   let tempPassword: string | undefined;
+  const emailVal = body.email ? body.email.trim().toLowerCase() : undefined;
+  
   try {
-    let teacher: any;
-    await session.withTransaction(async () => {
-      if (body.createLogin && !userId && emailVal) {
-        const teacherRole = await Role.findOne({ slug: ROLE_SLUGS.teacher }).session(session);
+    const teacher = await withUserLinkLock(body.userId as string | null | undefined, tenantDb, async (mongoSession) => {
+      let validatedUserId = undefined;
+      if (body.userId) {
+        validatedUserId = await requireUserLink(body.userId as string, 'teacher', undefined, tenantId, mongoSession, tenantDb);
+      }
+
+      if (body.createLogin && !validatedUserId) {
+        if (!emailVal) throw ApiError.badRequest('Email is required when creating a login account');
+        const existingUser = await User.findOne({ email: emailVal }).session(mongoSession || null);
+        if (existingUser) throw ApiError.conflict('A user with this email already exists', 'EMAIL_TAKEN');
+        
+        const teacherRole = await Role.findOne({ slug: ROLE_SLUGS.teacher }).session(mongoSession || null);
         if (!teacherRole) throw new ApiError(500, 'Teacher role not found');
         
         tempPassword = crypto.randomBytes(8).toString('hex');
@@ -209,9 +208,9 @@ export const createTeacher = asyncHandler(async (req: AuthRequest, res: Response
           roleId: teacherRole._id,
           tenantId,
           isActive: true,
-        }], { session });
+        }], { session: mongoSession });
         
-        userId = user[0]._id as unknown as mongoose.Types.ObjectId;
+        validatedUserId = user[0]._id as unknown as mongoose.Types.ObjectId;
       }
 
       const createdTeachers = await Teacher.create([{
@@ -227,18 +226,17 @@ export const createTeacher = asyncHandler(async (req: AuthRequest, res: Response
         qualification: body.qualification || undefined,
         joiningDate: parseDateOrThrow(body.joiningDate, 'Joining date'),
         salary: body.salary ?? 0,
-        userId,
+        userId: validatedUserId,
         documents: body.documents ?? [],
-      }], { session });
+      }], { session: mongoSession });
       
-      teacher = createdTeachers[0];
+      return createdTeachers[0];
     });
 
     recordAudit('teachers', 'TEACHER_CREATED', req.user, String(teacher._id), { employeeId: teacher.employeeId });
     
     ok(res, { ...publicTeacher(teacher), tempPassword }, 201);
   } catch (err: any) {
-    session.endSession();
     if (err?.code === 11000 || err?.message?.includes('E11000')) {
       throw ApiError.conflict('Employee ID already exists in this school', 'EMPLOYEE_ID_TAKEN');
     }
@@ -298,64 +296,51 @@ export const updateTeacher = asyncHandler(async (req: AuthRequest, res: Response
   if (body.email !== undefined) updates.email = body.email ? String(body.email).trim().toLowerCase() : undefined;
   if (body.phone !== undefined) updates.phone = body.phone ? String(body.phone).trim() : undefined;
 
-  let unsetUserId = false;
-  if (body.userId !== undefined) {
-    if (body.userId === null || body.userId === '') {
-      delete updates.userId;
-      unsetUserId = true;
-    } else {
-      updates.userId = await requireUserLink(body.userId as string, 'teacher', String(teacher._id), tenantId, undefined, tenantDb);
-    }
-  }
-
   let tempPassword: string | undefined;
-  const performUpdate = async (session?: mongoose.ClientSession) => {
-    Object.assign(teacher, updates);
-    if (unsetUserId) teacher.set('userId', undefined);
-    
-    if (body.createLogin && !teacher.userId && updates.email) {
-      const emailVal = String(updates.email).trim().toLowerCase();
-      const existingUser = await User.findOne({ email: emailVal }).session(session || null);
-      if (existingUser) throw ApiError.conflict('A user with this email already exists', 'EMAIL_TAKEN');
-      
-      const teacherRole = await Role.findOne({ slug: ROLE_SLUGS.teacher }).session(session || null);
-      if (!teacherRole) throw new ApiError(500, 'Teacher role not found');
-      
-      tempPassword = crypto.randomBytes(8).toString('hex');
-      const user = await User.create([{
-        name: teacher.fullName,
-        email: emailVal,
-        passwordHash: await hashPassword(tempPassword),
-        roleId: teacherRole._id,
-        tenantId,
-        isActive: true,
-      }], { session });
-      
-      teacher.userId = user[0]._id;
-    }
-
-    await teacher.save(session ? { session } : undefined);
-  };
-
-  const session = await tenantDb.startSession();
+  
   try {
-    await session.withTransaction(async () => {
-      await performUpdate(session);
+    await withUserLinkLock(body.userId as string | null | undefined, tenantDb, async (mongoSession) => {
+      let unsetUserId = false;
+      if (body.userId !== undefined) {
+        if (body.userId === null || body.userId === '') {
+          delete updates.userId;
+          unsetUserId = true;
+        } else {
+          updates.userId = await requireUserLink(body.userId as string, 'teacher', String(teacher._id), tenantId, mongoSession, tenantDb);
+        }
+      }
+
+      Object.assign(teacher, updates);
+      if (unsetUserId) teacher.set('userId', undefined);
+      
+      if (body.createLogin && !teacher.userId && updates.email) {
+        const emailVal = String(updates.email).trim().toLowerCase();
+        const existingUser = await User.findOne({ email: emailVal }).session(mongoSession || null);
+        if (existingUser) throw ApiError.conflict('A user with this email already exists', 'EMAIL_TAKEN');
+        
+        const teacherRole = await Role.findOne({ slug: ROLE_SLUGS.teacher }).session(mongoSession || null);
+        if (!teacherRole) throw new ApiError(500, 'Teacher role not found');
+        
+        tempPassword = crypto.randomBytes(8).toString('hex');
+        const user = await User.create([{
+          name: teacher.fullName,
+          email: emailVal,
+          passwordHash: await hashPassword(tempPassword),
+          roleId: teacherRole._id,
+          tenantId,
+          isActive: true,
+        }], { session: mongoSession });
+        
+        teacher.userId = user[0]._id;
+      }
+
+      await teacher.save(mongoSession ? { session: mongoSession } : undefined);
     });
   } catch (err: any) {
-    if (
-      err?.message?.includes('does not support retryable writes') ||
-      err?.message?.includes('Transactions are not supported')
-    ) {
-      await performUpdate();
-    } else {
-      if (err?.code === 11000 || err?.message?.includes('E11000')) {
-        throw ApiError.conflict('Employee ID already exists in this school', 'EMPLOYEE_ID_TAKEN');
-      }
-      throw err;
+    if (err?.code === 11000 || err?.message?.includes('E11000')) {
+      throw ApiError.conflict('Employee ID already exists in this school', 'EMPLOYEE_ID_TAKEN');
     }
-  } finally {
-    await session.endSession();
+    throw err;
   }
 
   recordAudit('teachers', 'TEACHER_UPDATED', req.user, String(teacher._id), { employeeId: teacher.employeeId });
