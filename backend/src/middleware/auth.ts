@@ -18,7 +18,7 @@ export async function authenticate(req: Request, _res: Response, next: NextFunct
   try {
     const header = req.headers.authorization;
     if (!header || !header.startsWith('Bearer ')) {
-      throw ApiError.unauthorized('Authentication required');
+      throw ApiError.unauthorized('Authentication required', 'AUTH_REQUIRED');
     }
     const token = header.slice(7).trim();
     const payload: AccessTokenPayload = verifyAccessToken(token);
@@ -74,9 +74,15 @@ export async function authenticate(req: Request, _res: Response, next: NextFunct
       permissions,
     } as AuthUser;
     next();
-  } catch (err) {
+  } catch (err: any) {
     if (err instanceof ApiError) return next(err);
-    next(ApiError.unauthorized('Session expired or invalid token. Please sign in again.'));
+    if (err.name === 'TokenExpiredError') {
+      return next(ApiError.unauthorized('Session expired. Please sign in again.', 'ACCESS_TOKEN_EXPIRED'));
+    }
+    if (err.name === 'JsonWebTokenError') {
+      return next(ApiError.unauthorized('Invalid token.', 'INVALID_ACCESS_TOKEN'));
+    }
+    next(err);
   }
 }
 

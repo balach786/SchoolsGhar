@@ -216,11 +216,14 @@ export async function refreshSession(refreshToken: string): Promise<SafeUserWith
   }
 
   if (session.revokedAt) {
-    await tenantModels.AuthSession.updateMany(
-      { user: session.user, revokedAt: null },
-      { $set: { revokedAt: new Date() } }
-    );
-    throw ApiError.unauthorized('Session expired. Please sign in again.', 'REFRESH_REUSED');
+    const GRACE_PERIOD_MS = 15000; // 15 seconds
+    if (Date.now() - session.revokedAt.getTime() > GRACE_PERIOD_MS) {
+      await tenantModels.AuthSession.updateMany(
+        { user: session.user, revokedAt: null },
+        { $set: { revokedAt: new Date() } }
+      );
+      throw ApiError.unauthorized('Session expired. Please sign in again.', 'REFRESH_REUSED');
+    }
   }
 
   if (session.expiresAt.getTime() < Date.now()) {
