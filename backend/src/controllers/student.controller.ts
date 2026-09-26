@@ -398,52 +398,92 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
   while (attempts < maxAttempts) {
     attempts++;
     try {
-      student = await Student.create({
-        ...body,
-        tenantId,
-        admissionNumber,
-        rollNumber: String(body.rollNumber ?? ''),
-        admissionDate,
-        dateOfBirth,
-        sessionId: session._id,
-        classId: cls._id,
-        sectionId: section?._id || undefined,
-        userId,
-        email: body.email || undefined,
-        phone: body.phone || undefined,
-        documents: body.documents ?? [],
-      });
+      const mongoSession = await mongoose.startSession();
+      try {
+        await mongoSession.withTransaction(async () => {
+          const createdStudents = await Student.create([{
+            ...body,
+            tenantId,
+            admissionNumber,
+            rollNumber: String(body.rollNumber ?? ''),
+            admissionDate,
+            dateOfBirth,
+            sessionId: session._id,
+            classId: cls._id,
+            sectionId: section?._id || undefined,
+            userId,
+            email: body.email || undefined,
+            phone: body.phone || undefined,
+            documents: body.documents ?? [],
+          }], { session: mongoSession });
+          student = createdStudents[0];
+
+          await StudentHistory.create([{
+            tenantId,
+            studentId: student._id,
+            sessionId: session._id,
+            classId: cls._id,
+            sectionId: section?._id || undefined,
+            status: 'admitted',
+            eventDate: admissionDate || new Date(),
+            date: admissionDate || new Date(),
+            recordedBy: req.user?._id,
+          }], { session: mongoSession });
+        });
+      } catch (err: any) {
+        if (err?.message?.includes('does not support retryable writes') || err?.message?.includes('Transactions are not supported')) {
+          student = await Student.create({
+            ...body,
+            tenantId,
+            admissionNumber,
+            rollNumber: String(body.rollNumber ?? ''),
+            admissionDate,
+            dateOfBirth,
+            sessionId: session._id,
+            classId: cls._id,
+            sectionId: section?._id || undefined,
+            userId,
+            email: body.email || undefined,
+            phone: body.phone || undefined,
+            documents: body.documents ?? [],
+          });
+          await StudentHistory.create({
+            tenantId,
+            studentId: student._id,
+            sessionId: session._id,
+            classId: cls._id,
+            sectionId: section?._id || undefined,
+            status: 'admitted',
+            eventDate: admissionDate || new Date(),
+            date: admissionDate || new Date(),
+            recordedBy: req.user?._id,
+          });
+        } else {
+          throw err;
+        }
+      } finally {
+        await mongoSession.endSession();
+      }
       break;
     } catch (err: any) {
-      if (err?.code === 11000 && isAutoAdmissionNumber && attempts < maxAttempts) {
-        // Concurrently claimed by another process during insert; atomically allocate next sequence and retry
-        const counter = await ReceiptCounter.findOneAndUpdate(
-          { _id: counterKey },
-          { $inc: { seq: 1 } },
-          { upsert: true, new: true }
-        );
-        admissionNumber = generateAdmissionNumber(defaultYear, counter.seq);
-        continue;
-      }
       if (err?.code === 11000) {
-        throw ApiError.conflict('Admission number already exists in this school', 'ADMISSION_NUMBER_TAKEN');
+        if (err.message.includes('admissionNumber') && isAutoAdmissionNumber && attempts < maxAttempts) {
+          // Concurrently claimed by another process during insert; atomically allocate next sequence and retry
+          const counter = await ReceiptCounter.findOneAndUpdate(
+            { _id: counterKey },
+            { $inc: { seq: 1 } },
+            { upsert: true, new: true }
+          );
+          admissionNumber = generateAdmissionNumber(defaultYear, counter.seq);
+          continue;
+        }
+        if (err.message.includes('admissionNumber')) throw ApiError.conflict('Admission number already exists in this school', 'ADMISSION_NUMBER_TAKEN');
+        if (err.message.includes('rollNumber')) throw ApiError.conflict('Roll number is already taken', 'ROLL_NUMBER_TAKEN');
+        if (err.message.includes('userId')) throw ApiError.conflict('This user account is already linked to another student', 'USER_ALREADY_LINKED');
       }
       throw err;
     }
   }
-
-  // Academic history: first enrollment record (exactly 1 created per admitted student)
-  await StudentHistory.create({
-    tenantId,
-    studentId: student._id,
-    sessionId: session._id,
-    classId: cls._id,
-    sectionId: section?._id || undefined,
-    status: 'admitted',
-    eventDate: admissionDate || new Date(),
-    date: admissionDate || new Date(),
-    recordedBy: req.user?._id,
-  });
 
   recordAudit('students', 'STUDENT_CREATED', req.user, String(student._id), {
     admissionNumber: student.admissionNumber,
@@ -521,8 +561,14 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
     if (dup) throw ApiError.conflict('Admission number already exists in this school', 'ADMISSION_NUMBER_TAKEN');
   }
 
-  if (body.rollNumber !== undefined) {
-    await assertRollNumberFree(req.tenantDb!, String(body.rollNumber), finalSessionId, finalClassId, finalSectionId, tenantId, String(student._id));
+  const finalRollNumber = body.rollNumber !== undefined ? String(body.rollNumber) : String(student.rollNumber || '');
+  const rollChanged = finalRollNumber !== String(student.rollNumber || '');
+  const sessionChanged = finalSessionId !== String(student.sessionId);
+  const classChanged = finalClassId !== String(student.classId);
+  const sectionChanged = finalSectionId !== (student.sectionId ? String(student.sectionId) : undefined);
+
+  if (rollChanged || sessionChanged || classChanged || sectionChanged) {
+    await assertRollNumberFree(req.tenantDb!, finalRollNumber, finalSessionId, finalClassId, finalSectionId, tenantId, String(student._id));
   }
 
   const updates: Record<string, unknown> = { ...body };
@@ -555,41 +601,76 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
   Object.assign(student, updates);
   if (unsetUserId) student.set('userId', undefined);
   if (unsetSectionId) student.set('sectionId', undefined);
-  await student.save();
 
   // Record academic history if placement changed
   const newSessionId = finalSessionId;
   const newClassId = finalClassId;
   const newSectionId = finalSectionId;
-  const academicChanged =
-    prevSessionId !== newSessionId ||
-    prevClassId !== newClassId ||
-    prevSectionId !== newSectionId;
+  const academicChanged = sessionChanged || classChanged || sectionChanged;
 
-  if (academicChanged) {
-    let historyStatus: 'class_changed' | 'section_changed' | 'transferred' = 'class_changed';
-    if (prevSessionId !== newSessionId) {
-      historyStatus = 'transferred';
-    } else if (prevClassId !== newClassId) {
-      historyStatus = 'class_changed';
-    } else if (prevSectionId !== newSectionId) {
-      historyStatus = 'section_changed';
+  try {
+    if (academicChanged) {
+      let historyStatus: 'class_changed' | 'section_changed' | 'transferred' = 'class_changed';
+      if (prevSessionId !== newSessionId) {
+        historyStatus = 'transferred';
+      } else if (prevClassId !== newClassId) {
+        historyStatus = 'class_changed';
+      } else if (prevSectionId !== newSectionId) {
+        historyStatus = 'section_changed';
+      }
+
+      const session = await mongoose.startSession();
+      try {
+        await session.withTransaction(async () => {
+          await student.save({ session });
+          await StudentHistory.create([{
+            tenantId,
+            studentId: student._id,
+            sessionId: newSessionId,
+            classId: newClassId,
+            sectionId: newSectionId || undefined,
+            previousClassId: prevClassId,
+            previousSectionId: prevSectionId,
+            status: historyStatus,
+            eventDate: new Date(),
+            date: new Date(),
+            recordedBy: req.user?._id,
+            remarks: 'Academic placement updated via student profile edit.',
+          }], { session });
+        });
+      } catch (err: any) {
+        if (err?.message?.includes('does not support retryable writes') || err?.message?.includes('Transactions are not supported')) {
+          await student.save();
+          await StudentHistory.create({
+            tenantId,
+            studentId: student._id,
+            sessionId: newSessionId,
+            classId: newClassId,
+            sectionId: newSectionId || undefined,
+            previousClassId: prevClassId,
+            previousSectionId: prevSectionId,
+            status: historyStatus,
+            eventDate: new Date(),
+            date: new Date(),
+            recordedBy: req.user?._id,
+            remarks: 'Academic placement updated via student profile edit.',
+          });
+        } else {
+          throw err;
+        }
+      } finally {
+        await session.endSession();
+      }
+    } else {
+      await student.save();
     }
-
-    await StudentHistory.create({
-      tenantId,
-      studentId: student._id,
-      sessionId: newSessionId,
-      classId: newClassId,
-      sectionId: newSectionId || undefined,
-      previousClassId: prevClassId,
-      previousSectionId: prevSectionId,
-      status: historyStatus,
-      eventDate: new Date(),
-      date: new Date(),
-      recordedBy: req.user?._id,
-      remarks: 'Academic placement updated via student profile edit.',
-    });
+  } catch (err: any) {
+    if (err?.code === 11000) {
+      if (err.message.includes('admissionNumber')) throw ApiError.conflict('Admission number already exists in this school', 'ADMISSION_NUMBER_TAKEN');
+      if (err.message.includes('rollNumber')) throw ApiError.conflict('Roll number is already taken', 'ROLL_NUMBER_TAKEN');
+      if (err.message.includes('userId')) throw ApiError.conflict('This user account is already linked to another student', 'USER_ALREADY_LINKED');
+    }
+    throw err;
   }
 
   recordAudit('students', 'STUDENT_UPDATED', req.user, String(student._id), {
@@ -637,27 +718,90 @@ export const archiveStudent = asyncHandler(async (req: AuthRequest, res: Respons
   student.isArchived = !restore;
   if (student.isArchived) {
     student.isActive = false;
+    await student.save();
   } else if (restore) {
-    await requireSession(String(student.sessionId), false, tenantIdObj, undefined, tenantDb).catch(() => {
-      throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
-    });
-    const cls = await requireClass(String(student.classId), tenantIdObj, undefined, tenantDb).catch(() => {
-      throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
-    });
-    if (String(cls.sessionId) !== String(student.sessionId)) {
-      throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
+    let finalSessionId = String(student.sessionId);
+    let finalClassId = String(student.classId);
+    let finalSectionId = student.sectionId ? String(student.sectionId) : undefined;
+    let finalRollNumber = String(student.rollNumber || '');
+    let overrideApplied = false;
+
+    if (req.body?.sessionId !== undefined) { finalSessionId = String(req.body.sessionId); overrideApplied = true; }
+    if (req.body?.classId !== undefined) { finalClassId = String(req.body.classId); overrideApplied = true; }
+    if (req.body?.sectionId !== undefined) { finalSectionId = req.body.sectionId ? String(req.body.sectionId) : undefined; overrideApplied = true; }
+    if (req.body?.rollNumber !== undefined) { finalRollNumber = String(req.body.rollNumber); overrideApplied = true; }
+
+    const session = await requireSession(finalSessionId, false, tenantIdObj, undefined, tenantDb).catch(() => null);
+    if (!session) throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
+    
+    const cls = await requireClass(finalClassId, tenantIdObj, undefined, tenantDb).catch(() => null);
+    if (!cls || String(cls.sessionId) !== finalSessionId) throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
+    
+    if (finalSectionId) {
+      const sec = await requireSectionOfClass(finalSectionId, finalClassId, tenantIdObj, undefined, tenantDb).catch(() => null);
+      if (!sec || String(sec.sessionId) !== finalSessionId) throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
     }
-    if (student.sectionId) {
-      const sec = await requireSectionOfClass(String(student.sectionId), String(student.classId), tenantIdObj, undefined, tenantDb).catch(() => {
-        throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
-      });
-      if (String(sec.sessionId) !== String(student.sessionId)) {
-        throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
-      }
+
+    if (overrideApplied) {
+      await assertRollNumberFree(tenantDb, finalRollNumber, finalSessionId, finalClassId, finalSectionId, tenantIdObj, String(student._id));
+      student.sessionId = new mongoose.Types.ObjectId(finalSessionId);
+      student.classId = new mongoose.Types.ObjectId(finalClassId);
+      student.sectionId = finalSectionId ? new mongoose.Types.ObjectId(finalSectionId) : undefined;
+      student.rollNumber = finalRollNumber;
     }
+    
     student.isActive = true;
+
+    try {
+      if (overrideApplied) {
+        const mongoSession = await mongoose.startSession();
+        try {
+          await mongoSession.withTransaction(async () => {
+            await student.save({ session: mongoSession });
+            await StudentHistory.create([{
+              tenantId: tenantIdObj,
+              studentId: student._id,
+              sessionId: finalSessionId,
+              classId: finalClassId,
+              sectionId: finalSectionId,
+              status: 're_admitted',
+              eventDate: new Date(),
+              date: new Date(),
+              recordedBy: req.user?._id,
+              remarks: 'Restored and relocated to new academic context.',
+            }], { session: mongoSession });
+          });
+        } catch (err: any) {
+          if (err?.message?.includes('does not support retryable writes') || err?.message?.includes('Transactions are not supported')) {
+            await student.save();
+            await StudentHistory.create({
+              tenantId: tenantIdObj,
+              studentId: student._id,
+              sessionId: finalSessionId,
+              classId: finalClassId,
+              sectionId: finalSectionId,
+              status: 're_admitted',
+              eventDate: new Date(),
+              date: new Date(),
+              recordedBy: req.user?._id,
+              remarks: 'Restored and relocated to new academic context.',
+            });
+          } else throw err;
+        } finally {
+          await mongoSession.endSession();
+        }
+      } else {
+        await student.save();
+      }
+    } catch (err: any) {
+      if (err?.code === 11000) {
+        if (err.message.includes('rollNumber')) throw ApiError.conflict('Roll number is already taken', 'ROLL_NUMBER_TAKEN');
+        if (err.message.includes('admissionNumber')) throw ApiError.conflict('Admission number already exists in this school', 'ADMISSION_NUMBER_TAKEN');
+        if (err.message.includes('userId')) throw ApiError.conflict('This user account is already linked to another student', 'USER_ALREADY_LINKED');
+      }
+      throw err;
+    }
   }
-  await student.save();
   recordAudit('students', restore ? 'STUDENT_RESTORED' : 'STUDENT_ARCHIVED', req.user, String(student._id), {
     admissionNumber: student.admissionNumber,
   });
