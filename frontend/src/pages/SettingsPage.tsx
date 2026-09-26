@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Loader2, Save, School } from 'lucide-react';
+import { Loader2, Save, School, Eye, EyeOff } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -62,6 +62,9 @@ export function SettingsPage() {
   const [busy, setBusy] = useState(false);
   const [savingSecurity, setSavingSecurity] = useState(false);
   const [securityForm, setSecurityForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [showSecCurrent, setShowSecCurrent] = useState(false);
+  const [showSecNew, setShowSecNew] = useState(false);
+  const [showSecConfirm, setShowSecConfirm] = useState(false);
 
   const [profile, setProfile] = useState<ProfileForm>({
     schoolName: '',
@@ -450,18 +453,33 @@ export function SettingsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2 lg:max-w-xl">
-                <div className="sm:col-span-2">
+                <div className="sm:col-span-2 relative">
                   <Label htmlFor="sec-current">Current Password</Label>
-                  <Input id="sec-current" type="password" value={securityForm.currentPassword} onChange={(e) => setSecurityForm({ ...securityForm, currentPassword: e.target.value })} />
+                  <div className="relative">
+                    <Input id="sec-current" type={showSecCurrent ? 'text' : 'password'} value={securityForm.currentPassword} onChange={(e) => setSecurityForm({ ...securityForm, currentPassword: e.target.value })} className="pr-10" />
+                    <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowSecCurrent(!showSecCurrent)} tabIndex={-1}>
+                      {showSecCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
-                <div>
+                <div className="relative">
                   <Label htmlFor="sec-new">New Password</Label>
-                  <Input id="sec-new" type="password" value={securityForm.newPassword} onChange={(e) => setSecurityForm({ ...securityForm, newPassword: e.target.value })} />
+                  <div className="relative">
+                    <Input id="sec-new" type={showSecNew ? 'text' : 'password'} value={securityForm.newPassword} onChange={(e) => setSecurityForm({ ...securityForm, newPassword: e.target.value })} className="pr-10" />
+                    <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowSecNew(!showSecNew)} tabIndex={-1}>
+                      {showSecNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                   <p className="text-[0.8rem] text-muted-foreground mt-1">Min 8 chars, 1 letter, 1 number</p>
                 </div>
-                <div>
+                <div className="relative">
                   <Label htmlFor="sec-confirm">Confirm New Password</Label>
-                  <Input id="sec-confirm" type="password" value={securityForm.confirmPassword} onChange={(e) => setSecurityForm({ ...securityForm, confirmPassword: e.target.value })} />
+                  <div className="relative">
+                    <Input id="sec-confirm" type={showSecConfirm ? 'text' : 'password'} value={securityForm.confirmPassword} onChange={(e) => setSecurityForm({ ...securityForm, confirmPassword: e.target.value })} className="pr-10" />
+                    <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowSecConfirm(!showSecConfirm)} tabIndex={-1}>
+                      {showSecConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="flex lg:max-w-xl justify-end">

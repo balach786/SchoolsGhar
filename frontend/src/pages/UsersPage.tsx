@@ -690,6 +690,8 @@ function ResetPasswordDialog({ target, onClose }: { target: UserRow | null; onCl
     defaultValues: { newPassword: '', confirm: '' },
   });
   const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const onSubmit = async (values: { newPassword: string }) => {
     if (!target) return;
@@ -716,14 +718,34 @@ function ResetPasswordDialog({ target, onClose }: { target: UserRow | null; onCl
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 relative">
             <Label htmlFor="r-pw">New password</Label>
-            <Input id="r-pw" type="password" placeholder="Minimum 8 characters with a number" {...register('newPassword')} />
+            <div className="relative">
+              <Input id="r-pw" type={showPassword ? 'text' : 'password'} placeholder="Minimum 8 characters with a number" {...register('newPassword')} className="pr-10" />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
             {errors.newPassword && <p className="text-xs text-destructive">{errors.newPassword.message}</p>}
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 relative">
             <Label htmlFor="r-cf">Confirm password</Label>
-            <Input id="r-cf" type="password" placeholder="Repeat the new password" {...register('confirm')} />
+            <div className="relative">
+              <Input id="r-cf" type={showConfirm ? 'text' : 'password'} placeholder="Repeat the new password" {...register('confirm')} className="pr-10" />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowConfirm(!showConfirm)}
+                tabIndex={-1}
+              >
+                {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
             {errors.confirm && <p className="text-xs text-destructive">{errors.confirm.message}</p>}
           </div>
           <DialogFooter>
