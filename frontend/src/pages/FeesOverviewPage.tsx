@@ -113,6 +113,13 @@ export function FeesOverviewPage() {
     else setLoading(true);
 
     try {
+      // Idempotently ensure current month invoices exist before pulling reports
+      try {
+        await api.post('/student-fees/ensure-current-month', {});
+      } catch (err) {
+        console.error('Failed to ensure monthly rollover:', err);
+      }
+
       const params = new URLSearchParams();
       if (sessionId) params.set('sessionId', sessionId);
 

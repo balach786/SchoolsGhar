@@ -602,3 +602,113 @@ export async function ensureApplicableMonthlyInvoiceForStudent(
     console.error(`Failed to generate monthly invoice for newly admitted student ${input.studentId}`, error);
   }
 }
+
+// Memory cache to prevent excessive full-school checks in serverless environment
+// Format: tenantId -> "YYYY-MM"
+const syncCache = new Map<string, string>();
+
+/**
+ * Checks if the current month's invoices have been generated for all active classes,
+ * triggering generation if they haven't. Designed to be called idempotently on
+ * dashboard loads. Uses a local map to skip repeated checks in the same Vercel execution context.
+ */
+export async function ensureCurrentMonthlyInvoices(
+  tenantDb: mongoose.Connection,
+  tenantId: string | mongoose.Types.ObjectId,
+  actor: AuthedUser,
+  options?: { asOfDate?: Date }
+): Promise<{
+  classesChecked: number;
+  structuresFound: number;
+  invoicesCreated: number;
+  invoicesSkipped: number;
+  classesWithoutStructure: number;
+}> {
+  const now = options?.asOfDate || new Date();
+  const currentMonth = now.getUTCMonth() + 1;
+  const currentYear = now.getUTCFullYear();
+  const cacheKey = `${String(tenantId)}_${currentYear}-${currentMonth}`;
+
+  const stats = {
+    classesChecked: 0,
+    structuresFound: 0,
+    invoicesCreated: 0,
+    invoicesSkipped: 0,
+    classesWithoutStructure: 0
+  };
+
+  if (!options?.asOfDate && syncCache.get(String(tenantId)) === cacheKey) {
+    return stats;
+  }
+
+  const { FeeStructure, AcademicSession, Class } = getTenantModels(tenantDb);
+  
+  const session = await AcademicSession.findOne({ isActive: true }).lean();
+  if (!session) return stats;
+  
+  // Validate that the date falls within the active session boundaries
+  const sessionStartDate = new Date(session.startDate);
+  const sessionEndDate = new Date(session.endDate);
+  // Compare year and month only to determine if it falls within session
+  const sessionStartVal = sessionStartDate.getUTCFullYear() * 12 + sessionStartDate.getUTCMonth();
+  const sessionEndVal = sessionEndDate.getUTCFullYear() * 12 + sessionEndDate.getUTCMonth();
+  const currentVal = currentYear * 12 + currentMonth - 1;
+
+  if (currentVal < sessionStartVal || currentVal > sessionEndVal) {
+    // Current month is outside the active session. Do not generate.
+    return stats;
+  }
+
+  const resolvedBillingYear = resolveBillingYearForSession(session, currentMonth);
+
+  // Find all active classes
+  const classes = await Class.find({ tenantId, isActive: true }).select('_id').lean();
+
+  for (const cls of classes) {
+    stats.classesChecked++;
+
+    // Check if there is an active monthly fee structure for this month
+    const structure = await FeeStructure.findOne({
+      tenantId,
+      sessionId: session._id,
+      classId: cls._id,
+      feeType: 'monthly_tuition',
+      month: currentMonth,
+      isActive: true,
+      isArchived: false,
+    }).select('_id').lean();
+
+    if (!structure) {
+      stats.classesWithoutStructure++;
+      continue;
+    }
+
+    stats.structuresFound++;
+
+    try {
+      const generateStats = await generateStudentFeesWithSnapshot(
+        actor,
+        {
+          sessionId: String(session._id),
+          classId: String(cls._id),
+          feeStructureId: String(structure._id),
+          month: currentMonth,
+          year: resolvedBillingYear
+        },
+        tenantDb
+      );
+      stats.invoicesCreated += generateStats.created;
+      stats.invoicesSkipped += generateStats.skipped;
+    } catch (error) {
+      console.error(`Failed to generate monthly invoices for class ${cls._id}`, error);
+    }
+  }
+
+  // Update cache on success (only if not using asOfDate override)
+  if (!options?.asOfDate) {
+    syncCache.set(String(tenantId), cacheKey);
+  }
+
+  return stats;
+}
+

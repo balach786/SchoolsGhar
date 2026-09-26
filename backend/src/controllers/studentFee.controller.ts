@@ -405,3 +405,32 @@ export const listClassSectionSummary = asyncHandler(async (req: AuthRequest, res
   });
 });
 
+/**
+ * POST /api/student-fees/ensure-current-month
+ * Idempotently ensures all active students have the current month's invoice generated.
+ */
+export const ensureCurrentMonthFees = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const tenantDb = (req as any).tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'tenantDb connection is required', 'TENANT_DB_MISSING');
+
+  const { getTenantObjectId } = await import('../utils/tenantScope');
+  const { ensureCurrentMonthlyInvoices } = await import('../services/feeManagement.service');
+  
+  const tenantId = getTenantObjectId(req);
+  if (!tenantId) throw ApiError.badRequest('Tenant context required');
+
+  const user = req.user as unknown as AuthedUser;
+  
+  // Optional test override
+  let asOfDate: Date | undefined;
+  if (process.env.NODE_ENV !== 'production' && req.body.asOfDate) {
+     asOfDate = new Date(req.body.asOfDate);
+  }
+
+  const result = await ensureCurrentMonthlyInvoices(tenantDb, tenantId, user, { asOfDate });
+
+  ok(res, result, 200, {
+    message: `Invoices checked. Created: ${result.invoicesCreated}, Skipped: ${result.invoicesSkipped}.`
+  });
+});
+

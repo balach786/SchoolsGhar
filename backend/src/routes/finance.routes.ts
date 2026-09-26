@@ -66,6 +66,7 @@ router.post('/fee-structures/:id/restore', requirePermission('fees', 'edit'), fe
 
 // ── Student fees ────────────────────────────────────────
 router.get('/student-fees/calculate', requirePermission('fees', 'view'), validate({ query: studentFeeCalculationQuerySchema }), studentFeeController.calculateStudentFee);
+router.post('/student-fees/ensure-current-month', requirePermission('fees', 'create'), studentFeeController.ensureCurrentMonthFees);
 router.get('/student-fees/class-summary', requirePermission('fees', 'view'), studentFeeController.listClassSectionSummary);
 router.get('/student-fees/ledger', requirePermission('fees', 'view'), validate({ query: ledgerQuerySchema }), studentFeeController.feeLedger);
 router.get('/student-fees', requirePermission('fees', 'view'), validate({ query: studentFeeQuerySchema }), studentFeeController.listStudentFees);
