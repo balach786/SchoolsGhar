@@ -54,12 +54,14 @@ interface ProfileForm {
 const NULLABLE = (v: string) => (v.trim() === '' ? null : v.trim());
 
 export function SettingsPage() {
-  const { can } = useAuth();
+  const { can, applySession } = useAuth();
   const canEdit = can('schoolSettings', 'edit');
   const [settings, setSettings] = useState<SettingsData | null>(null);
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [savingSecurity, setSavingSecurity] = useState(false);
+  const [securityForm, setSecurityForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
 
   const [profile, setProfile] = useState<ProfileForm>({
     schoolName: '',
@@ -143,6 +145,32 @@ export function SettingsPage() {
     }
   };
 
+  const handleChangePassword = async () => {
+    if (securityForm.newPassword !== securityForm.confirmPassword) {
+      return toast.error('New passwords do not match');
+    }
+    if (securityForm.newPassword.length < 8) {
+      return toast.error('Password must be at least 8 characters long');
+    }
+    if (!/(?=.*[A-Za-z])(?=.*[0-9])/.test(securityForm.newPassword)) {
+      return toast.error('Password must contain at least one letter and one number');
+    }
+    setSavingSecurity(true);
+    try {
+      const res = await api.post('/auth/change-password', {
+        currentPassword: securityForm.currentPassword,
+        newPassword: securityForm.newPassword
+      });
+      applySession(res.data.data);
+      toast.success('Password changed successfully. Other sessions have been signed out.');
+      setSecurityForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (err) {
+      toast.error(apiErrorMessage(err, 'Could not change password'));
+    } finally {
+      setSavingSecurity(false);
+    }
+  };
+
   const profileInput = (key: keyof Omit<ProfileForm, 'activeSessionId'>) => ({
     value: profile[key] as string,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, [key]: e.target.value }),
@@ -209,6 +237,7 @@ export function SettingsPage() {
           <TabsTrigger value="receipts">Receipts</TabsTrigger>
           <TabsTrigger value="result-cards">Result cards</TabsTrigger>
           <TabsTrigger value="theme">Theme</TabsTrigger>
+          <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile" className="mt-4">
@@ -409,6 +438,41 @@ export function SettingsPage() {
                   </Button>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="security" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Security preferences</CardTitle>
+              <CardDescription>Update your personal account password.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2 lg:max-w-xl">
+                <div className="sm:col-span-2">
+                  <Label htmlFor="sec-current">Current Password</Label>
+                  <Input id="sec-current" type="password" value={securityForm.currentPassword} onChange={(e) => setSecurityForm({ ...securityForm, currentPassword: e.target.value })} />
+                </div>
+                <div>
+                  <Label htmlFor="sec-new">New Password</Label>
+                  <Input id="sec-new" type="password" value={securityForm.newPassword} onChange={(e) => setSecurityForm({ ...securityForm, newPassword: e.target.value })} />
+                  <p className="text-[0.8rem] text-muted-foreground mt-1">Min 8 chars, 1 letter, 1 number</p>
+                </div>
+                <div>
+                  <Label htmlFor="sec-confirm">Confirm New Password</Label>
+                  <Input id="sec-confirm" type="password" value={securityForm.confirmPassword} onChange={(e) => setSecurityForm({ ...securityForm, confirmPassword: e.target.value })} />
+                </div>
+              </div>
+              <div className="flex lg:max-w-xl justify-end">
+                <Button 
+                  onClick={handleChangePassword} 
+                  disabled={savingSecurity || !securityForm.currentPassword || !securityForm.newPassword || !securityForm.confirmPassword}
+                >
+                  {savingSecurity ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Save className="mr-1.5 h-4 w-4" />}
+                  Change Password
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

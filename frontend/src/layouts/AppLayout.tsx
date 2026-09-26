@@ -2,7 +2,7 @@ import { RequestErrorNotice } from '@/components/RequestErrorNotice';
 import { PageTransition } from '@/components/PageTransition';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Search, Bell, ChevronLeft, ChevronRight, GraduationCap, Menu, Monitor, Moon, Sun, LogIn, LogOut, CalendarRange, AlertCircle } from 'lucide-react';
+import { Search, Bell, ChevronLeft, ChevronRight, GraduationCap, Menu, Monitor, Moon, Sun, LogIn, LogOut, CalendarRange, AlertCircle, KeyRound } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { initials } from '@/lib/format';
 import { api } from '@/lib/api';
 import { SubscriptionBanner } from '@/components/SubscriptionBanner';
+import { ChangePasswordDialog } from '@/components/ChangePasswordDialog';
 
 function SchoolLogo({ className, collapsed }: { className?: string; collapsed?: boolean }) {
   const [schoolName, setSchoolName] = useState<string>('School Prime');
@@ -497,6 +498,7 @@ function SidebarContent({ onNavigate, collapsed = false, setCollapsed, isMobile 
 export function AppLayout() {
   const menuTrigger = useRef<HTMLButtonElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     try {
       return localStorage.getItem('sms_sidebar_collapsed') === 'true';
@@ -644,6 +646,11 @@ export function AppLayout() {
                     My Profile
                   </DropdownMenuItem>
                 )}
+                <DropdownMenuItem className="cursor-pointer" onClick={() => setPasswordDialogOpen(true)}>
+                  <KeyRound className="h-4 w-4" />
+                  Change Password
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer text-destructive" onClick={handleLogout}>
                   <LogOut className="h-4 w-4" />
                   Sign out
@@ -677,6 +684,7 @@ export function AppLayout() {
           School Management System · Built for better school days.
         </footer>
       </div>
+      <ChangePasswordDialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen} />
     </div>
   );
 }
