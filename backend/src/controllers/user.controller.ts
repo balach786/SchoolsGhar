@@ -69,9 +69,14 @@ import { executeAdminRemovalWithLock } from '../services/adminSecurity.service';
 
 
 /** GET /api/users — paginated list with search + filters. */
-export const listUsers = asyncHandler(async (req: Request, res: Response) => {
+export const listUsers = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { page, limit } = parsePagination(req.query);
   const { search, role, status } = req.query as Record<string, string | undefined>;
+
+  const tenantDb = req.tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing');
+  const { getTenantModels } = await import('../services/TenantModelRegistry');
+  const { User: TenantUser, Role: TenantRole } = getTenantModels(tenantDb);
 
   const filter: Record<string, unknown> = {};
   if (req.user?.tenantId) {
@@ -86,7 +91,7 @@ export const listUsers = asyncHandler(async (req: Request, res: Response) => {
     ];
   }
   if (role) {
-    const roleDoc = await Role.findOne({ slug: role }).select('_id').lean();
+    const roleDoc = await TenantRole.findOne({ slug: role }).select('_id').lean();
     filter.roleId = roleDoc ? roleDoc._id : new Types.ObjectId('0'.repeat(24)); // matches nothing
   }
 
@@ -105,13 +110,13 @@ export const listUsers = asyncHandler(async (req: Request, res: Response) => {
 
   const skip = (page - 1) * limit;
   const [docs, total] = await Promise.all([
-    User.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
-    User.countDocuments(filter),
+    TenantUser.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    TenantUser.countDocuments(filter),
   ]);
 
   // Resolve role labels in one query
   const roleIds = Array.from(new Set(docs.map((d) => String(d.roleId))));
-  const roles = await Role.find({ _id: { $in: roleIds } }).select('slug name').lean();
+  const roles = await TenantRole.find({ _id: { $in: roleIds } }).select('slug name').lean();
   const roleMap = new Map(roles.map((r) => [String(r._id), { slug: r.slug, name: r.name }]));
 
   const data = docs.map((d) => {
@@ -128,13 +133,18 @@ export const listUsers = asyncHandler(async (req: Request, res: Response) => {
 
 /** GET /api/users/:id */
 export const getUser = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const tenantDb = req.tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing');
+  const { getTenantModels } = await import('../services/TenantModelRegistry');
+  const { User: TenantUser, Role: TenantRole } = getTenantModels(tenantDb);
+
   const query: Record<string, unknown> = { _id: req.params.id };
   if (req.user?.tenantId) query.tenantId = req.user.tenantId;
-  const user = await User.findOne(query);
+  const user = await TenantUser.findOne(query);
   if (!user) throw ApiError.notFound('User not found');
-  const targetRole = await Role.findById(user.roleId).select('slug').lean();
+  const targetRole = await TenantRole.findById(user.roleId).select('slug').lean();
   ensureCanTouchSuperAdmin(req.user, targetRole?.slug);
-  const role = await Role.findById(user.roleId).select('slug name').lean();
+  const role = await TenantRole.findById(user.roleId).select('slug name').lean();
   ok(res, {
     ...publicUser(user),
     role: role?.slug ?? 'unknown',
@@ -153,9 +163,15 @@ export const createUser = asyncHandler(async (req: AuthRequest, res: Response) =
     personId: string;
   };
 
+  const tenantDb = req.tenantDb as mongoose.Connection;
+  if (!tenantDb) {
+    throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
+  }
+  const { Staff: TenantStaff, Student: TenantStudent, User: TenantUser, Role: TenantRole } = getTenantModels(tenantDb);
+
   let resolvedRoleId = roleId;
   if (personType === 'teacher' || personType === 'student' || personType === 'accountant') {
-    const roleDoc = await Role.findOne({ slug: personType }).lean();
+    const roleDoc = await TenantRole.findOne({ slug: personType }).lean();
     if (!roleDoc) throw ApiError.badRequest(`Required system role '${personType}' not found`);
     resolvedRoleId = String(roleDoc._id);
   } else if (!resolvedRoleId) {
@@ -174,12 +190,6 @@ export const createUser = asyncHandler(async (req: AuthRequest, res: Response) =
       throw ApiError.badRequest('Primary Admin or platform roles cannot be assigned through this directory.', 'USER_ROLE_LINK_CONFLICT');
     }
   }
-
-  const tenantDb = req.tenantDb as mongoose.Connection;
-  if (!tenantDb) {
-    throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
-  }
-  const { Staff: TenantStaff, Student: TenantStudent, User: TenantUser } = getTenantModels(tenantDb);
 
   const session = await tenantDb.startSession();
   try {
@@ -327,9 +337,14 @@ export const searchUnlinkedPeople = asyncHandler(async (req: AuthRequest, res: R
 
 /** PATCH /api/users/:id */
 export const updateUser = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const user = await User.findOne({ _id: req.params.id, tenantId: req.user?.tenantId, isPlatformAdmin: { $ne: true } });
+  const tenantDb = req.tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing');
+  const { getTenantModels } = await import('../services/TenantModelRegistry');
+  const { User: TenantUser, Role: TenantRole, Staff: TStaff, Student: TStudent } = getTenantModels(tenantDb);
+
+  const user = await TenantUser.findOne({ _id: req.params.id, tenantId: req.user?.tenantId, isPlatformAdmin: { $ne: true } });
   if (!user) throw ApiError.notFound('User not found');
-  const currentRole = await Role.findById(user.roleId).select('slug').lean();
+  const currentRole = await TenantRole.findById(user.roleId).select('slug').lean();
   ensureCanTouchSuperAdmin(req.user, currentRole?.slug);
 
   const { name, email, roleId, isActive, isArchived } = req.body as {
@@ -347,7 +362,7 @@ export const updateUser = asyncHandler(async (req: AuthRequest, res: Response) =
   if (name !== undefined) changes.name = name;
   if (email !== undefined) {
     if (email !== user.email) {
-      const existing = await User.findOne({ email, _id: { $ne: user._id } });
+      const existing = await TenantUser.findOne({ email, _id: { $ne: user._id } });
       if (existing) throw ApiError.conflict('A user with this email already exists', 'EMAIL_TAKEN');
     }
     changes.email = email;
@@ -369,12 +384,6 @@ export const updateUser = asyncHandler(async (req: AuthRequest, res: Response) =
       throw ApiError.badRequest('Please use the specific Teachers, Students, or Staff directories to assign this role to users.');
     }
 
-    // Validate that existing person profile links remain compatible with new role
-    const tenantDb = req.tenantDb as mongoose.Connection;
-    if (!tenantDb) {
-      throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
-    }
-    const { Staff: TStaff, Student: TStudent } = getTenantModels(tenantDb);
     const [linkedStudent, linkedStaff] = await Promise.all([
       TStudent.findOne({ userId: user._id }).select('fullName admissionNumber').lean(),
       TStaff.findOne({ userId: user._id }).select('fullName staffType designation').lean(),
@@ -502,7 +511,7 @@ export const updateUser = asyncHandler(async (req: AuthRequest, res: Response) =
     newRoleObj?.slug ? { role: newRoleObj.slug } : undefined
   );
 
-  const finalRole = await Role.findById(user.roleId).select('slug name').lean();
+  const finalRole = await TenantRole.findById(user.roleId).select('slug name').lean();
   ok(res, {
     user: publicUser(user),
     role: finalRole?.slug ?? 'unknown',
@@ -512,9 +521,14 @@ export const updateUser = asyncHandler(async (req: AuthRequest, res: Response) =
 
 /** POST /api/users/:id/reset-password — admin-safe password reset. */
 export const resetUserPassword = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const user = await User.findOne({ _id: req.params.id, tenantId: req.user?.tenantId, isPlatformAdmin: { $ne: true } });
+  const tenantDb = req.tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing');
+  const { getTenantModels } = await import('../services/TenantModelRegistry');
+  const { User: TenantUser, Role: TenantRole } = getTenantModels(tenantDb);
+
+  const user = await TenantUser.findOne({ _id: req.params.id, tenantId: req.user?.tenantId, isPlatformAdmin: { $ne: true } });
   if (!user) throw ApiError.notFound('User not found');
-  const targetRole = await Role.findById(user.roleId).select('slug').lean();
+  const targetRole = await TenantRole.findById(user.roleId).select('slug').lean();
   ensureCanTouchSuperAdmin(req.user, targetRole?.slug);
 
   const { newPassword } = req.body as { newPassword: string };
@@ -531,9 +545,14 @@ export const resetUserPassword = asyncHandler(async (req: AuthRequest, res: Resp
 
 /** POST /api/users/:id/activate */
 export const activateUser = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const user = await User.findOne({ _id: req.params.id, tenantId: req.user?.tenantId, isPlatformAdmin: { $ne: true } });
+  const tenantDb = req.tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing');
+  const { getTenantModels } = await import('../services/TenantModelRegistry');
+  const { User: TenantUser, Role: TenantRole } = getTenantModels(tenantDb);
+
+  const user = await TenantUser.findOne({ _id: req.params.id, tenantId: req.user?.tenantId, isPlatformAdmin: { $ne: true } });
   if (!user) throw ApiError.notFound('User not found');
-  const targetRole = await Role.findById(user.roleId).select('slug').lean();
+  const targetRole = await TenantRole.findById(user.roleId).select('slug').lean();
   ensureCanTouchSuperAdmin(req.user, targetRole?.slug);
 
   if (user.isArchived) {
@@ -551,9 +570,14 @@ export const activateUser = asyncHandler(async (req: AuthRequest, res: Response)
 
 /** POST /api/users/:id/deactivate */
 export const deactivateUser = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const user = await User.findOne({ _id: req.params.id, tenantId: req.user?.tenantId, isPlatformAdmin: { $ne: true } });
+  const tenantDb = req.tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing');
+  const { getTenantModels } = await import('../services/TenantModelRegistry');
+  const { User: TenantUser, Role: TenantRole } = getTenantModels(tenantDb);
+
+  const user = await TenantUser.findOne({ _id: req.params.id, tenantId: req.user?.tenantId, isPlatformAdmin: { $ne: true } });
   if (!user) throw ApiError.notFound('User not found');
-  const targetRole = await Role.findById(user.roleId).select('slug').lean();
+  const targetRole = await TenantRole.findById(user.roleId).select('slug').lean();
   ensureCanTouchSuperAdmin(req.user, targetRole?.slug);
 
   if (String(user._id) === req.user!._id) {
