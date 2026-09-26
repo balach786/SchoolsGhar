@@ -108,7 +108,7 @@ export const listTeachers = asyncHandler(async (req: AuthRequest, res: Response)
   ]);
 
   const canSeeSalary = req.user
-    ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'view', req.user?.tenantId)
+    ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'view', req.user?.tenantId, req.tenantDb as mongoose.Connection)
     : false;
 
   // Class teacher assignment lookup from same tenant connection
@@ -138,7 +138,7 @@ export const getTeacher = asyncHandler(async (req: AuthRequest, res: Response) =
   const teacher = await Teacher.findOne(scopeQuery(req, { _id: req.params.id }));
   if (!teacher) throw ApiError.notFound('Teacher not found');
 
-  const canSeeSalary = await hasPermission(req.user!.roleId, req.user!.role, 'salaries', 'view', req.user?.tenantId);
+  const canSeeSalary = await hasPermission(req.user!.roleId, req.user!.role, 'salaries', 'view', req.user?.tenantId, tenantDb);
   const assignedClass = await Class.findOne({ classTeacherId: teacher._id }).select('_id name').lean();
 
   ok(res, {
@@ -275,7 +275,7 @@ export const updateTeacher = asyncHandler(async (req: AuthRequest, res: Response
   // Salary permission check
   if (body.salary !== undefined && Number(body.salary) !== Number(teacher.salary)) {
     const canEditSalary = req.user
-      ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'edit', req.user?.tenantId)
+      ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'edit', req.user?.tenantId, req.tenantDb as mongoose.Connection)
       : false;
     if (!canEditSalary) {
       throw ApiError.forbidden('You do not have permission to modify salary', 'SALARY_EDIT_FORBIDDEN');

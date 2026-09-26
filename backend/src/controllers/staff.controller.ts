@@ -73,7 +73,7 @@ export const listStaff = asyncHandler(async (req: AuthRequest, res: Response) =>
   ]);
 
   const canSeeSalary = req.user
-    ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'view', req.user?.tenantId)
+    ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'view', req.user?.tenantId, req.tenantDb as mongoose.Connection)
     : false;
 
   const data = docs.map((d) => publicStaff(d, { hideSalary: !canSeeSalary }));
@@ -93,7 +93,7 @@ export const getStaff = asyncHandler(async (req: AuthRequest, res: Response) => 
 
 
   const canSeeSalary = req.user
-    ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'view', req.user?.tenantId)
+    ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'view', req.user?.tenantId, tenantDb)
     : false;
 
   ok(res, publicStaff(staff, { hideSalary: !canSeeSalary }));
@@ -207,7 +207,7 @@ export const updateStaff = asyncHandler(async (req: AuthRequest, res: Response) 
   // Salary permission check (Requirement 8)
   if (body.salary !== undefined && Number(body.salary) !== Number(staff.salary)) {
     const canEditSalary = req.user
-      ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'edit', req.user?.tenantId)
+      ? await hasPermission(req.user.roleId, req.user.role, 'salaries', 'edit', req.user?.tenantId, req.tenantDb as mongoose.Connection)
       : false;
     if (!canEditSalary) {
       throw ApiError.forbidden('You do not have permission to modify salary', 'SALARY_EDIT_FORBIDDEN');

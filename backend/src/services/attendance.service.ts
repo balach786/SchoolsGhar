@@ -156,7 +156,7 @@ export async function authorizeAttendanceModification(user: AuthedUser, classId:
   const { Class, TemporaryAssignment } = getTenantModels(tenantDb);
 
   // 1. Check if user has explicit attendance:manage permission (Admin/Principal)
-  const canManage = await hasPermission(user.roleId, user.role, 'studentAttendance', 'create', tenantId as any);
+  const canManage = await hasPermission(user.roleId, user.role, 'studentAttendance', 'create', tenantId as any, tenantDb);
   if (canManage) return;
 
   // If student or parent, deny immediately

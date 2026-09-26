@@ -20,8 +20,8 @@ import {
   invalidatePermissionCache,
 } from '../services/permission.service';
 
-async function requireValidRole(roleId: string, tenantId?: string) {
-  const role = await effectiveRole(roleId, tenantId);
+async function requireValidRole(roleId: string, tenantId?: string, tenantDb?: mongoose.Connection) {
+  const role = await effectiveRole(roleId, tenantId, tenantDb);
   if (!role) throw ApiError.badRequest('Selected role does not exist', 'INVALID_ROLE');
   if (role.slug === 'platform_admin') throw ApiError.forbidden('Platform accounts cannot be assigned to a school.');
   if (!role.isActive) throw ApiError.badRequest('Selected role is inactive', 'INVALID_ROLE');
@@ -178,7 +178,7 @@ export const createUser = asyncHandler(async (req: AuthRequest, res: Response) =
     throw ApiError.badRequest('Role is required for staff members.');
   }
 
-  const role = await requireValidRole(resolvedRoleId, req.user?.tenantId);
+  const role = await requireValidRole(resolvedRoleId, req.user?.tenantId, tenantDb);
   ensureCanTouchSuperAdmin(req.user, role.slug);
   assertCanAssignRole(req.user, role);
 
@@ -369,7 +369,7 @@ export const updateUser = asyncHandler(async (req: AuthRequest, res: Response) =
   }
 
   if (roleId !== undefined && String(roleId) !== String(user.roleId)) {
-    const role = await requireValidRole(roleId, req.user?.tenantId);
+    const role = await requireValidRole(roleId, req.user?.tenantId, tenantDb);
     ensureCanTouchSuperAdmin(req.user, role.slug);
     assertCanAssignRole(req.user, role);
 

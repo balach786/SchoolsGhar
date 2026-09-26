@@ -33,7 +33,8 @@ export const globalSearch = asyncHandler(async (req: AuthRequest, res: Response)
   const rx = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
 
   const sections: { section: string; title: string; items: { label: string; sublabel?: string; path: string }[] }[] = [];
-  const can = async (module: string) => hasPermission(user.roleId, user.role, module, 'view', req.user?.tenantId);
+  const tenantDb = (req as AuthRequest).tenantDb as import('mongoose').Connection;
+  const can = async (module: string) => hasPermission(user.roleId, user.role, module, 'view', req.user?.tenantId, tenantDb);
 
   const ownStudent = user.role === 'student' ? await getOwnStudent(user).catch(() => null) : null;
 
