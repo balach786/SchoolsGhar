@@ -21,7 +21,8 @@ const RESERVED_SLUGS: string[] = [
 ];
 
 async function selected(req: Request) {
-  const role = await effectiveRole(req.params.id, requireTenantId(req));
+  const tenantDb = (req as AuthRequest).tenantDb as import('mongoose').Connection;
+  const role = await effectiveRole(req.params.id, requireTenantId(req), tenantDb);
   if (!role || role.slug === 'platform_admin') throw ApiError.notFound('Role not found');
   return role;
 }
@@ -49,16 +50,23 @@ function editable(req: AuthRequest, slug: string) {
 }
 
 /** GET /api/roles */
-export const listRoles = asyncHandler(async (req: Request, res: Response) => {
+export const listRoles = asyncHandler(async (req: AuthRequest, res: Response) => {
   const tenantId = requireTenantId(req);
-  const roles = await Role.find({
+  const tenantDb = req.tenantDb as import('mongoose').Connection;
+  if (!tenantDb) {
+    throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
+  }
+  const { getTenantModels } = await import('../services/TenantModelRegistry');
+  const { Role: TenantRole } = getTenantModels(tenantDb);
+
+  const roles = await TenantRole.find({
     slug: { $ne: 'platform_admin' },
     $or: [{ tenantId }, { tenantId: { $exists: false } }, { tenantId: null }],
   })
     .sort({ isSystemRole: -1, name: 1 })
     .lean();
 
-  const effective = await Promise.all(roles.map((r) => effectiveRole(String(r._id), tenantId)));
+  const effective = await Promise.all(roles.map((r) => effectiveRole(String(r._id), tenantId, tenantDb)));
   ok(res, effective.filter((r): r is NonNullable<typeof r> => !!r).map(shape));
 });
 
@@ -72,6 +80,10 @@ export const createRole = asyncHandler(async (req: AuthRequest, res: Response) =
   const tenantId = requireTenantId(req);
   const { name, slug, description, permissions } = req.body;
 
+  const tenantDb = req.tenantDb as import('mongoose').Connection;
+  const { getTenantModels } = await import('../services/TenantModelRegistry');
+  const { Role: TenantRole } = getTenantModels(tenantDb);
+
   // 1. Reserved slug check
   const normalizedSlug = String(slug || '').trim().toLowerCase();
   if (RESERVED_SLUGS.includes(normalizedSlug)) {
@@ -79,7 +91,7 @@ export const createRole = asyncHandler(async (req: AuthRequest, res: Response) =
   }
 
   // 2. Per-tenant uniqueness check
-  const existing = await Role.exists({ slug: normalizedSlug, tenantId });
+  const existing = await TenantRole.exists({ slug: normalizedSlug, tenantId });
   if (existing) {
     throw ApiError.conflict('A role with this slug already exists in your school', 'ROLE_SLUG_TAKEN');
   }
@@ -101,7 +113,7 @@ export const createRole = asyncHandler(async (req: AuthRequest, res: Response) =
     }
   }
 
-  const role = await Role.create({
+  const role = await TenantRole.create({
     tenantId,
     name: String(name || '').trim(),
     slug: normalizedSlug,
@@ -111,7 +123,7 @@ export const createRole = asyncHandler(async (req: AuthRequest, res: Response) =
   });
 
   recordAudit('roles', AUDIT_ACTIONS.ROLE_CREATED, req.user, String(role._id), { slug: normalizedSlug });
-  created(res, shape((await effectiveRole(String(role._id), tenantId))!));
+  created(res, shape((await effectiveRole(String(role._id), tenantId, tenantDb))!));
 });
 
 /** PATCH /api/roles/:id */
@@ -141,7 +153,10 @@ export const updateRole = asyncHandler(async (req: AuthRequest, res: Response) =
       { upsert: true, runValidators: true }
     );
   } else {
-    await Role.updateOne({ _id: role._id, tenantId }, { $set: changes });
+    const tenantDb = req.tenantDb as import('mongoose').Connection;
+    const { getTenantModels } = await import('../services/TenantModelRegistry');
+    const { Role: TenantRole } = getTenantModels(tenantDb);
+    await TenantRole.updateOne({ _id: role._id, tenantId }, { $set: changes });
   }
 
   invalidatePermissionCache(String(role._id));
@@ -202,7 +217,10 @@ export const updateRolePermissions = asyncHandler(async (req: AuthRequest, res: 
       { upsert: true, runValidators: true }
     );
   } else {
-    await Role.updateOne(
+    const tenantDb = req.tenantDb as import('mongoose').Connection;
+    const { getTenantModels } = await import('../services/TenantModelRegistry');
+    const { Role: TenantRole } = getTenantModels(tenantDb);
+    await TenantRole.updateOne(
       { _id: role._id, tenantId },
       { $set: { permissions: finalPermissions } }
     );
@@ -216,9 +234,13 @@ export const updateRolePermissions = asyncHandler(async (req: AuthRequest, res: 
 /** GET /api/roles/:id/users */
 export const roleUsers = asyncHandler(async (req: Request, res: Response) => {
   const role = await selected(req);
+  const tenantDb = (req as AuthRequest).tenantDb as import('mongoose').Connection;
+  const { getTenantModels } = await import('../services/TenantModelRegistry');
+  const { User: TenantUser } = getTenantModels(tenantDb);
+
   ok(
     res,
-    await User.find({
+    await TenantUser.find({
       roleId: role._id,
       tenantId: requireTenantId(req),
       isArchived: false,
