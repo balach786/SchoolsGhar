@@ -506,7 +506,7 @@ function UserFormDialog({
         await api.patch(`/users/${editing._id}`, {
           name: values.name,
           email: values.email,
-          roleId: values.roleId,
+          roleId: values.roleId || undefined,
           isActive: values.isActive,
         });
         toast.success('User updated');
@@ -516,7 +516,7 @@ function UserFormDialog({
           personId: values.personId,
           email: values.email,
           password: values.password,
-          roleId: values.roleId,
+          roleId: values.roleId || undefined,
           isActive: values.isActive,
         });
         toast.success('User created');
