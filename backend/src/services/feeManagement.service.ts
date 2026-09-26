@@ -255,11 +255,10 @@ export async function generateStudentFeesWithSnapshot(
   }
 
   const existingInvoices = await StudentFee.find(existingQuery).select('studentId feeStructureId billingMonth classId').lean();
-  console.log("EXISTING INVOICES FOUND FOR GENERATE:", JSON.stringify(existingInvoices));
   const existingSet = new Set(existingInvoices.map((e) => String(e.studentId)));
 
   const docsToInsert: any[] = [];
-  console.log("TARGETS FOR GENERATE:", JSON.stringify(targets));
+
   for (const student of targets) {
     if (existingSet.has(String(student._id))) continue;
 
@@ -352,17 +351,11 @@ export async function generateStudentFeesWithSnapshot(
   }
 
   let createdCount = 0;
-  console.log("DOCS TO INSERT LENGTH:", docsToInsert.length);
-  console.log("FIRST DOC TO INSERT:", JSON.stringify(docsToInsert[0]));
   if (docsToInsert.length > 0) {
     try {
       const res = await StudentFee.insertMany(docsToInsert, { ordered: false });
-      console.log("INSERT RES:", res);
-      console.log("IS ARRAY:", Array.isArray(res));
       createdCount = Array.isArray(res) ? res.length : (res as any).insertedCount ?? 0;
-      console.log("INSERT RES LENGTH:", createdCount);
     } catch (err: any) {
-      console.log("INSERT ERROR:", err);
       if (!err?.message?.includes('E11000')) throw err;
       // Partial successes with duplicate suppression
       createdCount = err.insertedDocs?.length ?? 0;

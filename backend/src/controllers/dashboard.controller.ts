@@ -2,24 +2,8 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ok } from '../utils/apiResponse';
-import { Student } from '../models/Student';
-import { Teacher } from '../models/Teacher';
-import { Class } from '../models/Class';
-import { FeeStructure } from '../models/FeeStructure';
-import { StudentAttendance } from '../models/StudentAttendance';
-import { TeacherAttendance } from '../models/TeacherAttendance';
-import { Payment } from '../models/Payment';
-import { PaymentReversal } from '../models/PaymentReversal';
-import { StudentFee } from '../models/StudentFee';
-
 import { getTenantModels } from '../services/TenantModelRegistry';
-import { Exam } from '../models/Exam';
-import { Mark } from '../models/Mark';
-import { Notice } from '../models/Notice';
-import { Assignment } from '../models/Assignment';
-import { Subject } from '../models/Subject';
-import { StudentExamFee } from '../models/StudentExamFee';
-import { ExamFeePayment } from '../models/ExamFeePayment';
+
 import { computeExamResults, findResult } from '../services/exam.service';
 import { AuthRequest } from '../types';
 import { getOwnStudent, getOwnTeacher, type AuthedUser } from '../services/attendance.service';
@@ -79,7 +63,7 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
       const student = await getOwnStudent(user, tenantDb);
       const today = dayBounds();
       const [attendanceSummary, upcomingFees, pendingAssignments, publishedExams, stuClass] = await Promise.all([
-        StudentAttendance.aggregate([
+        tenantModels.StudentAttendance.aggregate([
           { $match: tMatch({ studentId: student._id }) },
           { $group: { _id: '$status', count: { $sum: 1 } } },
         ]),
@@ -93,20 +77,20 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
           .sort({ dueDate: 1 })
           .limit(5)
           .lean(),
-        Exam.find(scopeQuery(req, { classId: student.classId, isPublished: true }))
+        tenantModels.Exam.find(scopeQuery(req, { classId: student.classId, isPublished: true }))
           .sort({ examDate: -1, createdAt: -1 })
           .limit(5),
-        Class.findOne(scopeQuery(req, { _id: student.classId })).select('name').lean(),
+        tenantModels.Class.findOne(scopeQuery(req, { _id: student.classId })).select('name').lean(),
       ]);
       const counts: Record<string, number> = {};
       for (const row of attendanceSummary) counts[String(row._id)] = row.count;
       const total = (counts.present ?? 0) + (counts.absent ?? 0) + (counts.late ?? 0) + (counts.leave ?? 0);
       const presentDays = (counts.present ?? 0) + (counts.late ?? 0);
-      const feeStructures = await FeeStructure.find(scopeQuery(req, { _id: { $in: upcomingFees.map((f: any) => f.feeStructureId) } })).select('title').lean();
+      const feeStructures = await tenantModels.FeeStructure.find(scopeQuery(req, { _id: { $in: upcomingFees.map((f: any) => f.feeStructureId) } })).select('title').lean();
       const feeTitleMap = new Map(feeStructures.map((s: any) => [String(s._id), s.title]));
 
       const subIds = pendingAssignments.map((a: any) => String(a.subjectId)).filter(Boolean);
-      const subjects = await Subject.find(scopeQuery(req, { _id: { $in: subIds } })).select('name').lean();
+      const subjects = await tenantModels.Subject.find(scopeQuery(req, { _id: { $in: subIds } })).select('name').lean();
       const subjectMap = new Map(subjects.map((s: any) => [String(s._id), s.name]));
 
       const className = stuClass?.name ?? '—';
@@ -159,16 +143,19 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
         })),
         latestResults: computedResults,
       });
-    } catch (e) {
-      // Fallback if the student profile is missing (e.g. user created via Users page without a profile)
-      return ok(res, {
-        role: 'student',
-        missingProfile: true,
-        attendance: { total: 0, present: 0, absent: 0, late: 0, leave: 0, percentage: 0 },
-        upcomingFees: [],
-        pendingAssignments: [],
-        latestResults: [],
-      });
+    } catch (e: any) {
+      // Only show missingProfile if the student profile actually does not exist
+      if (e?.code === 'STUDENT_PROFILE_REQUIRED' || (e instanceof Error && e.message === 'Tenant DB required')) {
+        return ok(res, {
+          role: 'student',
+          missingProfile: true,
+          attendance: { total: 0, present: 0, absent: 0, late: 0, leave: 0, percentage: 0 },
+          upcomingFees: [],
+          pendingAssignments: [],
+          latestResults: [],
+        });
+      }
+      throw e; // Re-throw unexpected errors so they are properly logged
     }
   }
 
@@ -178,12 +165,12 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
       const today = dayBounds();
 
       const teacher = await getOwnTeacher(user, tenantDb);
-      const allClassesDocs = await Class.find(scopeQuery(req, { isArchived: false })).select('_id name').lean();
+      const allClassesDocs = await tenantModels.Class.find(scopeQuery(req, { isArchived: false })).select('_id name').lean();
       const classIds = allClassesDocs.map((c: any) => String(c._id));
 
       const [classStrengths, myAttendanceToday, recentAssignments] = await Promise.all([
         Promise.resolve(allClassesDocs),
-        getTenantModels((req as any).tenantDb as mongoose.Connection).TeacherAttendance.find(scopeQuery(req, { teacherId: teacher._id, attendanceDate: { $gte: today.start, $lt: today.end } }))
+        tenantModels.TeacherAttendance.find(scopeQuery(req, { teacherId: teacher._id, attendanceDate: { $gte: today.start, $lt: today.end } }))
           .select('status')
           .lean(),
         tenantModels.Assignment.find(scopeQuery(req, { teacherId: teacher._id, isArchived: false }))
@@ -193,7 +180,7 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
           .lean(),
       ]);
       const assignClassIds = recentAssignments.map((a: any) => String(a.classId)).filter(Boolean);
-      const allClasses = await Class.find(scopeQuery(req, { _id: { $in: Array.from(new Set([...classIds, ...assignClassIds])) } })).select('name').lean();
+      const allClasses = await tenantModels.Class.find(scopeQuery(req, { _id: { $in: Array.from(new Set([...classIds, ...assignClassIds])) } })).select('name').lean();
       const classNameMap = new Map(allClasses.map((c: any) => [String(c._id), c.name]));
 
       return ok(res, {
@@ -207,14 +194,17 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
           dueDate: a.dueDate ?? null,
         })),
       });
-    } catch (e) {
-      // Fallback if the teacher profile is missing
-      return ok(res, {
-        role: 'teacher',
-        missingProfile: true,
-        myAttendanceToday: 'none',
-        recentAssignments: [],
-      });
+    } catch (e: any) {
+      // Only show missingProfile if profile actually isn't found, not for unexpected errors
+      if (e?.code === 'TEACHER_PROFILE_REQUIRED' || (e instanceof Error && e.message === 'Tenant DB required')) {
+        return ok(res, {
+          role: 'teacher',
+          missingProfile: true,
+          myAttendanceToday: 'none',
+          recentAssignments: [],
+        });
+      }
+      throw e; // Re-throw unexpected errors so they are properly logged
     }
   }
 
@@ -257,15 +247,15 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
     examFeePaymentsThisMonth,
     newAdmissionsThisMonth,
   ] = await Promise.all([
-    can('students') ? Student.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
-    can('teachers') ? Teacher.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
-    can('classes') ? Class.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
-    can('students') ? Student.aggregate([
+    can('students') ? tenantModels.Student.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
+    can('teachers') ? tenantModels.Teacher.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
+    can('classes') ? tenantModels.Class.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
+    can('students') ? tenantModels.Student.aggregate([
       { $match: tMatch({ isArchived: false }) },
       { $group: { _id: '$classId', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]) : Promise.resolve([]),
-    can('students') ? Student.aggregate([
+    can('students') ? tenantModels.Student.aggregate([
       { $match: tMatch({ isArchived: false }) },
       { $group: { _id: '$gender', count: { $sum: 1 } } },
     ]) : Promise.resolve([]),
@@ -322,8 +312,8 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
       { $group: { _id: { $dateToString: { format: '%Y-%m', date: '$date', timezone: SCHOOL_TIMEZONE } }, amount: { $sum: '$amount' } } },
     ]) : Promise.resolve([]),
     can('notices') ? tenantModels.Notice.find(scopeQuery(req, await resolveNoticeScope(user, req.tenantDb as mongoose.Connection))).select('title audienceType isPinned isImportant createdAt').sort({ createdAt: -1 }).limit(6).lean() : Promise.resolve([]),
-    can('exams') ? Exam.countDocuments(scopeQuery(req, { isArchived: false, $or: [{ startDate: { $gte: todayStart } }, { examDate: { $gte: todayStart } }, { status: { $in: ['Scheduled', 'Ongoing'] } }] })) : Promise.resolve(0),
-    can('exams') ? Exam.find(scopeQuery(req, { isArchived: false, $or: [{ startDate: { $gte: todayStart } }, { examDate: { $gte: todayStart } }, { status: { $in: ['Scheduled', 'Ongoing'] } }] }))
+    can('exams') ? tenantModels.Exam.countDocuments(scopeQuery(req, { isArchived: false, $or: [{ startDate: { $gte: todayStart } }, { examDate: { $gte: todayStart } }, { status: { $in: ['Scheduled', 'Ongoing'] } }] })) : Promise.resolve(0),
+    can('exams') ? tenantModels.Exam.find(scopeQuery(req, { isArchived: false, $or: [{ startDate: { $gte: todayStart } }, { examDate: { $gte: todayStart } }, { status: { $in: ['Scheduled', 'Ongoing'] } }] }))
       .select('name startDate endDate examDate status classId')
       .sort({ startDate: 1, examDate: 1 })
       .limit(5)
@@ -333,15 +323,15 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
       .sort({ dueDate: 1 })
       .limit(5)
       .lean() : Promise.resolve([]),
-    can('examFees') ? StudentExamFee.aggregate([
+    can('examFees') ? tenantModels.StudentExamFee.aggregate([
       { $match: tMatch({}) },
       { $group: { _id: null, expected: { $sum: '$netPayable' }, collected: { $sum: '$amountPaid' }, pending: { $sum: '$remainingBalance' }, count: { $sum: 1 } } },
     ]) : Promise.resolve([]),
-    can('examFees') ? ExamFeePayment.aggregate([
+    can('examFees') ? tenantModels.ExamFeePayment.aggregate([
       { $match: tMatch({ paymentDate: { $gte: thisMonthStart, $lt: thisMonthEnd } }) },
       { $group: { _id: null, amount: { $sum: '$amount' }, count: { $sum: 1 } } },
     ]) : Promise.resolve([]),
-    can('students') ? Student.countDocuments(
+    can('students') ? tenantModels.Student.countDocuments(
       scopeQuery(req, {
         isArchived: false,
         $or: [
@@ -353,14 +343,14 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
   ]);
 
   const classIds = studentsByClass.map((c: any) => c._id);
-  const classNames = await Class.find(scopeQuery(req, { _id: { $in: classIds } })).select('name').lean();
+  const classNames = await tenantModels.Class.find(scopeQuery(req, { _id: { $in: classIds } })).select('name').lean();
   const classMap = new Map(classNames.map((c: any) => [String(c._id), c.name]));
 
   // Class performance from published exams (last 8) — computed per exam, per student within tenant.
-  const publishedExams = await Exam.find(scopeQuery(req, { isPublished: true })).select('name classId subjects').sort({ examDate: -1 }).limit(8).lean();
+  const publishedExams = await tenantModels.Exam.find(scopeQuery(req, { isPublished: true })).select('name classId classIds subjects').sort({ examDate: -1 }).limit(8).lean();
   const examPerf: { exam: string; class: string; students: number; avgPercentage: number; passRate: number }[] = [];
   for (const exam of publishedExams) {
-    const marks = await Mark.find(scopeQuery(req, { examId: exam._id })).select('studentId subjectId marksObtained').lean();
+    const marks = await tenantModels.Mark.find(scopeQuery(req, { examId: exam._id })).select('studentId subjectId marksObtained').lean();
     if (marks.length === 0) continue;
     const perStudent = new Map<string, { obtained: number; max: number; failed: number }>();
     const subjectMax = new Map(exam.subjects.map((s: any) => [String(s.subjectId), { max: s.maxMarks, pass: s.passMarks ?? 0 }]));

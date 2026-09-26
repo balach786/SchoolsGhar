@@ -33,7 +33,6 @@ export async function authenticate(req: Request, _res: Response, next: NextFunct
 
     const account = await tenantModels.User.findById(payload.sub).select('_id isActive isArchived tenantId isPlatformAdmin roleId name email').lean();
     if (!account || account.isArchived) {
-      console.log('auth.ts: account not found or archived', { payloadSub: payload.sub, payloadTenantId: payload.tenantId, dbName: tenantDb.name, account });
       throw ApiError.unauthorized('Account no longer exists. Please sign in again.');
     }
     if (!account.isActive) {

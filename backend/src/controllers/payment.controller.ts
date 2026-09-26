@@ -7,8 +7,6 @@ import { paginated, ok, created } from '../utils/apiResponse';
 import { publicPayment } from '../models/Payment';
 import { publicStudentFee } from '../models/StudentFee';
 import { publicFeeStructure } from '../models/FeeStructure';
-import { User } from '../models/User';
-import { SchoolSettings } from '../models/SchoolSettings';
 import { recordPayment, ownStudentScope, type AuthedUser } from '../services/finance.service';
 import { executePaymentReversal } from '../services/reversal.service';
 import { recordAudit } from '../services/audit.service';
@@ -21,7 +19,7 @@ const PAGE_MAX = 100;
 
 async function resolveNames(req: Request, payments: any[]) {
   const tenantDb = (req as any).tenantDb as mongoose.Connection;
-  const { Student, StudentFee, FeeStructure } = getTenantModels(tenantDb);
+  const { Student, StudentFee, FeeStructure, User } = getTenantModels(tenantDb);
   const ids = (key: string) => Array.from(new Set(payments.map((p) => p[key]).filter(Boolean).map((v: unknown) => String(v))));
   const [students, users, studentFees] = await Promise.all([
     Student.find(scopeQuery(req, { _id: { $in: ids('studentId') } })).select('fullName admissionNumber rollNumber classId sectionId').lean(),
@@ -195,7 +193,7 @@ export const listPayments = asyncHandler(async (req: AuthRequest, res: Response)
 export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Response) => {
   const tenantDb = (req as any).tenantDb as mongoose.Connection;
   if (!tenantDb) throw new ApiError(500, 'tenantDb connection is required', 'TENANT_DB_MISSING');
-  const { FeeStructure, StudentFee, Payment, FeeSetting, FeeDiscount, Class, AcademicSession, Student, Section } = getTenantModels(tenantDb);
+  const { FeeStructure, StudentFee, Payment, FeeSetting, FeeDiscount, Class, AcademicSession, Student, Section, SchoolSettings, User } = getTenantModels(tenantDb);
 
   const user = req.user as unknown as AuthedUser;
   const payment = await Payment.findOne(scopeQuery(req, { _id: req.params.id }));

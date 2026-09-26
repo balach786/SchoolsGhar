@@ -1,13 +1,6 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ok } from '../utils/apiResponse';
-import { Student } from '../models/Student';
-import { Teacher } from '../models/Teacher';
-import { Payment } from '../models/Payment';
-import { StudentFee } from '../models/StudentFee';
-import { Exam } from '../models/Exam';
-import { Notice } from '../models/Notice';
-import { Class } from '../models/Class';
 import { AuthRequest } from '../types';
 import { getOwnStudent, type AuthedUser } from '../services/attendance.service';
 import { resolveNoticeScope } from '../services/prompt7.service';
@@ -15,11 +8,13 @@ import { hasPermission } from '../services/permission.service';
 import { scopeQuery } from '../utils/tenantScope';
 import mongoose from 'mongoose';
 import { getTenantModels } from '../services/TenantModelRegistry';
+import { ApiError } from '../utils/ApiError';
 
 const RESULT_LIMIT = 5;
 
 /**
  * Global search (Prompt 8) — permission- and ownership-scoped per role, strictly tenant-isolated.
+ * All queries use tenant-specific models via getTenantModels().
  */
 export const globalSearch = asyncHandler(async (req: AuthRequest, res: Response) => {
   const user = req.user as unknown as AuthedUser;
@@ -33,7 +28,10 @@ export const globalSearch = asyncHandler(async (req: AuthRequest, res: Response)
   const rx = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
 
   const sections: { section: string; title: string; items: { label: string; sublabel?: string; path: string }[] }[] = [];
-  const tenantDb = (req as AuthRequest).tenantDb as import('mongoose').Connection;
+  const tenantDb = (req as AuthRequest).tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
+  const { Student, Teacher, Payment, StudentFee, Exam, Class } = getTenantModels(tenantDb);
+
   const can = async (module: string) => hasPermission(user.roleId, user.role, module, 'view', req.user?.tenantId, tenantDb);
 
   const ownStudent = user.role === 'student' ? await getOwnStudent(user, tenantDb).catch(() => null) : null;
@@ -137,8 +135,8 @@ export const globalSearch = asyncHandler(async (req: AuthRequest, res: Response)
 
   // ── Notices (notices.view; audience-scoped) ──
   if (await can('notices')) {
-    const { Notice } = getTenantModels(req.tenantDb as mongoose.Connection);
-    const scope = await resolveNoticeScope(user, req.tenantDb as mongoose.Connection);
+    const { Notice } = getTenantModels(tenantDb);
+    const scope = await resolveNoticeScope(user, tenantDb);
     const noticeFilter = scopeQuery(req, { ...scope, title: rx });
     const notices = await Notice.find(noticeFilter)
       .select('title audienceType createdAt')

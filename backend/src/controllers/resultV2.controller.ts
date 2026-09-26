@@ -5,9 +5,8 @@ import mongoose from 'mongoose';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiError } from '../utils/ApiError';
 import { ok, created } from '../utils/apiResponse';
-import { Exam } from '../models/Exam';
-import { Student } from '../models/Student';
-import { Result, publicResult } from '../models/Result';
+import { publicResult } from '../models/Result';
+import { getTenantModels } from '../services/TenantModelRegistry';
 import {
   computeCanonicalResults,
   ResultPublicationService,
@@ -20,7 +19,7 @@ import { scopeQuery, requireTenantId, getTenantObjectId } from '../utils/tenantS
  * Ensure user has permission to access an exam's results.
  */
 async function loadExamForResults(req: AuthRequest, user: AuthedUser, examId: string) {
-  const exam = await Exam.findOne(scopeQuery(req, { _id: examId }));
+  const exam = await getTenantModels(req.tenantDb as mongoose.Connection).Exam.findOne(scopeQuery(req, { _id: examId }));
   if (!exam) throw ApiError.notFound('Exam not found');
 
   // Students: own class only + published only
@@ -117,7 +116,7 @@ export const getStudentResultHistory = asyncHandler(async (req: AuthRequest, res
     }
   }
 
-  const history = await Result.find({
+  const history = await getTenantModels(req.tenantDb as mongoose.Connection).Result.find({
     tenantId,
     examId,
     studentId,
@@ -269,7 +268,7 @@ export const getLatestPublishedResult = asyncHandler(async (req: AuthRequest, re
   }
 
   // Fetch the full cohort to calculate rank and class strength accurately
-  const publishedDocs = await Result.find({ examId, tenantId }).sort({ version: -1 }).lean();
+  const publishedDocs = await getTenantModels(req.tenantDb as mongoose.Connection).Result.find({ examId, tenantId }).sort({ version: -1 }).lean();
   if (!publishedDocs.length) {
     throw ApiError.notFound('No published result found for this exam');
   }
@@ -292,11 +291,11 @@ export const getPublishedSummary = asyncHandler(async (req: AuthRequest, res: Re
   if (!examId) throw ApiError.badRequest('examId is required', 'EXAM_REQUIRED');
   const tenantId = getTenantObjectId(req);
 
-  const exam = await Exam.findOne(scopeQuery(req, { _id: examId })).lean();
+  const exam = await getTenantModels(req.tenantDb as mongoose.Connection).Exam.findOne(scopeQuery(req, { _id: examId })).lean();
   if (!exam) throw ApiError.notFound('Exam not found');
   if (!exam.isPublished) throw ApiError.badRequest('Exam is not published', 'EXAM_NOT_PUBLISHED');
 
-  const publishedDocs = await Result.find({ examId: exam._id, tenantId }).sort({ version: -1 }).lean();
+  const publishedDocs = await getTenantModels(req.tenantDb as mongoose.Connection).Result.find({ examId: exam._id, tenantId }).sort({ version: -1 }).lean();
   const cohort = buildCohortResults(publishedDocs);
 
   // Rebuild subjects array solely from snapshot configurations, prioritizing highest versions

@@ -4,9 +4,7 @@ import { AuthRequest } from '../types';
 import { ok } from '../utils/apiResponse';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiError } from '../utils/ApiError';
-import { Student } from '../models/Student';
-import { StudentHistory } from '../models/StudentHistory';
-import { Section } from '../models/Section';
+import { getTenantModels } from '../services/TenantModelRegistry';
 import { Tenant } from '../models/Tenant';
 import { requireSession, requireClass, requireSectionOfClass } from '../services/academic.service';
 import { recordAuditWithSession } from '../services/audit.service';
@@ -68,6 +66,7 @@ async function resolvePromotionRefs(
       isArchived: false,
     };
     if (tenantId) sectionFilter.tenantId = tenantId;
+    const { Section } = getTenantModels(tenantDb);
     let q = Section.findOne(sectionFilter).select('_id');
     if (mongoSession) q = q.session(mongoSession);
     const hasSection = await q.lean();
@@ -122,6 +121,7 @@ export const previewPromotion = asyncHandler(async (req: AuthRequest, res: Respo
     ...sectionFilter(sectionId ? new mongoose.Types.ObjectId(sectionId) : null),
   };
 
+  const { Student } = getTenantModels(req.tenantDb as mongoose.Connection);
   const students = await Student.find(scopeQuery(req, studentQuery))
     .select('fullName admissionNumber rollNumber gender isActive')
     .sort({ rollNumber: 1 })
@@ -192,6 +192,10 @@ export const promoteStudents = asyncHandler(async (req: AuthRequest, res: Respon
   // internally (correction #21 — no custom retry wrapper stacked on top).
   const mongoSession = await mongoose.startSession();
   let txResult: { total: number; promoted: number; skipped: number };
+
+  const tenantDb = req.tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
+  const { Student, StudentHistory } = getTenantModels(tenantDb);
 
   try {
     await mongoSession.withTransaction(async () => {

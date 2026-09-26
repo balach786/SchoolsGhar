@@ -2,13 +2,22 @@ import { Request, Response } from 'express';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiError } from '../utils/ApiError';
 import { ok, created } from '../utils/apiResponse';
-import { ExamAttendance, publicExamAttendance } from '../models/ExamAttendance';
-import { ExamSchedule } from '../models/ExamSchedule';
-import { Exam } from '../models/Exam';
-import { Student } from '../models/Student';
+import { publicExamAttendance } from '../models/ExamAttendance';
 import { scopeQuery, getTenantObjectId } from '../utils/tenantScope';
+import { getTenantModels } from '../services/TenantModelRegistry';
+import mongoose from 'mongoose';
+import { AuthRequest } from '../types';
+
+function getTenantDb(req: Request): mongoose.Connection {
+  const tenantDb = (req as AuthRequest).tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
+  return tenantDb;
+}
 
 export const getExamAttendanceSheet = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { ExamSchedule, ExamRollNumber, Student, ExamAttendance } = getTenantModels(tenantDb);
+  
   const { examId, date, startTime, block } = req.query;
 
   if (!examId || !date || !startTime || !block) {
@@ -27,24 +36,22 @@ export const getExamAttendanceSheet = asyncHandler(async (req: Request, res: Res
   }
 
   // Find students assigned to this block for this exam
-  const rollNumbers = await import('../models/ExamRollNumber').then(m => 
-    m.ExamRollNumber.find(scopeQuery(req, { examId, block })).lean()
-  );
+  const rollNumbers = await ExamRollNumber.find(scopeQuery(req, { examId, block })).lean();
 
   if (rollNumbers.length === 0) {
     return ok(res, { roster: [], records: [] }, 200, { message: 'No students assigned to this block' });
   }
 
   // Filter students who are actually scheduled for an exam at this time
-  const scheduleByClassId = new Map(schedules.map(s => [String(s.classId), s]));
-  const participatingRolls = rollNumbers.filter(r => scheduleByClassId.has(String(r.classId)));
+  const scheduleByClassId = new Map(schedules.map((s: any) => [String(s.classId), s]));
+  const participatingRolls = rollNumbers.filter((r: any) => scheduleByClassId.has(String(r.classId)));
 
   if (participatingRolls.length === 0) {
     return ok(res, { roster: [], records: [] }, 200, { message: 'No students in this block have an exam at this time' });
   }
 
-  const studentIds = participatingRolls.map(r => r.studentId);
-  const scheduleIds = schedules.map(s => s._id);
+  const studentIds = participatingRolls.map((r: any) => r.studentId);
+  const scheduleIds = schedules.map((s: any) => s._id);
 
   const [students, attendanceRecords] = await Promise.all([
     Student.find(scopeQuery(req, { _id: { $in: studentIds }, isArchived: false }))
@@ -54,15 +61,15 @@ export const getExamAttendanceSheet = asyncHandler(async (req: Request, res: Res
     ExamAttendance.find(scopeQuery(req, { examId, examScheduleId: { $in: scheduleIds }, block })).lean()
   ]);
 
-  const attMap = new Map(attendanceRecords.map((a) => [String(a.studentId), a]));
-  const studentMap = new Map(students.map((s) => [String(s._id), s]));
+  const attMap = new Map(attendanceRecords.map((a: any) => [String(a.studentId), a]));
+  const studentMap = new Map(students.map((s: any) => [String(s._id), s]));
 
   const roster = participatingRolls
-    .map((r) => {
-      const s = studentMap.get(String(r.studentId));
+    .map((r: any) => {
+      const s: any = studentMap.get(String(r.studentId));
       if (!s) return null;
       const record = attMap.get(String(s._id));
-      const sch = scheduleByClassId.get(String(s.classId));
+      const sch: any = scheduleByClassId.get(String(s.classId));
       
       return {
         studentId: String(s._id),
@@ -96,6 +103,9 @@ export const getExamAttendanceSheet = asyncHandler(async (req: Request, res: Res
 });
 
 export const markExamAttendance = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { ExamAttendance } = getTenantModels(tenantDb);
+  
   const tenantId = getTenantObjectId(req);
   const { examId, block, records } = req.body;
 

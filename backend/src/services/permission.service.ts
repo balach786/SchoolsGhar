@@ -26,28 +26,15 @@ export async function effectiveRole(roleId: string, tenantId?: string, tenantDb?
     const { getTenantModels } = await import('./TenantModelRegistry');
     const tenantModels = getTenantModels(tenantDb);
     role = await tenantModels.Role.findById(roleId).lean();
-    console.log(`Queried Role from tenantModels:`, !!role);
   } else {
     role = await Role.findById(roleId).lean();
-    console.log(`Queried Role from default models:`, !!role);
-  }
-  
-  if (!role) {
-    console.error(`effectiveRole role is null!`);
-  }
-  if (role && role.tenantId && String(role.tenantId) !== tenantId) {
-    console.error(`effectiveRole tenant mismatch: ${role.tenantId} != ${tenantId}`);
   }
 
   if (!role || (role.tenantId && String(role.tenantId) !== tenantId)) {
-    console.error(`effectiveRole null for roleId=${roleId}, tenantId=${tenantId}`);
     return null;
   }
   const override = tenantId ? await TenantRoleOverride.findOne({ roleId, tenantId }).lean() : null;
-  
-  if (override) console.log(`effectiveRole override: ${override.isActive}`);
-  else console.log(`effectiveRole role: ${role.isActive}`);
-  
+
   // Dynamically pull FULL_ACCESS for Admin & Super Admin to prevent staleness
   const corePerms = (role.slug === ROLE_SLUGS.superAdmin || role.slug === ROLE_SLUGS.admin) 
     ? normalizePermissions(FULL_ACCESS)
@@ -125,10 +112,11 @@ export async function hasPermission(
   roleSlug: string,
   module: string,
   action: PermissionAction,
-  tenantId?: string
+  tenantId?: string,
+  tenantDb?: mongoose.Connection
 ): Promise<boolean> {
   if (!tenantId) return false;
-  const perms = await getRolePermissionMap(roleId, roleSlug, tenantId);
+  const perms = await getRolePermissionMap(roleId, roleSlug, tenantId, tenantDb);
   return (perms[module] ?? []).includes(action);
 }
 

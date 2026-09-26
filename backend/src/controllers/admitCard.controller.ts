@@ -2,27 +2,32 @@ import { Request, Response } from 'express';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiError } from '../utils/ApiError';
 import { ok, created } from '../utils/apiResponse';
-import { Exam } from '../models/Exam';
-import { ExamSchedule, publicExamSchedule } from '../models/ExamSchedule';
-import { StudentExamFee } from '../models/StudentExamFee';
-import { AdmitCardOverride, publicAdmitCardOverride } from '../models/AdmitCardOverride';
-import { Student } from '../models/Student';
-import { Class } from '../models/Class';
-import { Section } from '../models/Section';
-import { Subject } from '../models/Subject';
-import { AcademicSession } from '../models/AcademicSession';
-import { SchoolSettings, publicSchoolSettings } from '../models/SchoolSettings';
+import { publicExamSchedule } from '../models/ExamSchedule';
+import { publicAdmitCardOverride } from '../models/AdmitCardOverride';
+import { publicSchoolSettings } from '../models/SchoolSettings';
 import { scopeQuery, getTenantObjectId } from '../utils/tenantScope';
+import { getTenantModels } from '../services/TenantModelRegistry';
+import mongoose from 'mongoose';
+import { AuthRequest } from '../types';
+
+function getTenantDb(req: Request): mongoose.Connection {
+  const tenantDb = (req as AuthRequest).tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
+  return tenantDb;
+}
 
 /** GET /api/admit-cards?examId=&classId=&sectionId= */
 export const listAdmitCards = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { Exam, Student, Class, Section, StudentExamFee, AdmitCardOverride, ExamRollNumber } = getTenantModels(tenantDb);
+
   const { examId, classId, sectionId } = req.query;
   if (!examId) throw ApiError.badRequest('examId is required', 'EXAM_REQUIRED');
 
   const exam = await Exam.findOne(scopeQuery(req, { _id: examId }));
   if (!exam) throw ApiError.notFound('Exam not found');
 
-  const examClassIds = exam.classIds && exam.classIds.length > 0 ? exam.classIds : (exam.classId ? [exam.classId] : []);
+  const examClassIds = (exam as any).classIds && (exam as any).classIds.length > 0 ? (exam as any).classIds : (exam.classId ? [exam.classId] : []);
   const targetClassId = classId || { $in: examClassIds };
 
   const studentFilter: Record<string, any> = {
@@ -48,7 +53,7 @@ export const listAdmitCards = asyncHandler(async (req: Request, res: Response) =
     AdmitCardOverride.find(scopeQuery(req, { examId })).lean(),
     Class.find(scopeQuery(req, {})).select('name').lean(),
     Section.find(scopeQuery(req, {})).select('name').lean(),
-    import('../models/ExamRollNumber').then(m => m.ExamRollNumber.find(scopeQuery(req, { examId })).lean()),
+    ExamRollNumber.find(scopeQuery(req, { examId })).lean(),
   ]);
 
   const feeMap = new Map(fees.map((f) => [String(f.studentId), f]));
@@ -57,7 +62,7 @@ export const listAdmitCards = asyncHandler(async (req: Request, res: Response) =
   const sectionMap = new Map(sections.map((s) => [String(s._id), s.name]));
   const rollMap = new Map(rollNumbers.map((r) => [String(r.studentId), r]));
 
-  const requireFee = exam.requireExamFeeForAdmitCard;
+  const requireFee = (exam as any).requireExamFeeForAdmitCard;
 
   const cards = students.map((s) => {
     const fee = feeMap.get(String(s._id));
@@ -120,6 +125,9 @@ export const listAdmitCards = asyncHandler(async (req: Request, res: Response) =
 
 /** POST /api/admit-cards/override — admin override for unpaid student */
 export const overrideAdmitCard = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { Exam, Student, AdmitCardOverride } = getTenantModels(tenantDb);
+
   const tenantId = getTenantObjectId(req);
   const { examId, studentId, reason } = req.body;
 
@@ -146,6 +154,9 @@ export const overrideAdmitCard = asyncHandler(async (req: Request, res: Response
 
 /** DELETE /api/admit-cards/override */
 export const revokeOverride = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { AdmitCardOverride } = getTenantModels(tenantDb);
+
   const { examId, studentId } = req.body;
   if (!examId || !studentId) throw ApiError.badRequest('examId and studentId are required');
   await AdmitCardOverride.deleteOne(scopeQuery(req, { examId, studentId }));
@@ -154,6 +165,9 @@ export const revokeOverride = asyncHandler(async (req: Request, res: Response) =
 
 /** GET /api/admit-cards/print?examId=&studentId=&classId= — printable admit card(s) */
 export const getPrintableAdmitCard = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { Exam, Student, Class, Section, AcademicSession, Subject, StudentExamFee, AdmitCardOverride, ExamSchedule, ExamRollNumber, SchoolSettings } = getTenantModels(tenantDb);
+
   const { examId, studentId, classId } = req.query;
   if (!examId || (!studentId && !classId)) {
     throw ApiError.badRequest('examId and either studentId or classId are required', 'MISSING_PARAMS');
@@ -187,7 +201,7 @@ export const getPrintableAdmitCard = asyncHandler(async (req: Request, res: Resp
     Section.find(scopeQuery(req, {})).select('name').lean(),
     AcademicSession.findOne(scopeQuery(req, { _id: exam.sessionId })).select('name').lean(),
     ExamSchedule.find(scopeQuery(req, { examId })).sort({ examDate: 1, startTime: 1 }).lean(),
-    import('../models/ExamRollNumber').then(m => m.ExamRollNumber.find(scopeQuery(req, { examId, studentId: { $in: studentIds } })).lean()),
+    ExamRollNumber.find(scopeQuery(req, { examId, studentId: { $in: studentIds } })).lean(),
   ]);
 
   const feeMap = new Map(allFees.map((f) => [String(f.studentId), f]));
@@ -218,7 +232,7 @@ export const getPrintableAdmitCard = asyncHandler(async (req: Request, res: Resp
     const seatNumber = rollInfo?.seatNumber;
 
     // If studentId was requested explicitly, enforce fee blocking if fee is unpaid and not overridden
-    if (studentId && exam.requireExamFeeForAdmitCard && !override) {
+    if (studentId && (exam as any).requireExamFeeForAdmitCard && !override) {
       if (!fee || fee.status !== 'paid') {
         throw ApiError.forbidden(
           'Admit card blocked: Exam fee is pending for this student. Clear fees or grant an authorized admin override.',
@@ -228,7 +242,7 @@ export const getPrintableAdmitCard = asyncHandler(async (req: Request, res: Resp
     }
 
     // For batch printing, skip students whose fees are blocked without override
-    if (!studentId && exam.requireExamFeeForAdmitCard && !override && (!fee || fee.status !== 'paid')) {
+    if (!studentId && (exam as any).requireExamFeeForAdmitCard && !override && (!fee || fee.status !== 'paid')) {
       continue;
     }
 

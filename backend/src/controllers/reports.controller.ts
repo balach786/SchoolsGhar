@@ -1,30 +1,32 @@
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
+import { AuthRequest } from '../types';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ok } from '../utils/apiResponse';
-import { Student } from '../models/Student';
-import { Teacher } from '../models/Teacher';
-import { Class } from '../models/Class';
-import { Subject } from '../models/Subject';
-import { AcademicSession } from '../models/AcademicSession';
-import { StudentAttendance } from '../models/StudentAttendance';
-import { TeacherAttendance } from '../models/TeacherAttendance';
-import { Exam } from '../models/Exam';
-import { Mark } from '../models/Mark';
-import { Payment } from '../models/Payment';
-import { StudentHistory } from '../models/StudentHistory';
+import { getTenantModels } from '../services/TenantModelRegistry';
 import { sendCsv, wantsCsv } from '../utils/csv';
 import { scopeQuery, getTenantObjectId } from '../utils/tenantScope';
 import { getSchoolMonthRange, getSchoolCurrentMonthISO } from '../utils/schoolDate';
 import { computeAttendanceRate } from '../services/attendance.service';
+import { ApiError } from '../utils/ApiError';
 
 /**
  * Report center (Prompt 8) — compact, filterable report endpoints.
  * Each supports ?format=csv with the same filters as the JSON response.
+ * All queries use tenant-specific models via getTenantModels().
  */
+
+function getTenantDb(req: Request): mongoose.Connection {
+  const tenantDb = (req as AuthRequest).tenantDb as mongoose.Connection;
+  if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
+  return tenantDb;
+}
 
 /** GET /api/reports/exams — published exam performance (participants, avg %, pass rate). */
 export const examReport = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { Exam, Mark, Class } = getTenantModels(tenantDb);
+
   let filter: Record<string, any> = { isPublished: true };
   if (req.query.classId) filter.classId = req.query.classId;
   if (req.query.sessionId) filter.sessionId = req.query.sessionId;
@@ -39,7 +41,7 @@ export const examReport = asyncHandler(async (req: Request, res: Response) => {
   const totalPages = Math.ceil(totalRecords / limit) || 1;
 
   const exams = await Exam.find(filter)
-    .select('name classId sessionId subjects examDate')
+    .select('name classId classIds sessionId subjects examDate')
     .sort({ examDate: -1 })
     .skip(isExport ? 0 : skip)
     .limit(limit)
@@ -84,8 +86,8 @@ export const examReport = asyncHandler(async (req: Request, res: Response) => {
     const students = [...perStudent.values()];
     rows.push({
       exam: exam.name,
-      className: exam.classIds && exam.classIds.length > 0
-        ? exam.classIds.map(id => classMap.get(String(id)) ?? '—').join(', ')
+      className: (exam as any).classIds && (exam as any).classIds.length > 0
+        ? (exam as any).classIds.map((id: any) => classMap.get(String(id)) ?? '—').join(', ')
         : (classMap.get(String(exam.classId)) ?? '—'),
       examDate: exam.examDate ? new Date(exam.examDate).toISOString().slice(0, 10) : null,
       students: students.length,
@@ -104,6 +106,9 @@ export const examReport = asyncHandler(async (req: Request, res: Response) => {
 
 /** GET /api/reports/attendance?month=YYYY-MM&classId= — monthly attendance per class. */
 export const attendanceReport = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { StudentAttendance, Class } = getTenantModels(tenantDb);
+
   const month = typeof req.query.month === 'string' && /^\d{4}-(0[1-9]|1[0-2])$/.test(req.query.month)
     ? req.query.month
     : getSchoolCurrentMonthISO();
@@ -164,6 +169,9 @@ export const attendanceReport = asyncHandler(async (req: Request, res: Response)
 
 /** GET /api/reports/session-overview — one row per session: classes, students, teachers, fee collection. */
 export const sessionReport = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { AcademicSession, Class, Payment, Student, StudentHistory } = getTenantModels(tenantDb);
+
   let sessionFilter: Record<string, any> = {};
   if (req.query.sessionId) {
     sessionFilter._id = req.query.sessionId;
@@ -230,6 +238,9 @@ export const sessionReport = asyncHandler(async (req: Request, res: Response) =>
 
 /** GET /api/reports/teacher-workload — teachers, assigned classes/subjects, recent attendance %. */
 export const teacherReport = asyncHandler(async (req: Request, res: Response) => {
+  const tenantDb = getTenantDb(req);
+  const { Teacher, TeacherAttendance } = getTenantModels(tenantDb);
+
   const isExport = wantsCsv(req) || req.query.format === 'csv';
   const page = Math.max(1, parseInt(String(req.query.page || '1'), 10));
   const limit = isExport ? 10000 : Math.min(2000, Math.max(1, parseInt(String(req.query.limit || '50'), 10)));
@@ -256,11 +267,8 @@ export const teacherReport = asyncHandler(async (req: Request, res: Response) =>
       { $match: attMatch },
       { $group: { _id: '$teacherId', present: { $sum: { $cond: [{ $in: ['$status', ['present', 'late']] }, 1, 0] } }, total: { $sum: 1 } } },
     ]),
-
   ]);
   const attMap = new Map(attendance.map((a) => [String(a._id), a]));
-
-
 
   const rows = teachers.map((t) => {
     const att = attMap.get(String(t._id));
@@ -269,7 +277,6 @@ export const teacherReport = asyncHandler(async (req: Request, res: Response) =>
       teacherId: id,
       fullName: t.fullName,
       employeeId: t.employeeId,
-
       attendanceThisMonth: att && att.total > 0 ? Math.round((att.present / att.total) * 1000) / 10 : null,
     };
   });

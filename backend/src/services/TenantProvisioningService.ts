@@ -74,7 +74,6 @@ export class TenantProvisioningService {
         throw new Error('Failed to provision owner role');
       }
       
-      console.log(`Provisioned Role ID: ${ownerRole._id}`);
 
       // 3. Provision Owner User
       let ownerUser = await models.User.findOne({ email: email.toLowerCase() });
