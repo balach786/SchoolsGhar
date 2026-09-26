@@ -17,7 +17,7 @@ async function requireAssignmentForSubmission(user: AuthedUser, assignmentId: st
   const assignment = await Assignment.findOne({ _id: assignmentId, tenantId });
   if (!assignment) throw ApiError.notFound('Assignment not found');
   if (assignment.isArchived) throw ApiError.badRequest('Assignment is archived', 'ASSIGNMENT_ARCHIVED');
-  const scope = await resolveAssignmentScope(user);
+  const scope = await resolveAssignmentScope(user, tenantDb);
   const scopedClassIds = typeof scope.classId === 'object'
     ? (scope.classId.$in ?? []).map(String)
     : scope.classId ? [scope.classId] : null;

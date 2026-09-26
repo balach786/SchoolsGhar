@@ -633,6 +633,6 @@ export const getOwnProfile = asyncHandler(async (req: AuthRequest, res: Response
   if (!tenantDb) {
     throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
   }
-  const student = await getOwnStudent(req.user as never);
+  const student = await getOwnStudent(req.user as never, tenantDb);
   ok(res, publicStudent(student));
 });

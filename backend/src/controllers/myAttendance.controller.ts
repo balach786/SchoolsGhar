@@ -46,7 +46,7 @@ function summarize(counts: Record<string, number>) {
 
 /** GET /api/my-attendance — own student attendance, month-scoped, with summary. */
 export const studentMyAttendance = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const student = await getOwnStudent(req.user as unknown as AuthedUser);
+  const student = await getOwnStudent(req.user as unknown as AuthedUser, req.tenantDb as mongoose.Connection);
 
   const month = typeof req.query.month === 'string' && /^\d{4}-\d{2}$/.test(req.query.month) ? req.query.month : undefined;
   const { start, end } = monthBounds(month);

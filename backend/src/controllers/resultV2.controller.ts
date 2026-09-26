@@ -25,7 +25,7 @@ async function loadExamForResults(req: AuthRequest, user: AuthedUser, examId: st
 
   // Students: own class only + published only
   if (user.role === 'student') {
-    const own = await getOwnStudent(user);
+    const own = await getOwnStudent(user, req.tenantDb as mongoose.Connection);
     const examClassIds = (exam.classIds && exam.classIds.length > 0)
       ? exam.classIds.map(String)
       : [String(exam.classId)];
@@ -111,7 +111,7 @@ export const getStudentResultHistory = asyncHandler(async (req: AuthRequest, res
   const tenantId = getTenantObjectId(req);
 
   if (user.role === 'student') {
-    const own = await getOwnStudent(user);
+    const own = await getOwnStudent(user, req.tenantDb as mongoose.Connection);
     if (String(own._id) !== String(studentId)) {
       throw ApiError.forbidden('You can only view your own result history', 'RESULTS_FORBIDDEN');
     }
@@ -262,7 +262,7 @@ export const getLatestPublishedResult = asyncHandler(async (req: AuthRequest, re
   const tenantId = getTenantObjectId(req);
 
   if (user.role === 'student') {
-    const own = await getOwnStudent(user);
+    const own = await getOwnStudent(user, req.tenantDb as mongoose.Connection);
     if (String(own._id) !== String(studentId)) {
       throw ApiError.forbidden('You can only view your own result card', 'RESULTS_FORBIDDEN');
     }

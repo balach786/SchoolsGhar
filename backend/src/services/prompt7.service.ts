@@ -23,9 +23,9 @@ const OWNER_ROLES = ['super_admin', 'admin'];
 
 
 
-export async function resolveAssignmentScope(user: AuthedUser): Promise<Record<string, any>> {
+export async function resolveAssignmentScope(user: AuthedUser, tenantDb: mongoose.Connection): Promise<Record<string, any>> {
   if (user.role !== 'student') return {};
-  const student = await getOwnStudent(user);
+  const student = await getOwnStudent(user, tenantDb);
   const base = { classId: String(student.classId) } as Record<string, any>;
   if (student.sectionId) base.$or = [{ sectionId: null }, { sectionId: String(student.sectionId) }];
   return base;

@@ -165,7 +165,7 @@ export const listAttendance = asyncHandler(async (req: Request & { tenantDb?: mo
 
   let filter: Record<string, any> = {};
   if (user.role === 'teacher') {
-    const own = await getOwnTeacher(user);
+    const own = await getOwnTeacher(user, tenantDb);
     filter.teacherId = own._id;
   } else if (user.role === 'student') {
     throw ApiError.forbidden('Students cannot view teacher attendance', 'ATTENDANCE_FORBIDDEN');
@@ -220,7 +220,7 @@ export const summary = asyncHandler(async (req: Request & { tenantDb?: mongoose.
 
   const filter: Record<string, any> = {};
   if (user.role === 'teacher') {
-    const own = await getOwnTeacher(user);
+    const own = await getOwnTeacher(user, tenantDb);
     filter.teacherId = own._id;
   } else if (user.role === 'student') {
     throw ApiError.forbidden('Students cannot view teacher attendance', 'ATTENDANCE_FORBIDDEN');
@@ -281,7 +281,7 @@ export const downloadCsv = asyncHandler(async (req: Request & { tenantDb?: mongo
 
   let filter: Record<string, any> = {};
   if (user.role === 'teacher') {
-    const own = await getOwnTeacher(user);
+    const own = await getOwnTeacher(user, tenantDb);
     filter.teacherId = own._id;
   } else if (teacherId) {
     filter.teacherId = teacherId;
@@ -351,7 +351,7 @@ export const monthlySummary = asyncHandler(async (req: Request & { tenantDb?: mo
     ],
   };
   if (user.role === 'teacher') {
-    const own = await getOwnTeacher(user);
+    const own = await getOwnTeacher(user, tenantDb);
     teacherFilter = { _id: own._id };
   }
 

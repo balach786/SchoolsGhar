@@ -20,8 +20,8 @@ const OWNER_ROLES = ['super_admin', 'admin'];
 const PAGE_DEFAULT = 20;
 const PAGE_MAX = 100;
 
-async function requireAssignmentVisible(user: AuthedUser, assignment: any) {
-  const scope = await resolveAssignmentScope(user);
+async function requireAssignmentVisible(user: AuthedUser, assignment: any, tenantDb: mongoose.Connection) {
+  const scope = await resolveAssignmentScope(user, tenantDb);
   if (scope.classId) {
     if (typeof scope.classId === 'string' && String(assignment.classId) !== scope.classId) {
       throw ApiError.notFound('Assignment not found');
@@ -45,7 +45,7 @@ export const listAssignments = asyncHandler(async (req: AuthRequest, res: Respon
   const limit = Math.min(PAGE_MAX, Math.max(1, Number(req.query.limit) || PAGE_DEFAULT));
   const skip = (page - 1) * limit;
 
-  const scope = await resolveAssignmentScope(user);
+  const scope = await resolveAssignmentScope(user, tenantDb);
   const filter: Record<string, any> = scopeQuery(req, { ...scope });
   if (req.query.status === 'archived' && OWNER_ROLES.includes(user.role)) filter.isArchived = true;
   else if (req.query.status === 'all' && OWNER_ROLES.includes(user.role)) delete filter.isArchived;
@@ -61,7 +61,7 @@ export const listAssignments = asyncHandler(async (req: AuthRequest, res: Respon
   // Students additionally get their own submission status per assignment.
   let mySubmissions: any[] = [];
   if (user.role === 'student') {
-    mySubmissions = await Submission.find({ assignmentId: { $in: docs.map((d) => d._id) }, studentId: (await getOwnStudent(user))._id })
+    mySubmissions = await Submission.find({ assignmentId: { $in: docs.map((d) => d._id) }, studentId: (await getOwnStudent(user, tenantDb))._id })
       .select('assignmentId submittedAt isLate marksObtained feedback')
       .lean();
   }
@@ -112,7 +112,7 @@ export const createAssignment = asyncHandler(async (req: AuthRequest, res: Respo
     throw ApiError.badRequest('Provided sessionId does not match class academic session', 'SESSION_CLASS_MISMATCH');
   }
 
-  const teacher = user.role === 'teacher' ? await getOwnTeacher(user) : null;
+  const teacher = user.role === 'teacher' ? await getOwnTeacher(user, tenantDb) : null;
   const doc = await Assignment.create({
     ...req.body,
     tenantId,
@@ -136,7 +136,7 @@ export const getAssignment = asyncHandler(async (req: AuthRequest, res: Response
   const user = req.user as unknown as AuthedUser;
   const doc = await Assignment.findOne(scopeQuery(req, { _id: req.params.id }));
   if (!doc) throw ApiError.notFound('Assignment not found');
-  await requireAssignmentVisible(user, doc);
+  await requireAssignmentVisible(user, doc, tenantDb);
   const names = await resolveAssignmentNames([doc]);
   ok(res, publicAssignment(doc, names));
 });
@@ -155,7 +155,7 @@ export const updateAssignment = asyncHandler(async (req: AuthRequest, res: Respo
   if (doc.isArchived) throw ApiError.badRequest('Assignment is archived; restore it first', 'ASSIGNMENT_ARCHIVED');
 
   if (!OWNER_ROLES.includes(user.role)) {
-    const teacher = await getOwnTeacher(user);
+    const teacher = await getOwnTeacher(user, tenantDb);
     if (String(doc.teacherId) !== String(teacher._id)) {
       throw ApiError.forbidden('Only the authoring teacher can edit this assignment', 'ASSIGNMENT_FORBIDDEN');
     }
@@ -182,7 +182,7 @@ export const archiveAssignment = asyncHandler(async (req: AuthRequest, res: Resp
   const doc = await Assignment.findOne(scopeQuery(req, { _id: req.params.id }));
   if (!doc) throw ApiError.notFound('Assignment not found');
   if (!OWNER_ROLES.includes(user.role)) {
-    const teacher = await getOwnTeacher(user);
+    const teacher = await getOwnTeacher(user, tenantDb);
     if (String(doc.teacherId) !== String(teacher._id)) {
       throw ApiError.forbidden('Only the authoring teacher can archive this assignment', 'ASSIGNMENT_FORBIDDEN');
     }

@@ -76,7 +76,7 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
   // ── Student portal analytics ─────────────────
   if (user.role === 'student') {
     try {
-      const student = await getOwnStudent(user);
+      const student = await getOwnStudent(user, tenantDb);
       const today = dayBounds();
       const [attendanceSummary, upcomingFees, pendingAssignments, publishedExams, stuClass] = await Promise.all([
         StudentAttendance.aggregate([
@@ -177,7 +177,7 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
     try {
       const today = dayBounds();
 
-      const teacher = await getOwnTeacher(user);
+      const teacher = await getOwnTeacher(user, tenantDb);
       const allClassesDocs = await Class.find(scopeQuery(req, { isArchived: false })).select('_id name').lean();
       const classIds = allClassesDocs.map((c: any) => String(c._id));
 

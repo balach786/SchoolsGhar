@@ -36,7 +36,7 @@ export const globalSearch = asyncHandler(async (req: AuthRequest, res: Response)
   const tenantDb = (req as AuthRequest).tenantDb as import('mongoose').Connection;
   const can = async (module: string) => hasPermission(user.roleId, user.role, module, 'view', req.user?.tenantId, tenantDb);
 
-  const ownStudent = user.role === 'student' ? await getOwnStudent(user).catch(() => null) : null;
+  const ownStudent = user.role === 'student' ? await getOwnStudent(user, tenantDb).catch(() => null) : null;
 
   // ── Students (students.view; students search themselves) ──
   if ((await can('students')) || user.role === 'student') {

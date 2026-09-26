@@ -275,7 +275,7 @@ export const getRecord = asyncHandler(async (req: Request & { tenantDb?: mongoos
   if (!record) throw ApiError.notFound('Attendance record not found');
 
   if (user.role === 'student') {
-    const own = await getOwnStudent(user);
+    const own = await getOwnStudent(user, tenantDb);
     if (String(record.studentId) !== String(own._id)) {
       throw ApiError.forbidden('You can only view your own attendance', 'ATTENDANCE_FORBIDDEN');
     }
@@ -440,7 +440,7 @@ export const studentSummary = asyncHandler(async (req: Request & { tenantDb?: mo
   if (!student) throw ApiError.notFound('Student not found');
 
   if (user.role === 'student') {
-    const own = await getOwnStudent(user);
+    const own = await getOwnStudent(user, tenantDb);
     if (String(own._id) !== String(student._id)) {
       throw ApiError.forbidden('You can only view your own attendance', 'ATTENDANCE_FORBIDDEN');
     }
