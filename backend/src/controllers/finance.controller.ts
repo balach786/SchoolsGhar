@@ -24,7 +24,6 @@ function dayBounds(date: Date): { start: Date; end: Date } {
 
 import { ExamFeePayment } from '../models/ExamFeePayment';
 import { PaymentReversal } from '../models/PaymentReversal';
-import { ensureCurrentMonthlyInvoices } from '../services/feeManagement.service';
 
 /** GET /api/finance/dashboard — compact real-time aggregations. */
 export const dashboard = asyncHandler(async (req: AuthRequest, res: Response) => {
@@ -37,16 +36,6 @@ export const dashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
   const tenantDb = req.tenantDb as mongoose.Connection;
   if (!tenantDb) throw new ApiError(500, 'Tenant database connection missing', 'TENANT_DB_MISSING');
 
-  // Safely ensure the current calendar month's invoices are generated for all classes
-  if (tenantId && req.user) {
-    ensureCurrentMonthlyInvoices(tenantDb, tenantId, req.user)
-      .then(res => {
-        if (res.invoicesCreated > 0) {
-          console.log(`Auto-generated ${res.invoicesCreated} new invoices for the current month.`);
-        }
-      })
-      .catch(e => console.error('Failed to ensure current monthly invoices in dashboard:', e));
-  }
   const { Expense, Income, SalaryRecord, Payment, StudentFee, ExamFeePayment, PaymentReversal, Student } = getTenantModels(tenantDb);
 
   const tMatch = (extra: Record<string, any>) => (tenantId ? { ...extra, tenantId } : extra);

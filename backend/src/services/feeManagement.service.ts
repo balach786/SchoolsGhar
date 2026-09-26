@@ -623,6 +623,7 @@ export async function ensureCurrentMonthlyInvoices(
   invoicesCreated: number;
   invoicesSkipped: number;
   classesWithoutStructure: number;
+  failedClasses: number;
 }> {
   const now = options?.asOfDate || new Date();
   const currentMonth = now.getUTCMonth() + 1;
@@ -634,7 +635,8 @@ export async function ensureCurrentMonthlyInvoices(
     structuresFound: 0,
     invoicesCreated: 0,
     invoicesSkipped: 0,
-    classesWithoutStructure: 0
+    classesWithoutStructure: 0,
+    failedClasses: 0
   };
 
   if (!options?.asOfDate && syncCache.get(String(tenantId)) === cacheKey) {
@@ -661,8 +663,13 @@ export async function ensureCurrentMonthlyInvoices(
 
   const resolvedBillingYear = resolveBillingYearForSession(session, currentMonth);
 
-  // Find all active classes
-  const classes = await Class.find({ tenantId, isActive: true }).select('_id').lean();
+  // Find all active classes scoped to current session
+  const classes = await Class.find({
+    tenantId,
+    sessionId: session._id,
+    isActive: true,
+    isArchived: false
+  }).select('_id').lean();
 
   for (const cls of classes) {
     stats.classesChecked++;
@@ -701,11 +708,12 @@ export async function ensureCurrentMonthlyInvoices(
       stats.invoicesSkipped += generateStats.skipped;
     } catch (error) {
       console.error(`Failed to generate monthly invoices for class ${cls._id}`, error);
+      stats.failedClasses++;
     }
   }
 
-  // Update cache on success (only if not using asOfDate override)
-  if (!options?.asOfDate) {
+  // Update cache on success (only if not using asOfDate override and no failures occurred)
+  if (!options?.asOfDate && stats.failedClasses === 0) {
     syncCache.set(String(tenantId), cacheKey);
   }
 
