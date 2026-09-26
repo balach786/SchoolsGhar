@@ -143,6 +143,17 @@ interface ReceiptPayload {
     reference: string | null;
     notes: string | null;
     collectedByName: string;
+    allocations?: Array<{
+      studentFeeId: string;
+      amountAllocated: number;
+      feeTitle: string;
+      feeType: string;
+      month: number | null;
+      year: number | null;
+      netPayable: number;
+      currentRemainingBalance: number;
+      balanceAfterThisPayment: number;
+    }>;
   };
   student: {
     fullName: string;
@@ -164,7 +175,7 @@ interface ReceiptPayload {
     remainingBalanceAfter: number;
     status: string;
     chargeBreakdown?: any;
-  };
+  } | null;
 }
 
 export function CollectFeePage() {
@@ -898,49 +909,75 @@ export function CollectFeePage() {
 
             {/* Payment & Breakdown Snapshot */}
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-slate-100 font-semibold">
-                <span>Fee Description:</span>
-                <span>{issuedReceipt?.fee.title}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 text-slate-600">
-                <span>Base Original Amount:</span>
-                <span>{formatCurrency(issuedReceipt?.fee.originalAmount)}</span>
-              </div>
-              {issuedReceipt?.fee.discountAmount ? (
-                <div className="flex justify-between py-1 border-b border-slate-100 text-emerald-600 font-medium">
-                  <span>Applied Discount Snapshot:</span>
-                  <span>-{formatCurrency(issuedReceipt.fee.discountAmount)}</span>
-                </div>
-              ) : null}
-              {issuedReceipt?.fee.otherFeeAmount ? (
-                <div className="flex justify-between py-1 border-b border-slate-100 text-slate-700">
-                  <span>Auxiliary Charge Snapshot:</span>
-                  <span>+{formatCurrency(issuedReceipt.fee.otherFeeAmount)}</span>
-                </div>
-              ) : null}
-              {issuedReceipt?.fee.fineAmount ? (
-                <div className="flex justify-between py-1 border-b border-slate-100 text-purple-700 font-medium">
-                  <span>Assessed Late Fine Snapshot:</span>
-                  <span>+{formatCurrency(issuedReceipt.fee.fineAmount)}</span>
-                </div>
-              ) : null}
+              {issuedReceipt?.fee ? (
+                <>
+                  <div className="flex justify-between py-1 border-b border-slate-100 font-semibold">
+                    <span>Fee Description:</span>
+                    <span>{issuedReceipt.fee.title}</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-slate-100 text-slate-600">
+                    <span>Base Original Amount:</span>
+                    <span>{formatCurrency(issuedReceipt.fee.originalAmount)}</span>
+                  </div>
+                  {issuedReceipt.fee.discountAmount ? (
+                    <div className="flex justify-between py-1 border-b border-slate-100 text-emerald-600 font-medium">
+                      <span>Applied Discount Snapshot:</span>
+                      <span>-{formatCurrency(issuedReceipt.fee.discountAmount)}</span>
+                    </div>
+                  ) : null}
+                  {issuedReceipt.fee.otherFeeAmount ? (
+                    <div className="flex justify-between py-1 border-b border-slate-100 text-slate-700">
+                      <span>Auxiliary Charge Snapshot:</span>
+                      <span>+{formatCurrency(issuedReceipt.fee.otherFeeAmount)}</span>
+                    </div>
+                  ) : null}
+                  {issuedReceipt.fee.fineAmount ? (
+                    <div className="flex justify-between py-1 border-b border-slate-100 text-purple-700 font-medium">
+                      <span>Assessed Late Fine Snapshot:</span>
+                      <span>+{formatCurrency(issuedReceipt.fee.fineAmount)}</span>
+                    </div>
+                  ) : null}
 
-              <div className="flex justify-between py-1.5 border-b-2 border-slate-900 font-bold text-slate-900">
-                <span>Net Payable:</span>
-                <span>{formatCurrency(issuedReceipt?.fee.netPayable)}</span>
-              </div>
+                  <div className="flex justify-between py-1.5 border-b-2 border-slate-900 font-bold text-slate-900">
+                    <span>Net Payable:</span>
+                    <span>{formatCurrency(issuedReceipt.fee.netPayable)}</span>
+                  </div>
+                  
+                  <div className="flex justify-between py-1 text-slate-700">
+                    <span>Remaining Balance After Payment:</span>
+                    <span className="font-bold">
+                      {formatCurrency(issuedReceipt.fee.remainingBalanceAfter)}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="font-bold text-slate-900 py-1 border-b-2 border-slate-900 flex justify-between">
+                    <span className="w-1/2">Fee / Period</span>
+                    <span className="w-1/4 text-right">Allocated</span>
+                    <span className="w-1/4 text-right">Historical Bal</span>
+                  </div>
+                  {issuedReceipt?.payment.allocations?.map((alloc, idx) => (
+                    <div key={idx} className="flex justify-between py-2 border-b border-slate-100 items-center">
+                      <div className="w-1/2 flex flex-col">
+                        <span className="font-semibold text-slate-800">{alloc.feeTitle}</span>
+                        <span className="text-[10px] text-slate-500">Current Bal: {formatCurrency(alloc.currentRemainingBalance)}</span>
+                      </div>
+                      <span className="w-1/4 text-right font-medium text-emerald-700">
+                        {formatCurrency(alloc.amountAllocated)}
+                      </span>
+                      <span className="w-1/4 text-right font-medium text-slate-700">
+                        {formatCurrency(alloc.balanceAfterThisPayment)}
+                      </span>
+                    </div>
+                  ))}
+                </>
+              )}
 
               {/* Amount Paid Now */}
-              <div className="flex justify-between py-2 text-sm font-black text-emerald-700 bg-emerald-50/70 px-2 rounded">
-                <span>AMOUNT RECEIVED NOW:</span>
+              <div className="flex justify-between py-2 text-sm font-black text-emerald-700 bg-emerald-50/70 px-2 rounded mt-2">
+                <span>TOTAL RECEIVED NOW:</span>
                 <span>{formatCurrency(issuedReceipt?.payment.amount)}</span>
-              </div>
-
-              <div className="flex justify-between py-1 text-slate-700">
-                <span>Remaining Balance After Payment:</span>
-                <span className="font-bold">
-                  {formatCurrency(issuedReceipt?.fee.remainingBalanceAfter)}
-                </span>
               </div>
             </div>
 

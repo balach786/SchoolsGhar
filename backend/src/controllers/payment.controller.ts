@@ -266,9 +266,66 @@ export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Respons
   const isCancelled = totalRefunded >= payment.amount || reversals.some((r: any) => r.reversalType === 'full_reversal' || r.reversalType === 'void');
   const firstReversal = reversals.length > 0 ? reversals[reversals.length - 1] : null;
 
+  const siblingPayments = await Payment.find(scopeQuery(req, {
+    $or: [{ studentFeeId: { $in: feeIds } }, { 'allocations.studentFeeId': { $in: feeIds } }]
+  })).sort({ paymentDate: 1, createdAt: 1, _id: 1 }).lean();
+
+  const siblingPaymentIds = siblingPayments.map(p => p._id);
+  const siblingReversals = await PaymentReversal.find(scopeQuery(req, { paymentId: { $in: siblingPaymentIds } })).lean();
+
   const allocationsBreakdown = paymentAllocations.map((alloc: any) => {
     const feeDoc = fees.find((f: any) => String(f._id) === String(alloc.studentFeeId));
     if (!feeDoc) return { ...alloc, feeTitle: '—' };
+
+    const validPaymentsUpToThis = siblingPayments.filter((p: any) => {
+      const isBefore = new Date(p.paymentDate).getTime() < new Date(payment.paymentDate).getTime();
+      const isSameTimeButBefore = new Date(p.paymentDate).getTime() === new Date(payment.paymentDate).getTime() 
+        && (new Date(p.createdAt).getTime() < new Date(payment.createdAt).getTime() 
+            || (new Date(p.createdAt).getTime() === new Date(payment.createdAt).getTime() && String(p._id) <= String(payment._id)));
+      return isBefore || isSameTimeButBefore;
+    });
+
+    let paidUpToHere = 0;
+    for (const vp of validPaymentsUpToThis) {
+      if (vp.allocations && vp.allocations.length > 0) {
+        const vpAlloc = vp.allocations.find((a: any) => String(a.studentFeeId) === String(feeDoc._id));
+        if (vpAlloc) paidUpToHere += vpAlloc.amountAllocated;
+      } else if (String(vp.studentFeeId) === String(feeDoc._id)) {
+        paidUpToHere += vp.amount;
+      }
+    }
+
+    const validReversalsUpToThis = siblingReversals.filter((r: any) => {
+      let affectsThisFee = false;
+      if (r.obligationId && String(r.obligationId) === String(feeDoc._id)) affectsThisFee = true;
+      else if (!r.obligationId) {
+        const p = siblingPayments.find(sp => String(sp._id) === String(r.paymentId));
+        if (p && p.allocations && p.allocations.length > 0) affectsThisFee = p.allocations.some((a:any) => String(a.studentFeeId) === String(feeDoc._id));
+        else if (p && String(p.studentFeeId) === String(feeDoc._id)) affectsThisFee = true;
+      }
+      if (!affectsThisFee) return false;
+
+      const isBefore = new Date(r.createdAt).getTime() < new Date(payment.paymentDate).getTime();
+      const isSameTimeButBefore = new Date(r.createdAt).getTime() === new Date(payment.paymentDate).getTime() && String(r._id) <= String(payment._id);
+      return isBefore || isSameTimeButBefore;
+    });
+
+    let refundedUpToHere = 0;
+    for (const vr of validReversalsUpToThis) {
+      const p = siblingPayments.find(sp => String(sp._id) === String(vr.paymentId));
+      if (!p) continue;
+      
+      if (p.allocations && p.allocations.length > 0) {
+        const pAlloc = p.allocations.find((a: any) => String(a.studentFeeId) === String(feeDoc._id));
+        if (pAlloc) refundedUpToHere += pAlloc.amountAllocated;
+      } else {
+        refundedUpToHere += vr.amount;
+      }
+    }
+
+    const netPaidUpToHere = paidUpToHere - refundedUpToHere;
+    const balanceAfterThisPayment = Math.max(0, feeDoc.netPayable - netPaidUpToHere);
+
     return {
       studentFeeId: alloc.studentFeeId,
       amountAllocated: alloc.amountAllocated,
@@ -277,7 +334,8 @@ export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Respons
       month: feeDoc.billingMonth ?? feeDoc.month ?? null,
       year: feeDoc.billingYear ?? null,
       netPayable: feeDoc.netPayable,
-      currentRemainingBalance: feeDoc.remainingBalance
+      currentRemainingBalance: feeDoc.remainingBalance,
+      balanceAfterThisPayment
     };
   });
 
@@ -285,6 +343,7 @@ export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Respons
   if (payment.studentFeeId) {
     const f = fees.find((f: any) => String(f._id) === String(payment.studentFeeId));
     if (f) {
+      const bdn = allocationsBreakdown.find((a: any) => String(a.studentFeeId) === String(payment.studentFeeId));
       legacyFee = {
         title: structureMap.get(String(f.feeStructureId)) ?? '—',
         feeType: f.feeType,
@@ -297,7 +356,7 @@ export const paymentReceipt = asyncHandler(async (req: AuthRequest, res: Respons
         fineAmount: f.fineAmount ?? 0,
         chargeBreakdown: f.chargeBreakdown ?? null,
         netPayable: f.netPayable,
-        remainingBalanceAfter: f.remainingBalance,
+        remainingBalanceAfter: bdn ? bdn.balanceAfterThisPayment : f.remainingBalance,
         status: f.status,
       };
     }

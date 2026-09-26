@@ -476,11 +476,6 @@ export async function buildLedger(
     $or: [{ studentFeeId: { $in: feeIds } }, { 'allocations.studentFeeId': { $in: feeIds } }],
   };
   if (tenantId) payFilter.tenantId = new mongoose.Types.ObjectId(String(tenantId));
-  if (opts.from || opts.to) {
-    payFilter.paymentDate = {};
-    if (opts.from) payFilter.paymentDate.$gte = new Date(opts.from);
-    if (opts.to) payFilter.paymentDate.$lte = new Date(new Date(opts.to).getTime() + 24 * 3600 * 1000 - 1);
-  }
   const payments = await getTenantModels(tenantDb!).Payment.find(payFilter)
     .select('_id studentFeeId amount paymentDate receiptNumber paymentMethod allocations status')
     .sort({ paymentDate: 1, createdAt: 1 })
@@ -577,7 +572,18 @@ export async function buildLedger(
     running += r.charge - r.payment;
     r.balance = running;
   }
-  return rows;
+
+  let filteredRows = rows;
+  if (opts.from || opts.to) {
+    const fromTime = opts.from ? new Date(opts.from).getTime() : 0;
+    const toTime = opts.to ? new Date(new Date(opts.to).getTime() + 24 * 3600 * 1000 - 1).getTime() : Infinity;
+    filteredRows = rows.filter(r => {
+      const t = new Date(r.date).getTime();
+      return t >= fromTime && t <= toTime;
+    });
+  }
+
+  return filteredRows;
 }
 
 /** Resolve the staff profile for salary records with strict tenant verification. */
