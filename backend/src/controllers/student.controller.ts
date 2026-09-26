@@ -272,6 +272,13 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
   const session = await requireSession(String(body.sessionId), false, tenantId, undefined, tenantDb);
   const cls = await requireClass(String(body.classId), tenantId, undefined, tenantDb);
 
+  if (String(cls.sessionId) !== String(session._id)) {
+    throw ApiError.badRequest(
+      'Class does not belong to the selected session',
+      'INVALID_CLASS_SESSION'
+    );
+  }
+
   let section: any = null;
   if (body.sectionId) {
     section = await requireSectionOfClass(String(body.sectionId), String(cls._id), tenantId, undefined, tenantDb);
@@ -382,7 +389,7 @@ export const createStudent = asyncHandler(async (req: AuthRequest, res: Response
     }
   }
 
-  const userId = await requireUserLink(body.userId as string | null | undefined, 'student', undefined, tenantId);
+  const userId = await requireUserLink(body.userId as string | null | undefined, 'student', undefined, tenantId, undefined, tenantDb);
 
   let student: any;
   let attempts = 0;
@@ -471,29 +478,37 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
 
   const body = req.body as Record<string, unknown>;
 
-  if (body.sessionId !== undefined) await requireSession(String(body.sessionId), false, tenantId, undefined, tenantDb);
-  if (body.classId !== undefined) await requireClass(String(body.classId), tenantId, undefined, tenantDb);
-
   const prevSessionId = String(student.sessionId);
   const prevClassId = String(student.classId);
   const prevSectionId = student.sectionId ? String(student.sectionId) : undefined;
 
-  const sessionId = String(body.sessionId ?? student.sessionId);
-  const classId = String(body.classId ?? student.classId);
+  const finalSessionId = String(body.sessionId ?? student.sessionId);
+  const finalClassId = String(body.classId ?? student.classId);
 
-  let targetSectionId: string | undefined = undefined;
+  let finalSectionId: string | undefined = undefined;
   if (body.sectionId !== undefined) {
     if (body.sectionId) {
-      targetSectionId = String(body.sectionId);
-      const section = await requireSectionOfClass(targetSectionId, classId, tenantId, undefined, tenantDb);
-      if (String(section.sessionId) !== sessionId) {
-        throw ApiError.badRequest('Section does not belong to the selected session', 'INVALID_SECTION_SESSION');
-      }
+      finalSectionId = String(body.sectionId);
     } else {
-      targetSectionId = undefined;
+      finalSectionId = undefined;
     }
   } else {
-    targetSectionId = student.sectionId ? String(student.sectionId) : undefined;
+    finalSectionId = student.sectionId ? String(student.sectionId) : undefined;
+  }
+
+  // Final validation
+  const session = await requireSession(finalSessionId, false, tenantId, undefined, tenantDb);
+  const cls = await requireClass(finalClassId, tenantId, undefined, tenantDb);
+  
+  if (String(cls.sessionId) !== String(session._id)) {
+    throw ApiError.badRequest('Class does not belong to the selected session', 'INVALID_CLASS_SESSION');
+  }
+
+  if (finalSectionId) {
+    const section = await requireSectionOfClass(finalSectionId, finalClassId, tenantId, undefined, tenantDb);
+    if (String(section.sessionId) !== String(session._id)) {
+      throw ApiError.badRequest('Section does not belong to the selected session', 'INVALID_SECTION_SESSION');
+    }
   }
 
   if (body.admissionNumber !== undefined && body.admissionNumber !== student.admissionNumber) {
@@ -507,11 +522,15 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
   }
 
   if (body.rollNumber !== undefined) {
-    await assertRollNumberFree(req.tenantDb!, String(body.rollNumber), sessionId, classId, targetSectionId, tenantId, String(student._id));
+    await assertRollNumberFree(req.tenantDb!, String(body.rollNumber), finalSessionId, finalClassId, finalSectionId, tenantId, String(student._id));
   }
 
   const updates: Record<string, unknown> = { ...body };
-  if (body.dateOfBirth) updates.dateOfBirth = parseDateOrThrow(String(body.dateOfBirth), 'Date of birth');
+  if (body.dateOfBirth) {
+    const parsedDob = parseDateOrThrow(String(body.dateOfBirth), 'Date of birth');
+    if (parsedDob >= new Date()) throw ApiError.badRequest('Date of birth must be in the past');
+    updates.dateOfBirth = parsedDob;
+  }
   if (body.admissionDate) updates.admissionDate = parseDateOrThrow(String(body.admissionDate), 'Admission date');
   updates.email = body.email || undefined;
   updates.phone = body.phone || undefined;
@@ -521,7 +540,7 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
       delete updates.userId;
       unsetUserId = true;
     } else {
-      updates.userId = await requireUserLink(body.userId as string, 'student', String(student._id), tenantId);
+      updates.userId = await requireUserLink(body.userId as string, 'student', String(student._id), tenantId, undefined, tenantDb);
     }
   }
 
@@ -533,15 +552,15 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
     }
   }
 
-  Object.assign(student, updates, tenantDb);
+  Object.assign(student, updates);
   if (unsetUserId) student.set('userId', undefined);
   if (unsetSectionId) student.set('sectionId', undefined);
   await student.save();
 
   // Record academic history if placement changed
-  const newSessionId = sessionId;
-  const newClassId = classId;
-  const newSectionId = targetSectionId;
+  const newSessionId = finalSessionId;
+  const newClassId = finalClassId;
+  const newSectionId = finalSectionId;
   const academicChanged =
     prevSessionId !== newSessionId ||
     prevClassId !== newClassId ||
@@ -549,12 +568,12 @@ export const updateStudent = asyncHandler(async (req: AuthRequest, res: Response
 
   if (academicChanged) {
     let historyStatus: 'class_changed' | 'section_changed' | 'transferred' = 'class_changed';
-    if (prevClassId !== newClassId) {
+    if (prevSessionId !== newSessionId) {
+      historyStatus = 'transferred';
+    } else if (prevClassId !== newClassId) {
       historyStatus = 'class_changed';
     } else if (prevSectionId !== newSectionId) {
       historyStatus = 'section_changed';
-    } else if (prevSessionId !== newSessionId) {
-      historyStatus = 'transferred';
     }
 
     await StudentHistory.create({
@@ -589,9 +608,9 @@ export const archiveStudent = asyncHandler(async (req: AuthRequest, res: Respons
   const restore = req.path.endsWith('/restore');
   const student = await Student.findOne(scopeQuery(req, { _id: req.params.id }));
   if (!student) throw ApiError.notFound('Student not found');
+  const tenantIdObj = getTenantObjectId(req);
 
   if (!restore && !student.isArchived) {
-    const tenantIdObj = getTenantObjectId(req);
     const dues = await StudentFee.aggregate([
       {
         $match: {
@@ -619,6 +638,23 @@ export const archiveStudent = asyncHandler(async (req: AuthRequest, res: Respons
   if (student.isArchived) {
     student.isActive = false;
   } else if (restore) {
+    await requireSession(String(student.sessionId), false, tenantIdObj, undefined, tenantDb).catch(() => {
+      throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
+    });
+    const cls = await requireClass(String(student.classId), tenantIdObj, undefined, tenantDb).catch(() => {
+      throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
+    });
+    if (String(cls.sessionId) !== String(student.sessionId)) {
+      throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
+    }
+    if (student.sectionId) {
+      const sec = await requireSectionOfClass(String(student.sectionId), String(student.classId), tenantIdObj, undefined, tenantDb).catch(() => {
+        throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
+      });
+      if (String(sec.sessionId) !== String(student.sessionId)) {
+        throw ApiError.badRequest('Cannot restore student: Academic context is invalid or archived.', 'RESTORE_INVALID_ACADEMIC_CONTEXT');
+      }
+    }
     student.isActive = true;
   }
   await student.save();
