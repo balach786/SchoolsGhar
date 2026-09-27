@@ -149,10 +149,6 @@ async function validatePeriodReferences(
   }
 
   if (teacherId) {
-    // Teacher must be assigned to teach this subject
-    if (!subjectDoc?.teacherIds?.length || !subjectDoc.teacherIds.map(String).includes(String(teacherId))) {
-      throw ApiError.badRequest('Teacher is not assigned to teach this subject', 'INVALID_SUBJECT_TEACHER');
-    }
 
     await requireTeachingStaff(String(teacherId), tenantId, false, tenantDb);
   }

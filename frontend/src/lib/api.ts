@@ -188,18 +188,24 @@ api.interceptors.response.use(
 
 /** Extract a human-friendly message from an API error envelope. */
 export function apiErrorMessage(err: unknown, fallback = 'Something went wrong'): string {
-  if (axios.isAxiosError(err)) {
-    const axiosErr = err as AxiosError<{ error?: { message?: string; code?: string; details?: { path?: string; message?: string }[] } }>;
-    const errorData = axiosErr.response?.data?.error;
-    if (errorData) {
-      if (errorData.code === 'VALIDATION_ERROR' && Array.isArray(errorData.details) && errorData.details.length > 0) {
-        return errorData.details[0].message || errorData.message || fallback;
+  try {
+    if (axios.isAxiosError(err)) {
+      const errorData = err.response?.data?.error;
+      if (errorData) {
+        if (typeof errorData === 'string') return errorData;
+        if (errorData.code === 'VALIDATION_ERROR' && Array.isArray(errorData.details) && errorData.details.length > 0) {
+          const detailMsg = errorData.details[0].message;
+          if (typeof detailMsg === 'string') return detailMsg;
+        }
+        if (typeof errorData.message === 'string') return errorData.message;
+        return JSON.stringify(errorData);
       }
-      return errorData.message ?? fallback;
     }
-    return fallback;
+    if (err instanceof Error && typeof err.message === 'string') return err.message;
+  } catch (e) {
+    // Ignore
   }
-  return err instanceof Error ? err.message : fallback;
+  return fallback;
 }
 
 export interface ApiListResponse<T, S = any> {
