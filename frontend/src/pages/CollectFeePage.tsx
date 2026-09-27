@@ -213,6 +213,9 @@ export function CollectFeePage() {
   const [issuedReceipt, setIssuedReceipt] = useState<ReceiptPayload | null>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
 
+  const isSubmittingRef = useRef(false);
+  const idempotencyKeyRef = useRef(crypto.randomUUID());
+
   const canPay = can('payments', 'create');
 
   // Search Students
@@ -320,6 +323,7 @@ export function CollectFeePage() {
   // Submit Payment
   async function handleProcessPayment(e: React.FormEvent) {
     e.preventDefault();
+    if (isSubmittingRef.current) return;
     if (!selectedStudent || !targetInvoiceId) {
       toast.error('Please select an invoice or Auto-Allocate to apply payment');
       return;
@@ -336,6 +340,7 @@ export function CollectFeePage() {
       return;
     }
 
+    isSubmittingRef.current = true;
     setSubmittingPayment(true);
     try {
       const payload = {
@@ -349,11 +354,19 @@ export function CollectFeePage() {
 
       const res = await api.post<{ success: boolean; data: { payment: { _id: string } } }>(
         '/payments',
-        payload
+        payload,
+        {
+          headers: {
+            'Idempotency-Key': idempotencyKeyRef.current,
+          },
+        }
       );
 
       const paymentId = res.data.data.payment._id;
       toast.success('Payment recorded successfully!');
+
+      // Cycle the idempotency key for the next valid payment
+      idempotencyKeyRef.current = crypto.randomUUID();
 
       // Fetch Full Receipt for modal display & printing
       const receiptRes = await api.get<ApiDataResponse<ReceiptPayload>>(
@@ -366,6 +379,7 @@ export function CollectFeePage() {
     } catch (err: any) {
       toast.error(apiErrorMessage(err));
     } finally {
+      isSubmittingRef.current = false;
       setSubmittingPayment(false);
     }
   }

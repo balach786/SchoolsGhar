@@ -37,22 +37,52 @@ export async function nextReceiptNumber(
   }
   const year = paymentDate.getUTCFullYear();
   const counterKey = `${tenantId}:${prefix}-${year}`;
+  
+  // NEVER use the session for the counter increment.
+  // It must increment permanently even if the surrounding transaction aborts.
+  // This prevents rollback loops and eliminates WriteConflicts on concurrent payments.
   const options: mongoose.QueryOptions = { upsert: true, new: true };
-  if (session) {
-    options.session = session;
-  }
+  
   let model = ReceiptCounter;
+  let PaymentModel: any = null;
+  let PaymentReversalModel: any = null;
+
   if (tenantDb) {
     const { getTenantModels } = require('../services/TenantModelRegistry');
     model = getTenantModels(tenantDb).ReceiptCounter;
+    PaymentModel = getTenantModels(tenantDb).Payment;
+    PaymentReversalModel = getTenantModels(tenantDb).PaymentReversal;
+  } else {
+    PaymentModel = mongoose.models.Payment;
+    PaymentReversalModel = mongoose.models.PaymentReversal;
   }
-  const doc = await model.findOneAndUpdate(
-    { _id: counterKey },
-    { $inc: { seq: 1 } },
-    options
-  );
-  if (!doc) {
-    throw new Error('Failed to generate receipt sequence number');
+
+  // Generate until we find a completely free receipt number.
+  // This automatically bypasses any manual imports or legacy data collisions.
+  while (true) {
+    const doc = await model.findOneAndUpdate(
+      { _id: counterKey },
+      { $inc: { seq: 1 } },
+      options
+    );
+    
+    if (!doc) {
+      throw new Error('Failed to generate receipt sequence number');
+    }
+    
+    const receiptNumber = `${prefix}-${year}-${String(doc.seq).padStart(6, '0')}`;
+    
+    // Check if the generated number collides with existing records
+    if (PaymentModel) {
+      const existsInPayment = await PaymentModel.exists({ tenantId, receiptNumber }).session(session || null);
+      if (existsInPayment) continue;
+    }
+    
+    if (PaymentReversalModel) {
+      const existsInReversal = await PaymentReversalModel.exists({ tenantId, reversalReceiptNumber: receiptNumber }).session(session || null);
+      if (existsInReversal) continue;
+    }
+    
+    return receiptNumber;
   }
-  return `${prefix}-${year}-${String(doc.seq).padStart(6, '0')}`;
 }
