@@ -75,6 +75,7 @@ export async function nextReceiptNumber(
     // Check if the generated number collides with existing records
     if (PaymentModel) {
       const existsInPayment = await PaymentModel.exists({ tenantId, receiptNumber }).session(session || null);
+      console.log(`Checking ${receiptNumber} with tenantId ${tenantId}, exists:`, !!existsInPayment);
       if (existsInPayment) continue;
     }
     
