@@ -320,7 +320,7 @@ export function TimetablePage() {
           }
           results.push({ column: entity.label, success: true });
         } catch(err: any) {
-          results.push({ column: entity.label, success: false, error: err.response?.data?.error || err.message || 'Unknown error' });
+          results.push({ column: entity.label, success: false, error: apiErrorMessage(err) });
         }
       });
 
