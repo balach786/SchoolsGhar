@@ -145,7 +145,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-
+  scroll-padding-top: 120px;
 }
 
 body {
