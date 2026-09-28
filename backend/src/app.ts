@@ -13,13 +13,19 @@ export function createApp(): Express {
   const app = express();
 
   // ── CORS (MUST be first, before helmet or any other middleware) ──
-  const allowedOrigins = (env.frontendUrl || '').split(',').map((o) => o.trim()).filter(Boolean);
+  const allowedOrigins = [
+    'https://schoolsghar.site',
+    'https://www.schoolsghar.site',
+    'http://localhost:5173',
+    'http://localhost:3000',
+    ...(env.frontendUrl || '').split(',').map((o) => o.trim()).filter(Boolean)
+  ];
+  
   const corsOptions: cors.CorsOptions = {
     origin(origin, callback) {
-      // Allow exact matches or wildcard
       if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) return callback(null, true);
       // Automatically allow any Vercel preview domain or custom domain
-      if (origin.endsWith('.vercel.app') || origin.endsWith('.schoolsghar.site') || origin === 'https://schoolsghar.site') return callback(null, true);
+      if (origin.endsWith('.vercel.app') || origin.endsWith('.schoolsghar.site')) return callback(null, true);
       if (env.nodeEnv !== 'production' && /localhost|127\.0\.0\.1|e2b\.app/i.test(origin)) {
         return callback(null, true);
       }
@@ -27,7 +33,7 @@ export function createApp(): Express {
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-tenant-id', 'Idempotency-Key'],
   };
   app.use(cors(corsOptions));
 
