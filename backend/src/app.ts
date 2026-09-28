@@ -49,7 +49,7 @@ export function createApp(): Express {
         // Allow exact matches or wildcard
         if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) return callback(null, true);
         // Automatically allow any Vercel preview domain or custom domain for seamless testing
-        if (origin.endsWith('.vercel.app') || origin.endsWith('.schoolsghar.site')) return callback(null, true);
+        if (origin.endsWith('.vercel.app') || origin.endsWith('.schoolsghar.site') || origin === 'https://schoolsghar.site') return callback(null, true);
         if (env.nodeEnv !== 'production' && /localhost|127\.0\.0\.1|e2b\.app/i.test(origin)) {
           return callback(null, true);
         }
