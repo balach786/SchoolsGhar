@@ -12,6 +12,28 @@ import { requestContext } from './utils/logger';
 export function createApp(): Express {
   const app = express();
 
+  // ── CORS (MUST be first, before helmet or any other middleware) ──
+  const allowedOrigins = (env.frontendUrl || '').split(',').map((o) => o.trim()).filter(Boolean);
+  const corsOptions: cors.CorsOptions = {
+    origin(origin, callback) {
+      // Allow exact matches or wildcard
+      if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) return callback(null, true);
+      // Automatically allow any Vercel preview domain or custom domain
+      if (origin.endsWith('.vercel.app') || origin.endsWith('.schoolsghar.site') || origin === 'https://schoolsghar.site') return callback(null, true);
+      if (env.nodeEnv !== 'production' && /localhost|127\.0\.0\.1|e2b\.app/i.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, false);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key'],
+  };
+  app.use(cors(corsOptions));
+
+  // Explicit preflight handler — respond immediately to OPTIONS
+  app.options('*', cors(corsOptions));
+
   // ── Security headers ────────────────────────────────
   app.use(
     helmet({
@@ -35,33 +57,11 @@ export function createApp(): Express {
 
   // Serve public logos
   app.use('/uploads/logos', express.static(path.join(process.cwd(), 'uploads', 'logos'), {
-    maxAge: '1d', // Cache for 1 day
-    fallthrough: false, // If file not found, return 404 instead of passing to next
+    maxAge: '1d',
+    fallthrough: false,
   }));
   
   // Private files are served via authorized tenant-scoped endpoint: /api/files/proofs/:key
-
-  // ── CORS (frontend URL from env) ─────────────────────
-  const allowedOrigins = (env.frontendUrl || '').split(',').map((o) => o.trim()).filter(Boolean);
-  app.use(
-    cors({
-      origin(origin, callback) {
-        // Allow exact matches or wildcard
-        if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) return callback(null, true);
-        // Automatically allow any Vercel preview domain or custom domain for seamless testing
-        if (origin.endsWith('.vercel.app') || origin.endsWith('.schoolsghar.site') || origin === 'https://schoolsghar.site') return callback(null, true);
-        if (env.nodeEnv !== 'production' && /localhost|127\.0\.0\.1|e2b\.app/i.test(origin)) {
-          return callback(null, true);
-        }
-        // Disallowed origin → no CORS headers (browser blocks the response).
-        // Returning false keeps the request flowing without an error.
-        return callback(null, false);
-      },
-      credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key'],
-    })
-  );
 
   // ── Parsing ─────────────────────────────────────────
   app.use(express.json({ limit: '1mb' }));
