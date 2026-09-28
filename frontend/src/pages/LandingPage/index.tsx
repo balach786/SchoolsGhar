@@ -473,7 +473,7 @@ export function LandingPage() {
         {/* =========================================================
             HERO SECTION (Navy #070d1e) WITH WAVY BOTTOM TO WHITE
             ========================================================= */}
-        <section id="home" className="marketing-hero relative min-h-screen flex flex-col justify-center pt-24 sm:pt-32 pb-12">
+        <section id="home" className="marketing-hero relative flex flex-col justify-start pt-24 sm:pt-32">
           <div className="hero-lines" aria-hidden="true" />
           <div
             className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-600/25 via-blue-800/10 to-transparent blur-3xl pointer-events-none"
@@ -524,13 +524,30 @@ export function LandingPage() {
           </StaggerContainer>
 
           {/* Live School Management Dashboard Showcase */}
-          <div className="hero-product -mb-2 sm:-mb-3 relative z-20">
+          <div className="hero-product pb-0 relative z-20">
             <HeroDashboardMockup />
           </div>
-
-          {/* 1. Seamless Wavy Transition from Hero into Value Strip (White) */}
-          <CurvedSectionDivider from="transparent" to="#ffffff" height={90} />
         </section>
+
+        {/* 1. Seamless Wavy Transition from Hero into Value Strip (White) */}
+        <div
+          className="w-full block relative z-10 select-none pointer-events-none"
+          style={{ background: 'linear-gradient(145deg, #0d1b3e 0%, #172a6b 100%)', marginTop: '-2px', marginBottom: '-2px' }}
+          aria-hidden="true"
+        >
+          <svg
+            className="w-full block"
+            style={{ height: '90px', display: 'block', verticalAlign: 'bottom' }}
+            viewBox="0 0 1440 120"
+            preserveAspectRatio="none"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M -100 20 C 220 90, 440 10, 720 50 C 1000 90, 1220 15, 1540 40 V 125 H -100 Z" fill="#93C5FD" style={{ opacity: 0.35 }} />
+            <path d="M -100 38 C 240 105, 480 25, 740 70 C 1000 110, 1240 30, 1540 55 V 125 H -100 Z" fill="#2563EB" style={{ opacity: 0.65 }} />
+            <path d="M -100 62 C 260 118, 510 45, 760 85 C 1020 118, 1260 48, 1540 75 V 125 H -100 Z" fill="#ffffff" />
+          </svg>
+        </div>
 
         {/* Value Strip (Vibrant, Colorful Feature Badges) */}
         {/* Value Strip (Headline Placed Above 4 Full-Width Cards) */}
