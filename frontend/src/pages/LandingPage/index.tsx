@@ -173,9 +173,6 @@ function FloatingNavbar() {
           </Button>
         </div>
         <div className="mobile-menu-trigger items-center gap-2">
-          <Link to="/login" className="px-4 py-1.5 text-sm font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-full hover:bg-blue-100 transition-colors">
-            Sign In
-          </Link>
           <Button
             variant="ghost"
             size="icon"
@@ -514,7 +511,7 @@ export function LandingPage() {
                   Start Your 7-Day Free Trial <ArrowRight className="ml-2" size={18} />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="w-full sm:w-auto h-12 text-base sm:px-8 bg-transparent border-blue-400/30 text-blue-100 hover:bg-blue-900/50 hover:text-white">
+              <Button size="lg" variant="outline" asChild className="w-full sm:w-auto h-12 text-base bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm font-semibold rounded-full transition">
                 <Link to="/login">
                   Sign In / Login
                 </Link>
