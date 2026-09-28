@@ -528,20 +528,20 @@ export function LandingPage() {
           </StaggerContainer>
 
           {/* Live School Management Dashboard Showcase */}
-          <div className="hero-product pb-0 -mb-8 sm:-mb-16 lg:-mb-24 relative z-20">
+          <div className="hero-product relative z-20 mb-8 sm:mb-12">
             <HeroDashboardMockup />
           </div>
         </section>
 
         {/* 1. Seamless Wavy Transition from Hero into Value Strip (White) */}
         <div
-          className="w-full block relative z-10 select-none pointer-events-none"
-          style={{ background: 'linear-gradient(145deg, #0d1b3e 0%, #172a6b 100%)', marginTop: '-2px', marginBottom: '-2px' }}
+          className="relative w-full overflow-hidden leading-none block z-10 select-none pointer-events-none"
+          style={{ background: 'linear-gradient(145deg, #0d1b3e 0%, #172a6b 100%)', marginTop: '-2px' }}
           aria-hidden="true"
         >
           <svg
-            className="w-full block"
-            style={{ height: '90px', display: 'block', verticalAlign: 'bottom' }}
+            className="w-full h-auto min-h-[40px] max-h-[90px] block"
+            style={{ verticalAlign: 'bottom' }}
             viewBox="0 0 1440 120"
             preserveAspectRatio="none"
             fill="none"

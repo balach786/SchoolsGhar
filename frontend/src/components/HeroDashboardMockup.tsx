@@ -165,7 +165,7 @@ export function HeroDashboardMockup() {
   const opacity = useTransform(smoothProgress, [0, 1], [0.5, 1]);
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-sm sm:max-w-xl lg:max-w-[1440px] mx-auto px-4 select-none" style={{ perspective: '1200px' }}>
+    <div ref={containerRef} className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 select-none" style={{ perspective: '1200px' }}>
       <motion.div 
         className="relative w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-transparent shadow-[0_30px_80px_rgba(15,23,42,0.18)]"
         style={prefersReducedMotion ? {} : { rotateX, y, scale, opacity }}
