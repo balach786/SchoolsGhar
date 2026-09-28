@@ -473,7 +473,7 @@ export function LandingPage() {
         {/* =========================================================
             HERO SECTION (Navy #070d1e) WITH WAVY BOTTOM TO WHITE
             ========================================================= */}
-        <section id="home" className="marketing-hero relative overflow-hidden">
+        <section id="home" className="marketing-hero relative min-h-screen flex flex-col justify-center pt-24 sm:pt-32 pb-12">
           <div className="hero-lines" aria-hidden="true" />
           <div
             className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-600/25 via-blue-800/10 to-transparent blur-3xl pointer-events-none"
@@ -491,7 +491,7 @@ export function LandingPage() {
               </span>
             </StaggerItem>
             <StaggerItem>
-              <h1>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
                 Run your entire school.
                 <br />
                 <span>From one smart platform.</span>
