@@ -247,6 +247,9 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
     examFeesAgg,
     examFeePaymentsThisMonth,
     newAdmissionsThisMonth,
+    admissionFeesToday,
+    admissionFeesMonth,
+    admissionFeesTotal,
   ] = await Promise.all([
     can('students') ? tenantModels.Student.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
     can('teachers') ? tenantModels.Teacher.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
@@ -352,6 +355,30 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
         ],
       })
     ) : Promise.resolve(0),
+    can('payments') ? tenantModels.Payment.aggregate([
+      { $match: tMatch({ paymentDate: { $gte: todayStart, $lt: todayEnd } }) },
+      { $unwind: '$allocations' },
+      { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
+      { $unwind: '$fee' },
+      { $match: { 'fee.feeType': 'admission_fee' } },
+      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
+    ]) : Promise.resolve([]),
+    can('payments') ? tenantModels.Payment.aggregate([
+      { $match: tMatch({ paymentDate: { $gte: thisMonthStart, $lt: thisMonthEnd } }) },
+      { $unwind: '$allocations' },
+      { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
+      { $unwind: '$fee' },
+      { $match: { 'fee.feeType': 'admission_fee' } },
+      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
+    ]) : Promise.resolve([]),
+    can('payments') ? tenantModels.Payment.aggregate([
+      { $match: tMatch({}) },
+      { $unwind: '$allocations' },
+      { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
+      { $unwind: '$fee' },
+      { $match: { 'fee.feeType': 'admission_fee' } },
+      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
+    ]) : Promise.resolve([]),
   ]);
 
   const classIds = studentsByClass.map((c: any) => c._id);
@@ -518,6 +545,9 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
       paymentsToday: paymentsToday[0]?.count ?? 0,
       pendingFees: feeSplit.unpaid?.count ?? 0,
       pendingFeesAmount,
+      admissionFeesToday: admissionFeesToday[0]?.amount ?? 0,
+      admissionFeesMonth: admissionFeesMonth[0]?.amount ?? 0,
+      admissionFeesTotal: admissionFeesTotal[0]?.amount ?? 0,
       partialFees: feeSplit.partial?.count ?? 0,
       paidFees: feeSplit.paid?.count ?? 0,
       incomeThisMonth: incomeThisMonth[0]?.amount ?? 0,

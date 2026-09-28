@@ -45,7 +45,7 @@ export function LaptopDashboardMockup({
       {/* 3D Perspective Stage with Tilt */}
       <div
         className={cn(
-          'laptop-3d-stage transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu',
+          'laptop-3d-stage transition-all duration-1000 ease-out transform-gpu',
           mounted
             ? 'opacity-100 translate-y-0 scale-100'
             : 'opacity-0 translate-y-8 scale-95'

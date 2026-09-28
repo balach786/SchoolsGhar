@@ -12,6 +12,9 @@ interface FeeOverviewCardProps {
   examFeeCollected: number;
   examFeePending: number;
   examFeeThisMonth?: number;
+  admissionFeesToday?: number;
+  admissionFeesMonth?: number;
+  admissionFeesTotal?: number;
   className?: string;
 }
 
@@ -21,6 +24,9 @@ export function FeeOverviewCard({
   examFeeCollected,
   examFeePending,
   examFeeThisMonth = 0,
+  admissionFeesToday = 0,
+  admissionFeesMonth = 0,
+  admissionFeesTotal = 0,
   className,
 }: FeeOverviewCardProps) {
   const navigate = useNavigate();
@@ -34,6 +40,8 @@ export function FeeOverviewCard({
 
   const totalExam = currentExamCollected + examFeePending;
   const examRate = totalExam > 0 ? Math.round((currentExamCollected / totalExam) * 100) : 0;
+
+  const currentAdmissionCollected = timeframe === 'month' ? admissionFeesMonth : admissionFeesTotal;
 
   return (
     <Card className={cn('rounded-2xl border border-[#FDE68A] bg-gradient-to-br from-[#FFFDF5] to-[#FEF3C7] shadow-sm flex flex-col', className)}>
@@ -170,6 +178,35 @@ export function FeeOverviewCard({
                 className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-500"
                 style={{ width: `${Math.min(100, examRate)}%` }}
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: Admission Fees (Violet) */}
+        <div className="rounded-2xl border border-violet-200/60 bg-violet-50/50 p-4 transition-colors hover:border-violet-400">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#6D28D9] text-white shadow-md shadow-violet-500/30">
+                <Receipt className="h-4 w-4 stroke-[2]" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-wider text-violet-950">
+                Admission Fees
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div>
+              <p className="text-[11px] font-medium text-violet-700/80">Collected</p>
+              <p className="text-base font-bold text-violet-950 truncate">
+                {formatCurrency(currentAdmissionCollected)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[11px] font-medium text-violet-700/80">Today</p>
+              <p className="text-base font-bold text-violet-600 truncate">
+                {formatCurrency(admissionFeesToday)}
+              </p>
             </div>
           </div>
         </div>

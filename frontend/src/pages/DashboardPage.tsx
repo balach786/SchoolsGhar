@@ -91,6 +91,9 @@ interface StaffAnalytics {
     examFeeCollected?: number;
     examFeePending?: number;
     examFeeCollectedThisMonth?: number;
+    admissionFeesToday?: number;
+    admissionFeesMonth?: number;
+    admissionFeesTotal?: number;
   };
   monthly: { month: string; collection: number; income: number; expenses: number }[];
   classPerformance: { exam: string; class: string; students: number; avgPercentage: number | null; passRate: number | null }[];
@@ -579,6 +582,9 @@ export function DashboardPage() {
                 examFeeCollected={staffData.finance.examFeeCollected ?? 0}
                 examFeePending={staffData.finance.examFeePending ?? 0}
                 examFeeThisMonth={staffData.finance.examFeeCollectedThisMonth ?? 0}
+                admissionFeesToday={staffData.finance.admissionFeesToday ?? 0}
+                admissionFeesMonth={staffData.finance.admissionFeesMonth ?? 0}
+                admissionFeesTotal={staffData.finance.admissionFeesTotal ?? 0}
                 className="h-full"
               />
             )}

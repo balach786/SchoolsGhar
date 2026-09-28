@@ -233,7 +233,7 @@ export function LoginPage() {
           ========================================================= */}
       <div
         className={cn(
-          'auth-wave-bg absolute top-0 h-full w-[60%] pointer-events-none z-10 transition-all duration-[850ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
+          'auth-wave-bg absolute top-0 h-full w-[60%] pointer-events-none z-10 transition-all duration-700 ease-out',
           isRegisterActive ? 'left-0 -scale-x-100' : 'right-0 scale-x-100'
         )}
       >

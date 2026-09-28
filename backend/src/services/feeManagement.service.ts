@@ -5,6 +5,7 @@ import { IFeeDiscount } from '../models/FeeDiscount';
 import { ApiError } from '../utils/ApiError';
 import { IStudentFee, IChargeBreakdown } from '../models/StudentFee';
 import { requireFeeStructure, resolveFeeContext, AuthedUser } from './finance.service';
+import { nextReceiptNumber } from '../models/ReceiptCounter';
 
 /**
  * Ensures a tenant FeeSetting document exists, initializing defaults if needed.
@@ -12,6 +13,7 @@ import { requireFeeStructure, resolveFeeContext, AuthedUser } from './finance.se
 export async function getOrCreateFeeSettings(tenantId: string | mongoose.Types.ObjectId, tenantDb: mongoose.Connection): Promise<IFeeSetting> {
   if (!tenantDb) throw new ApiError(500, 'tenantDb connection is required', 'TENANT_DB_MISSING');
   const { FeeSetting, FeeDiscount, StudentFee, FeeStructure, Student, StudentHistory, Payment, PaymentReversal, AcademicSession, Class, Section, ReceiptCounter } = getTenantModels(tenantDb);
+
 
   const tId = new mongoose.Types.ObjectId(String(tenantId));
   let settings = await FeeSetting.findOne({ tenantId: tId });
@@ -601,6 +603,119 @@ export async function ensureApplicableMonthlyInvoiceForStudent(
   } catch (error) {
     console.error(`Failed to generate monthly invoice for newly admitted student ${input.studentId}`, error);
   }
+}
+
+export async function ensureAdmissionInvoiceForStudent(
+  actor: AuthedUser,
+  input: {
+    tenantId: string | mongoose.Types.ObjectId;
+    studentId: string | mongoose.Types.ObjectId;
+    sessionId: string | mongoose.Types.ObjectId;
+    classId: string | mongoose.Types.ObjectId;
+    admissionFeePaisa: number;
+  },
+  tenantDb: mongoose.Connection
+): Promise<void> {
+  const { FeeStructure, StudentFee, FeeSetting } = getTenantModels(tenantDb);
+
+  // Find or create a generic admission fee structure for this class/session
+  let structure: any = await FeeStructure.findOne({
+    tenantId: input.tenantId,
+    sessionId: input.sessionId,
+    classId: input.classId,
+    feeType: 'admission_fee',
+  }).select('_id').lean();
+
+  if (!structure) {
+    // create a fallback one to satisfy the schema foreign key
+    const newStructure = await FeeStructure.create([{
+      tenantId: input.tenantId,
+      sessionId: input.sessionId,
+      classId: input.classId,
+      feeType: 'admission_fee',
+      title: 'Admission Fee',
+      amount: input.admissionFeePaisa, // Will be overridden per student anyway
+      isActive: true,
+      createdBy: actor._id ? new mongoose.Types.ObjectId(actor._id) : undefined,
+    }]);
+    structure = newStructure[0];
+  }
+
+  if (!structure) {
+    throw new Error('Failed to create or find admission fee structure');
+  }
+
+  // Determine due date from settings
+  let dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + 7); // Fallback: 7 days from now
+  const settings = await FeeSetting.findOne({ tenantId: input.tenantId }).lean();
+  if (settings && settings.dueDate && settings.dueDate.defaultMonthlyDueDay) {
+     const day = settings.dueDate.defaultMonthlyDueDay;
+     dueDate = new Date();
+     dueDate.setDate(day);
+     if (dueDate < new Date()) {
+       dueDate.setMonth(dueDate.getMonth() + 1);
+     }
+  }
+
+  // Create the StudentFee record directly (marked as paid)
+  const createdInvoices = await StudentFee.create([{
+    tenantId: input.tenantId,
+    studentId: input.studentId,
+    sessionId: input.sessionId,
+    classId: input.classId,
+    feeStructureId: structure._id,
+    title: 'Admission Fee',
+    feeType: 'admission_fee',
+    month: null,
+    billingMonth: null,
+    billingYear: null,
+    originalAmount: input.admissionFeePaisa,
+    discountAmount: 0,
+    scholarshipAmount: 0,
+    fineAmount: 0,
+    otherFeeAmount: 0,
+    netPayable: input.admissionFeePaisa,
+    amountPaid: input.admissionFeePaisa,
+    remainingBalance: 0,
+    status: 'paid',
+    dueDate: dueDate,
+    createdBy: actor._id ? new mongoose.Types.ObjectId(actor._id) : undefined,
+    chargeBreakdown: {
+      baseFeePaisa: input.admissionFeePaisa,
+      discount: { discountId: null, name: null, type: null, valueBps: null, amountPaisa: 0 },
+      lateFee: { applied: false, amountPaisa: 0, assessedAt: null },
+      otherFee: { applied: false, name: null, amountPaisa: 0 },
+      netPayablePaisa: input.admissionFeePaisa,
+    }
+  }]);
+
+  const invoice = createdInvoices[0];
+
+  // Create a Payment record so this is counted as revenue/income
+  const paymentDate = new Date();
+  const receiptNumber = await nextReceiptNumber(paymentDate, 'RCPT', String(input.tenantId), undefined, tenantDb);
+  
+  const { Payment } = getTenantModels(tenantDb);
+  await Payment.create([{
+    tenantId: input.tenantId,
+    studentId: input.studentId,
+    sessionId: input.sessionId,
+    amount: input.admissionFeePaisa,
+    refundableAmount: input.admissionFeePaisa,
+    paymentMethod: 'cash', // default payment method
+    paymentDate,
+    receiptNumber,
+    notes: 'Admission Fee (Auto-collected on admission)',
+    allocations: [
+      {
+        studentFeeId: invoice._id,
+        amountAllocated: input.admissionFeePaisa,
+      }
+    ],
+    status: 'active',
+    collectedBy: actor._id ? new mongoose.Types.ObjectId(actor._id) : undefined,
+  }]);
 }
 
 // Memory cache to prevent excessive full-school checks in serverless environment

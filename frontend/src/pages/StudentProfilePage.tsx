@@ -78,6 +78,7 @@ const schema = z.object({
   sectionId: z.string().optional().or(z.literal('')),
   confirmDuplicate: z.boolean().optional(),
   isAutoAdmissionNumber: z.boolean().optional(),
+  admissionFee: z.coerce.number().min(0).optional().or(z.literal('')),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -102,6 +103,7 @@ export function StudentProfilePage() {
   const [duplicateWarning, setDuplicateWarning] = useState<{ message: string; values: FormValues } | null>(null);
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
   const [showRestoreDialog, setShowRestoreDialog] = useState(false);
+  const [printData, setPrintData] = useState<{ student: any; formValues: FormValues } | null>(null);
 
   const canEdit = can('students', isNew ? 'create' : 'edit');
   const canArchive = can('students', 'archive');
@@ -134,6 +136,12 @@ export function StudentProfilePage() {
 
   if (authLoading) return <LoadingOverlay label="Loading..." />;
   if (isNew && !canEdit) return <LoadingOverlay label="Not authorized" />;
+  if (printData) {
+    return <AdmissionPrintSheet data={printData} sessions={sessions} classes={classes} sections={sections} onDone={() => {
+      navigate(`/students/${printData.student._id}`);
+      setPrintData(null);
+    }} />;
+  }
 
   return (
     <div>
@@ -189,7 +197,7 @@ export function StudentProfilePage() {
             try {
               const created = await api.post<ApiDataResponse<{ _id: string }>>('/students', values);
               toast.success('Student admitted');
-              navigate(`/students/${created.data.data._id}`);
+              setPrintData({ student: created.data.data, formValues: values });
             } catch (err: any) {
               const code = err?.response?.data?.error?.code;
               const msg = apiErrorMessage(err);
@@ -414,7 +422,7 @@ export function StudentProfilePage() {
           try {
             const created = await api.post<ApiDataResponse<{ _id: string }>>('/students', vals);
             toast.success('Student admitted');
-            navigate(`/students/${created.data.data._id}`);
+            setPrintData({ student: created.data.data, formValues: vals });
           } catch (err: any) {
             toast.error(apiErrorMessage(err));
           } finally {
@@ -495,7 +503,7 @@ function StudentForm({ initial, isNew, sessions, classes, sections, onSubmit, on
       dateOfBirth: '', email: '', phone: '', fatherName: '', caste: '', guardianName: '', guardianPhone: '', guardianRelationship: 'Father',
       address: '', admissionDate: todayStr, previousSchool: '',
       sessionId: activeSession?._id ?? '',
-      classId: '', sectionId: '',
+      classId: '', sectionId: '', admissionFee: '',
     });
   }, [initial, reset, sessions, activeSession]);
 
@@ -640,6 +648,18 @@ function StudentForm({ initial, isNew, sessions, classes, sections, onSubmit, on
               <Input placeholder="Former school name" {...register('previousSchool')} />
             </div>
           </div>
+          {isNew && (
+            <div className="space-y-1.5">
+              <Label>Admission Fee (Rs.)</Label>
+              <div className="flex gap-2 items-center">
+                <Input type="number" placeholder="e.g. 5000" min="0" className="w-1/2" {...register('admissionFee')} />
+                <div className="text-xs text-muted-foreground flex gap-1 items-center">
+                  <span>(Leave empty or enter 0 for Free Admission)</span>
+                </div>
+              </div>
+              {errors.admissionFee && <Err msg={errors.admissionFee.message} />}
+            </div>
+          )}
           <div className="space-y-1.5">
             <Label>Session *</Label>
             <Select value={sessionId || undefined} onValueChange={(v) => { setValue('sessionId', v, { shouldValidate: true }); setValue('classId', ''); setValue('sectionId', ''); }}>
@@ -719,4 +739,110 @@ function StudentForm({ initial, isNew, sessions, classes, sections, onSubmit, on
 
 function Err({ msg }: { msg?: string }) {
   return <p className="text-xs text-destructive">{msg}</p>;
+}
+
+function AdmissionPrintSheet({ data, sessions, classes, sections, onDone }: { data: { student: any; formValues: FormValues }, sessions: SessionLite[], classes: ClassLite[], sections: SectionLite[], onDone: () => void }) {
+  const [schoolSettings, setSchoolSettings] = useState<{ name: string; logoUrl?: string | null }>({ name: 'School Name' });
+  
+  useEffect(() => {
+    let mounted = true;
+    api.get('/school-settings').then(res => {
+      if (mounted && res.data?.data) {
+        setSchoolSettings({
+          name: res.data.data.schoolName || 'School Name',
+          logoUrl: res.data.data.schoolLogoUrl
+        });
+      }
+    }).catch(() => {});
+    return () => { mounted = false; };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.print();
+    }, 500);
+
+    const handleAfterPrint = () => {
+      onDone();
+    };
+    window.addEventListener('afterprint', handleAfterPrint);
+    
+    // Fallback if browser doesn't support afterprint properly or user navigates back
+    const fallbackTimer = setTimeout(() => {
+      // In some browsers print blocks JS so this runs after print dialog closes
+      // But if it's already done, this is safe since onDone removes the component
+      onDone();
+    }, 60000); 
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(fallbackTimer);
+      window.removeEventListener('afterprint', handleAfterPrint);
+    };
+  }, [onDone]);
+
+  const { formValues, student } = data;
+  
+  const className = classes.find((c) => c._id === formValues.classId)?.name || 'N/A';
+  const sectionName = sections.find((s) => s._id === formValues.sectionId)?.name || '';
+  const sessionName = sessions.find((s) => s._id === formValues.sessionId)?.name || 'N/A';
+  
+  const feeText = formValues.admissionFee 
+    ? `Rs. ${formValues.admissionFee} (Paid)` 
+    : 'Free / Waived';
+
+  return (
+    <div className="p-8 max-w-4xl mx-auto bg-white text-black min-h-screen relative" style={{ fontFamily: 'sans-serif' }}>
+      <button onClick={onDone} className="absolute top-4 right-4 print:hidden px-4 py-2 border rounded hover:bg-gray-100 text-sm">Close</button>
+      <div className="text-center mb-8 border-b-2 border-black pb-6 flex flex-col items-center">
+        {schoolSettings.logoUrl && (
+          <img src={schoolSettings.logoUrl} alt="Logo" className="h-20 object-contain mb-4" />
+        )}
+        <h1 className="text-3xl font-bold uppercase tracking-wider">{schoolSettings.name}</h1>
+        <h2 className="text-xl font-semibold mt-2">Admission Application Form</h2>
+      </div>
+
+      <div className="grid grid-cols-2 gap-x-12 gap-y-6 mb-8 text-sm">
+        <FieldPrint label="Admission No." value={student.admissionNumber} />
+        <FieldPrint label="Roll No." value={student.rollNumber || '—'} />
+        <FieldPrint label="Student Name" value={student.fullName} />
+        <FieldPrint label="Gender" value={String(student.gender).toUpperCase()} />
+        <FieldPrint label="Date of Birth" value={student.dateOfBirth?.slice(0, 10)} />
+        <FieldPrint label="Class" value={`${className} ${sectionName}`} />
+        <FieldPrint label="Academic Session" value={sessionName} />
+        <FieldPrint label="Admission Fee Status" value={feeText} />
+      </div>
+
+      <div className="grid grid-cols-2 gap-x-12 gap-y-6 mb-8 text-sm border-t border-gray-300 pt-6">
+        <FieldPrint label="Father's Name" value={student.fatherName || '—'} />
+        <FieldPrint label="Caste" value={student.caste || '—'} />
+        <FieldPrint label="Guardian Name" value={student.guardianName} />
+        <FieldPrint label="Guardian Phone" value={student.guardianPhone || '—'} />
+        <FieldPrint label="Relationship" value={student.guardianRelationship || '—'} />
+        <FieldPrint label="Phone" value={student.phone || '—'} />
+      </div>
+      
+      <div className="mb-16 text-sm">
+        <FieldPrint label="Address" value={student.address || '—'} />
+      </div>
+
+      <div className="flex justify-between mt-24 px-8">
+        <div className="text-center w-48">
+          <div className="border-t border-black pt-2 font-medium">Guardian Signature</div>
+        </div>
+        <div className="text-center w-48">
+          <div className="border-t border-black pt-2 font-medium">Principal Signature</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FieldPrint({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-col">
+      <span className="font-semibold text-gray-600 text-[10px] uppercase tracking-wider mb-1">{label}</span>
+      <span className="font-medium text-base border-b border-gray-300 pb-1">{value}</span>
+    </div>
+  );
 }

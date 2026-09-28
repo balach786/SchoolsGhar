@@ -52,6 +52,9 @@ export const dashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
     examFeeMonthAgg,
     examExpenseMonthAgg,
     reversalMonthAgg,
+    admissionTodayAgg,
+    admissionMonthAgg,
+    admissionTotalAgg,
     recent,
   ] = await Promise.all([
     Payment.aggregate([
@@ -106,7 +109,31 @@ export const dashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
       { $match: tMatch({ createdAt: { $gte: monthStart } }) },
       { $group: { _id: null, amount: { $sum: '$amount' }, count: { $sum: 1 } } },
     ]),
-    Payment.find(scopeQuery(req, {})).sort({ createdAt: -1 }).limit(8).select('amount receiptNumber studentId paymentMethod paymentDate').lean(),
+    Payment.aggregate([
+      { $match: tMatch({ paymentDate: { $gte: todayStart, $lt: todayEnd } }) },
+      { $unwind: '$allocations' },
+      { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
+      { $unwind: '$fee' },
+      { $match: { 'fee.feeType': 'admission_fee' } },
+      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' }, count: { $sum: 1 } } }
+    ]),
+    Payment.aggregate([
+      { $match: tMatch({ paymentDate: { $gte: monthStart } }) },
+      { $unwind: '$allocations' },
+      { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
+      { $unwind: '$fee' },
+      { $match: { 'fee.feeType': 'admission_fee' } },
+      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' }, count: { $sum: 1 } } }
+    ]),
+    Payment.aggregate([
+      { $match: tMatch({}) },
+      { $unwind: '$allocations' },
+      { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
+      { $unwind: '$fee' },
+      { $match: { 'fee.feeType': 'admission_fee' } },
+      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' }, count: { $sum: 1 } } }
+    ]),
+    Payment.find(scopeQuery(req, {})).sort({ createdAt: -1 }).limit(8).select('amount receiptNumber studentId paymentMethod paymentDate allocations notes').lean(),
   ]);
 
   const studentIds = Array.from(new Set(recent.map((p: any) => String(p.studentId))));
@@ -125,6 +152,9 @@ export const dashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
   const examFeeMonth = g(examFeeMonthAgg);
   const examExpenseMonth = g(examExpenseMonthAgg);
   const reversalMonth = g(reversalMonthAgg);
+  const admissionToday = g(admissionTodayAgg);
+  const admissionMonth = g(admissionMonthAgg);
+  const admissionTotal = g(admissionTotalAgg);
 
   // Semantics:
   // outstandingBalance counts each pending obligation (unpaid or partial remaining balance) once.
@@ -132,14 +162,16 @@ export const dashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
   const outstandingBalance = pending.amount;
 
   // Revenue / Outflow Semantics:
-  const regularFeeCollected = month.amount;
+  // Month amount includes ALL payments (regular + admission). We subtract admission to get just regular fees.
+  const admissionFeeCollected = admissionMonth.amount;
+  const regularFeeCollected = month.amount - admissionFeeCollected;
   const examFeeCollected = examFeeMonth.amount;
   const miscellaneousIncome = income.amount;
   const operatingExpenses = expense.amount + examExpenseMonth.amount;
   const salaryPaid = salary.paidAmount ?? 0;
   const refundsThisMonth = reversalMonth.amount;
 
-  const totalRevenue = regularFeeCollected + examFeeCollected + miscellaneousIncome;
+  const totalRevenue = regularFeeCollected + admissionFeeCollected + examFeeCollected + miscellaneousIncome;
   const totalOutflow = operatingExpenses + salaryPaid + refundsThisMonth;
   const netCashFlow = totalRevenue - totalOutflow;
 
@@ -157,9 +189,9 @@ export const dashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
     examFeeCollectionThisMonth: { amount: examFeeMonth.amount, count: examFeeMonth.count },
     examExpensesThisMonth: { amount: examExpenseMonth.amount, count: examExpenseMonth.count },
     netExamBalanceThisMonth: examFeeMonth.amount - examExpenseMonth.amount,
-    // Step 4E.16 Distinct Financial Cash Flow Semantics
     financialSummary: {
-      regularFeeCollected: { amount: regularFeeCollected, count: month.count },
+      regularFeeCollected: { amount: regularFeeCollected, count: month.count - admissionMonth.count },
+      admissionFeeCollected: { amount: admissionFeeCollected, count: admissionMonth.count },
       examFeeCollected: { amount: examFeeCollected, count: examFeeMonth.count },
       miscellaneousIncome: { amount: miscellaneousIncome, count: income.count },
       operatingExpenses: { amount: operatingExpenses, count: expense.count + examExpenseMonth.count },
@@ -169,6 +201,11 @@ export const dashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
       totalOutflow,
       netCashFlow,
     },
+    admissionFees: {
+      today: { amount: admissionToday.amount, count: admissionToday.count },
+      month: { amount: admissionMonth.amount, count: admissionMonth.count },
+      session: { amount: admissionTotal.amount, count: admissionTotal.count },
+    },
     recentPayments: recent.map((p: any) => ({
       _id: String(p._id),
       amount: p.amount,
@@ -177,6 +214,7 @@ export const dashboard = asyncHandler(async (req: AuthRequest, res: Response) =>
       paymentDate: new Date(p.paymentDate).toISOString(),
       studentName: studentMap.get(String(p.studentId))?.fullName ?? '—',
       admissionNumber: studentMap.get(String(p.studentId))?.admissionNumber ?? '—',
+      feeType: p.notes?.includes('Admission') ? 'Admission Fee' : 'Tuition / Exam Fee',
     })),
   });
 });
@@ -196,7 +234,7 @@ export const dailyCollection = asyncHandler(async (req: AuthRequest, res: Respon
 
   const payments = await Payment.find(scopeQuery(req, { paymentDate: { $gte: start, $lt: end } }))
     .sort({ paymentDate: 1 })
-    .select('amount receiptNumber paymentMethod paymentDate studentId')
+    .select('amount receiptNumber paymentMethod paymentDate studentId notes')
     .lean();
   const students = await Student.find(scopeQuery(req, { _id: { $in: payments.map((p: any) => p.studentId) } })).select('fullName admissionNumber').lean();
   const map = new Map(students.map((s) => [String(s._id), s]));
@@ -204,13 +242,14 @@ export const dailyCollection = asyncHandler(async (req: AuthRequest, res: Respon
     receiptNumber: p.receiptNumber,
     studentName: map.get(String(p.studentId))?.fullName ?? '—',
     admissionNumber: map.get(String(p.studentId))?.admissionNumber ?? '—',
+    feeType: p.notes?.includes('Admission') ? 'Admission Fee' : 'Tuition / Exam Fee',
     method: p.paymentMethod,
     amount: p.amount,
     date: new Date(p.paymentDate).toISOString().slice(0, 10),
   }));
 
   if (wantsCsv(req)) {
-    return sendCsv(res, `daily-collection-${dateStr}.csv`, ['Receipt', 'Student', 'Admission', 'Method', 'Amount (PKR)', 'Date'], rows.map((r: any) => [r.receiptNumber, r.studentName, r.admissionNumber, r.method, (r.amount / 100).toFixed(2), r.date]));
+    return sendCsv(res, `daily-collection-${dateStr}.csv`, ['Receipt', 'Student', 'Admission', 'Fee Type', 'Method', 'Amount (PKR)', 'Date'], rows.map((r: any) => [r.receiptNumber, r.studentName, r.admissionNumber, r.feeType, r.method, (r.amount / 100).toFixed(2), r.date]));
   }
   ok(res, { date: dateStr, rows, total: reportTotals(rows), count: rows.length });
 });

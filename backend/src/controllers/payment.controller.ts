@@ -55,8 +55,11 @@ function withNames(p: any, names: any) {
   const stu = names.studentMap.get(String(p.studentId));
   
   let feeTitle = '—';
-  if (p.studentFeeId) {
+  if (p.notes && p.notes.includes('Admission')) {
+    feeTitle = 'Admission Fee';
+  } else if (p.studentFeeId) {
     feeTitle = names.feeMap?.get(String(p.studentFeeId)) ?? '—';
+    if (feeTitle === 'admission_fee') feeTitle = 'Admission Fee';
   } else if (p.allocations && p.allocations.length > 0) {
     if (p.allocations.length === 1) {
       feeTitle = names.feeMap?.get(String(p.allocations[0].studentFeeId)) ?? '—';
