@@ -32,11 +32,19 @@ import * as nonTeachingStaffAttendanceController from '../controllers/nonTeachin
 import * as timetableController from '../controllers/timetable.controller';
 import * as myAttendanceController from '../controllers/myAttendance.controller';
 import * as schoolClosureController from '../controllers/schoolClosure.controller';
+import * as attendanceOverviewController from '../controllers/attendanceOverview.controller';
 import { resolveTenant } from '../middleware/tenant';
 import { checkSubscriptionAccess } from '../middleware/subscription';
 
 const router = Router();
 router.use(authenticate, resolveTenant, checkSubscriptionAccess);
+
+// ── Overview ─────────────────────────────────────────────
+router.get(
+  '/overview/daily-overview',
+  requirePermission('studentAttendance', 'view'), // requires at least one attendance view permission
+  attendanceOverviewController.getDailyOverview
+);
 
 // ── Student attendance ──────────────────────────────────
 router.get(

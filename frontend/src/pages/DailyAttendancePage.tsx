@@ -1,11 +1,39 @@
 import { useNavigate } from 'react-router-dom';
-import { Users, GraduationCap, BriefcaseBusiness, CheckCircle2, Clock, AlertCircle, TrendingUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Users, GraduationCap, BriefcaseBusiness, CheckCircle2, Clock, AlertCircle, TrendingUp, Calendar, CheckCircle, XCircle } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { useAuth } from '@/context/AuthContext';
+import { api } from '@/lib/api';
+import { Loader2 } from 'lucide-react';
+
+interface DailyOverviewData {
+  dayByDay: {
+    date: string;
+    student: { present: number; total: number };
+    teacher: { present: number; total: number };
+    staff: { present: number; total: number };
+  }[];
+  classStatusSummary: {
+    totalClasses: number;
+    completedClasses: number;
+    pendingClasses: number;
+    classes: { id: string; name: string; status: 'Completed' | 'Pending' }[];
+  };
+}
 
 export function DailyAttendancePage() {
   const navigate = useNavigate();
   const { can } = useAuth();
+  const [overview, setOverview] = useState<DailyOverviewData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get<{ success: boolean; data: DailyOverviewData }>('/attendance/overview/daily-overview')
+      .then(res => {
+        if (res.data?.success) setOverview(res.data.data);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const canStudent = can('studentAttendance', 'view');
   const canTeacher = can('teacherAttendance', 'view');
@@ -87,51 +115,94 @@ export function DailyAttendancePage() {
         )}
       </div>
 
-      {/* Today's Overview Section */}
-      {(canStudent || canTeacher || canNonTeaching) && (
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl">
-          <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-bold text-slate-800 mb-6">Today's Attendance Trends</h3>
-            <div className="flex h-64 items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50">
-              <div className="text-center text-slate-500">
-                <TrendingUp className="mx-auto h-8 w-8 text-slate-400 mb-2" />
-                <p>Attendance charts will appear here once data is recorded for the day.</p>
+      {/* Day-by-Day and Today's Class Status Sections */}
+      {(canStudent || canTeacher || canNonTeaching) && !loading && overview && (
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl">
+          {/* Day-by-Day Attendance */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col max-h-[600px]">
+            <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-indigo-500" />
+              Day-by-Day Attendance
+            </h3>
+            <div className="overflow-y-auto flex-1 pr-2 space-y-4">
+              {overview.dayByDay.map((day) => (
+                <div key={day.date} className="p-4 rounded-xl border border-slate-100 bg-slate-50">
+                  <h4 className="font-semibold text-slate-800 mb-3">
+                    {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' })}
+                  </h4>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-indigo-50 p-3 rounded-lg text-center">
+                      <p className="text-xs text-indigo-600 font-medium mb-1">Students</p>
+                      <p className="text-sm font-bold text-indigo-900">{day.student.present} / {day.student.total}</p>
+                    </div>
+                    <div className="bg-emerald-50 p-3 rounded-lg text-center">
+                      <p className="text-xs text-emerald-600 font-medium mb-1">Teachers</p>
+                      <p className="text-sm font-bold text-emerald-900">{day.teacher.present} / {day.teacher.total}</p>
+                    </div>
+                    <div className="bg-purple-50 p-3 rounded-lg text-center">
+                      <p className="text-xs text-purple-600 font-medium mb-1">Staff</p>
+                      <p className="text-sm font-bold text-purple-900">{day.staff.present} / {day.staff.total}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {overview.dayByDay.length === 0 && (
+                <div className="text-center py-8 text-slate-500">
+                  No attendance records found for the past week.
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Today's Class Attendance Status */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col max-h-[600px]">
+            <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+              Today's Class Attendance Status
+            </h3>
+            
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl text-center">
+                <p className="text-sm text-emerald-600 font-medium mb-1">Completed</p>
+                <p className="text-2xl font-bold text-emerald-700">
+                  {overview.classStatusSummary.completedClasses} <span className="text-sm text-emerald-600/70 font-medium">/ {overview.classStatusSummary.totalClasses}</span>
+                </p>
+              </div>
+              <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl text-center">
+                <p className="text-sm text-amber-600 font-medium mb-1">Pending</p>
+                <p className="text-2xl font-bold text-amber-700">
+                  {overview.classStatusSummary.pendingClasses}
+                </p>
+              </div>
+            </div>
+
+            <div className="overflow-y-auto flex-1 pr-2">
+              <div className="space-y-3">
+                {overview.classStatusSummary.classes.map((cls) => (
+                  <div key={cls.id} className="flex items-center justify-between p-3 rounded-lg border border-slate-100 bg-white shadow-sm">
+                    <span className="font-semibold text-slate-700">{cls.name}</span>
+                    {cls.status === 'Completed' ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
+                        <CheckCircle className="h-3.5 w-3.5" />
+                        Completed
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">
+                        <Clock className="h-3.5 w-3.5" />
+                        Pending
+                      </span>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-          
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-bold text-slate-800 mb-6">Recent Activity</h3>
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                  <CheckCircle2 className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-800">Class 10-A Attendance Marked</p>
-                  <p className="text-xs text-slate-500 mt-1">45/45 Students Present • 10 mins ago</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
-                  <Clock className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-800">Teacher Check-ins</p>
-                  <p className="text-xs text-slate-500 mt-1">12/16 Teachers Arrived • 45 mins ago</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600">
-                  <AlertCircle className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-800">Missing Registers</p>
-                  <p className="text-xs text-slate-500 mt-1">3 classes haven't marked attendance yet</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        </div>
+      )}
+
+      {loading && (
+        <div className="mt-8 flex justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
         </div>
       )}
     </div>
