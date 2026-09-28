@@ -224,6 +224,7 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
     studentTotal,
     teacherTotal,
     classesTotal,
+    attendanceTrends,
     studentsByClass,
     genderSplit,
     attendanceToday,
@@ -250,6 +251,17 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
     can('students') ? tenantModels.Student.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
     can('teachers') ? tenantModels.Teacher.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
     can('classes') ? tenantModels.Class.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
+    can('studentAttendance') ? getTenantModels((req as any).tenantDb as mongoose.Connection).StudentAttendance.aggregate([
+      { $match: tMatch({ attendanceDate: { $gte: lastSix[0].start } }) },
+      { $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$attendanceDate', timezone: SCHOOL_TIMEZONE } },
+          present: { $sum: { $cond: [{ $in: ['$status', ['present', 'late']] }, 1, 0] } },
+          total: { $sum: 1 },
+          lastMarkedTime: { $max: '$createdAt' }
+      }},
+      { $sort: { '_id': -1 } },
+      { $limit: 10 }
+    ]) : Promise.resolve([]),
     can('students') ? tenantModels.Student.aggregate([
       { $match: tMatch({ isArchived: false }) },
       { $group: { _id: '$classId', count: { $sum: 1 } } },
@@ -528,6 +540,12 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
     })),
     upcomingActivities,
     calendarEvents,
+    attendanceTrends: (attendanceTrends || []).map((t: any) => ({
+      date: t._id,
+      present: t.present,
+      total: t.total,
+      lastMarkedTime: t.lastMarkedTime,
+    })),
   });
 });
 

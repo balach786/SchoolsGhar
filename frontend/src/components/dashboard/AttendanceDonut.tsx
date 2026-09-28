@@ -13,8 +13,16 @@ interface AttendanceCounts {
   total: number;
 }
 
+interface AttendanceTrend {
+  date: string;
+  present: number;
+  total: number;
+  lastMarkedTime: string;
+}
+
 interface AttendanceDonutProps {
   attendance: AttendanceCounts;
+  trends?: AttendanceTrend[];
   canTakeAttendance?: boolean;
   onTakeAttendance?: () => void;
   className?: string;
@@ -29,6 +37,7 @@ const COLORS = {
 
 export function AttendanceDonut({
   attendance,
+  trends,
   canTakeAttendance,
   onTakeAttendance,
   className,
@@ -171,6 +180,29 @@ export function AttendanceDonut({
                 </span>
               </div>
             </div>
+            {trends && trends.length > 0 && (
+              <div className="pt-3 border-t border-border/50">
+                <h4 className="text-xs font-bold text-foreground mb-2">Day-by-Day Frequency</h4>
+                <div className="space-y-2 max-h-[110px] overflow-y-auto pr-1">
+                  {trends.map((t, idx) => (
+                    <div key={idx} className="flex justify-between items-center bg-muted/30 p-2 rounded-lg text-xs">
+                      <div>
+                        <span className="font-medium text-foreground">{new Date(t.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                        {t.lastMarkedTime && (
+                          <span className="block text-[10px] text-muted-foreground mt-0.5">
+                            Marked at {new Date(t.lastMarkedTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <span className="font-bold text-[#0F7E75]">{t.present}</span>
+                        <span className="text-muted-foreground"> / {t.total} present</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </CardContent>

@@ -97,6 +97,7 @@ interface StaffAnalytics {
   recentNotices: NoticeItem[];
   upcomingActivities?: ActivityItemData[];
   calendarEvents?: CalendarEventItem[];
+  attendanceTrends?: { date: string; present: number; total: number; lastMarkedTime: string }[];
 }
 
 interface SubscriptionStatus {
@@ -565,6 +566,7 @@ export function DashboardPage() {
             {can('studentAttendance', 'view') && (
               <AttendanceDonut
                 attendance={staffData.attendanceToday}
+                trends={staffData.attendanceTrends}
                 canTakeAttendance={can('studentAttendance', 'create')}
                 className="h-full"
               />
@@ -602,7 +604,7 @@ export function DashboardPage() {
           </div>
 
           {/* Collapsible Analytics & Academic Performance */}
-          <DashboardAnalytics attendance={staffData.attendanceToday} monthly={staffData.monthly} />
+          <DashboardAnalytics monthly={staffData.monthly} />
         </div>
       )}
 
