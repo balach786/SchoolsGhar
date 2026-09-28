@@ -55,10 +55,14 @@ export function createApp(): Express {
     });
   });
 
-  // Serve public logos
-  app.use('/uploads/logos', express.static(path.join(process.cwd(), 'uploads', 'logos'), {
+  // Serve public logos (use /tmp on serverless)
+  const isServerless = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+  const logosDir = isServerless
+    ? path.join(require('os').tmpdir(), 'uploads', 'logos')
+    : path.join(process.cwd(), 'uploads', 'logos');
+  app.use('/uploads/logos', express.static(logosDir, {
     maxAge: '1d',
-    fallthrough: false,
+    fallthrough: true,
   }));
   
   // Private files are served via authorized tenant-scoped endpoint: /api/files/proofs/:key
