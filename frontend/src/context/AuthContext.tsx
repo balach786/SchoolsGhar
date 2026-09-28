@@ -94,9 +94,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const res = await api.get<{ success: boolean; data: { user: AuthUser } }>('/auth/me');
         if (!cancelled && version === sessionVersion.current && res.data?.success) setUser(res.data.data.user);
-      } catch {
+      } catch (err: any) {
         if (!cancelled && version === sessionVersion.current) {
-          clearTokens();
+          // Do NOT aggressively clear tokens here. 
+          // The API interceptor already clears tokens automatically on 401/403.
+          // By keeping them, we survive temporary 5xx errors or network drops.
           setUser(null);
         }
       } finally {
