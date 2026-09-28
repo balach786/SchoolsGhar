@@ -172,16 +172,21 @@ function FloatingNavbar() {
             </Link>
           </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          ref={menuTrigger}
-          className="mobile-menu-trigger"
-          aria-label="Open navigation"
-          onClick={() => setOpen(true)}
-        >
-          <Menu />
-        </Button>
+        <div className="mobile-menu-trigger items-center gap-2">
+          <Link to="/login" className="px-4 py-1.5 text-sm font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-full hover:bg-blue-100 transition-colors">
+            Sign In
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            ref={menuTrigger}
+            aria-label="Open navigation"
+            onClick={() => setOpen(true)}
+            className="text-slate-700"
+          >
+            <Menu />
+          </Button>
+        </div>
       </FloatingHeader>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
@@ -503,15 +508,17 @@ export function LandingPage() {
                 <br className="hidden sm:block" /> Bring academics, attendance and finance into one beautifully organized workspace.
               </p>
             </StaggerItem>
-            <StaggerItem className="hero-actions">
-              <Button size="lg" asChild>
+            <StaggerItem className="hero-actions flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:max-w-none mx-auto mt-8">
+              <Button size="lg" asChild className="w-full sm:w-auto h-12 text-base sm:px-8">
                 <Link to="/register">
-                  Start Your 7-Day Free Trial <ArrowRight />
+                  Start Your 7-Day Free Trial <ArrowRight className="ml-2" size={18} />
                 </Link>
               </Button>
-              <a href="#features">
-                Explore features <ArrowRight size={18} />
-              </a>
+              <Button size="lg" variant="outline" asChild className="w-full sm:w-auto h-12 text-base sm:px-8 bg-transparent border-blue-400/30 text-blue-100 hover:bg-blue-900/50 hover:text-white">
+                <Link to="/login">
+                  Sign In / Login
+                </Link>
+              </Button>
             </StaggerItem>
             <div className="hero-assurance">
               <span>

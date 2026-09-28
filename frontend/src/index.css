@@ -442,26 +442,11 @@ textarea {
   line-height: 1.8;
 }
 
-.hero-actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 28px;
-  margin-top: 36px;
-}
 
-.hero-actions>a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14.5px;
-  color: #bfdbfe;
-  transition: color .2s;
-}
 
-.hero-actions>a:hover {
-  color: #ffffff;
-}
+
+
+
 
 .hero-assurance {
   display: flex;
@@ -2446,17 +2431,9 @@ footer {
     font-size: 9px;
   }
 
-  .hero-actions {
-    flex-direction: column;
-    gap: 20px;
-  }
+  
 
-  .hero-actions>a:first-child {
-    width: 100%;
-    font-size: 12px;
-    padding-left: 14px;
-    padding-right: 14px;
-  }
+  
 
   .hero-assurance {
     font-size: 9px;
