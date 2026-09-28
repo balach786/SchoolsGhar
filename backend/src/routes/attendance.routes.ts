@@ -41,7 +41,7 @@ router.use(authenticate, resolveTenant, checkSubscriptionAccess);
 
 // ── Overview ─────────────────────────────────────────────
 router.get(
-  '/overview/daily-overview',
+  '/daily-overview',
   requirePermission('studentAttendance', 'view'), // requires at least one attendance view permission
   attendanceOverviewController.getDailyOverview
 );

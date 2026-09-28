@@ -57,7 +57,7 @@ router.get(['/files/proofs/:key', '/uploads/proofs/:key'], authenticate, getAuth
 const academicPath = /^\/(academic-sessions|classes|sections|subjects|students|teachers|promotions)(\/|$)/;
 router.use((req, res, next) => (academicPath.test(req.path) ? academicRoutes(req, res, next) : next()));
 
-const attendancePath = /^\/(student-attendance|teacher-attendance|timetables|my-attendance|school-closures|non-teaching-attendance)(\/|$)/;
+const attendancePath = /^\/(student-attendance|teacher-attendance|timetables|my-attendance|school-closures|non-teaching-attendance|daily-overview)(\/|$)/;
 router.use((req, res, next) => (attendancePath.test(req.path) ? attendanceRoutes(req, res, next) : next()));
 
 const examPath = /^\/(exams|marks|results|grade-scales|exam-types|exam-schedules|exam-fees|exam-expenses|exam-attendance|admit-cards|exam-reports)(\/|$)/;

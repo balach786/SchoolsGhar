@@ -28,7 +28,7 @@ export function DailyAttendancePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get<{ success: boolean; data: DailyOverviewData }>('/attendance/overview/daily-overview')
+    api.get<{ success: boolean; data: DailyOverviewData }>('/daily-overview')
       .then(res => {
         if (res.data?.success) setOverview(res.data.data);
       })
