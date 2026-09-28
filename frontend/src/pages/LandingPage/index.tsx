@@ -511,7 +511,7 @@ export function LandingPage() {
                   Start Your 7-Day Free Trial <ArrowRight className="ml-2" size={18} />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="w-full sm:w-auto h-12 text-base bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm font-semibold rounded-full transition">
+              <Button size="lg" asChild className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 text-white font-semibold h-12 sm:px-8 rounded-full shadow-lg hover:shadow-indigo-500/25 transition duration-300 w-full sm:w-auto text-center flex items-center justify-center border-0">
                 <Link to="/login">
                   Sign In / Login
                 </Link>
@@ -528,7 +528,7 @@ export function LandingPage() {
           </StaggerContainer>
 
           {/* Live School Management Dashboard Showcase */}
-          <div className="hero-product pb-0 relative z-20">
+          <div className="hero-product pb-0 -mb-8 sm:-mb-16 lg:-mb-24 relative z-20">
             <HeroDashboardMockup />
           </div>
         </section>
