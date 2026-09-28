@@ -123,4 +123,7 @@ router.get('/finance/reports/fees-summary', requirePermission('reports', 'view')
 router.get('/school-settings', schoolSettingsController.getSettings);
 router.patch('/school-settings', requirePermission('schoolSettings', 'edit'), validate({ body: updateSettingsSchema }), schoolSettingsController.updateSettings);
 
+import { uploadLogo } from '../middlewares/upload';
+router.post('/school-settings/upload-logo', requirePermission('schoolSettings', 'edit'), uploadLogo.single('logo'), schoolSettingsController.uploadLogoFile);
+
 export default router;

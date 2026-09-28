@@ -1,4 +1,5 @@
 import express, { Express } from 'express';
+import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -32,7 +33,12 @@ export function createApp(): Express {
     });
   });
 
-  // Step 4D.1: Unauthenticated public static /uploads mount removed.
+  // Serve public logos
+  app.use('/uploads/logos', express.static(path.join(process.cwd(), 'uploads', 'logos'), {
+    maxAge: '1d', // Cache for 1 day
+    fallthrough: false, // If file not found, return 404 instead of passing to next
+  }));
+  
   // Private files are served via authorized tenant-scoped endpoint: /api/files/proofs/:key
 
   // ── CORS (frontend URL from env) ─────────────────────

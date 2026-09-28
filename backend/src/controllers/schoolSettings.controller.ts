@@ -100,3 +100,35 @@ export const updateSettings = asyncHandler(async (req: AuthRequest, res: Respons
   recordAudit('schoolSettings', 'SETTINGS_UPDATED', req.user, String(doc._id), { schoolName: doc.schoolName });
   ok(res, publicSchoolSettings(doc as never), 200, { message: 'School settings updated' });
 });
+
+/** POST /api/school-settings/upload-logo */
+export const uploadLogoFile = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const tenantId = getTenantObjectId(req);
+  if (!tenantId) {
+    throw ApiError.unauthorized('Tenant context is required');
+  }
+  
+  if (!req.file) {
+    throw ApiError.badRequest('No image file provided');
+  }
+
+  // Construct public URL
+  const publicUrl = `/uploads/logos/${req.file.filename}`;
+
+  let doc = await SchoolSettings.findOne({ tenantId });
+  if (!doc) {
+    const defaultName = req.tenant?.name || 'School Management System';
+    doc = new SchoolSettings({
+      _id: String(tenantId),
+      tenantId,
+      schoolName: defaultName,
+    });
+  }
+
+  doc.schoolLogoUrl = publicUrl;
+  await doc.save();
+  
+  recordAudit('schoolSettings', 'LOGO_UPLOADED', req.user, String(doc._id), { url: publicUrl });
+  
+  ok(res, { url: publicUrl, ...publicSchoolSettings(doc as never) }, 200, { message: 'Logo uploaded successfully' });
+});

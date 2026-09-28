@@ -214,6 +214,37 @@ export function SettingsPage() {
     );
   };
 
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('File size must be less than 2MB');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('logo', file);
+
+    setBusy(true);
+    try {
+      const res = await api.post('/school-settings/upload-logo', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const newUrl = res.data.data.schoolLogoUrl;
+      setProfile((prev) => ({ ...prev, schoolLogoUrl: newUrl }));
+      setSettings((prev) => prev ? { ...prev, schoolLogoUrl: newUrl } : null);
+      toast.success('Logo uploaded successfully');
+      window.dispatchEvent(new Event('schoolSettingsUpdated'));
+    } catch (err) {
+      toast.error(apiErrorMessage(err, 'Failed to upload logo'));
+    } finally {
+      setBusy(false);
+      // Reset input value
+      e.target.value = '';
+    }
+  };
+
   if (loading || !settings) {
     return (
       <div>
@@ -284,9 +315,34 @@ export function SettingsPage() {
                 <Input id="st-principal" disabled={!canEdit} {...profileInput('principalName')} />
               </div>
               <div>
-                <Label htmlFor="st-logo">Logo URL</Label>
-                <p className="text-xs text-muted-foreground mb-2">Must be a direct image link (e.g. .png, .jpg), not a Google Drive/share page.</p>
-                <Input id="st-logo" disabled={!canEdit} {...profileInput('schoolLogoUrl')} placeholder="https://…/logo.png" />
+                <Label>School Logo</Label>
+                <p className="text-xs text-muted-foreground mb-4">Used on receipts, admit cards, and the main navbar. Max size 2MB (.png, .jpg, .webp).</p>
+                <div className="flex items-center gap-6">
+                  {profile.schoolLogoUrl ? (
+                    <div className="relative group rounded-xl overflow-hidden border bg-muted/30 w-24 h-24 flex items-center justify-center p-2">
+                      <img src={profile.schoolLogoUrl} alt="Logo preview" className="w-full h-full object-contain" />
+                      {canEdit && (
+                        <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity gap-2">
+                          <Button size="sm" variant="destructive" className="h-7 text-xs" onClick={() => save({ schoolLogoUrl: null }, 'Logo removed')}>Remove</Button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="rounded-xl border border-dashed bg-muted/30 w-24 h-24 flex flex-col items-center justify-center text-muted-foreground">
+                      <School className="h-6 w-6 mb-1 opacity-50" />
+                      <span className="text-[10px] uppercase font-medium tracking-wider">No logo</span>
+                    </div>
+                  )}
+                  {canEdit && (
+                    <div className="flex-1">
+                      <Label htmlFor="st-logo-upload" className="cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
+                        {busy ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                        Upload Image
+                      </Label>
+                      <Input id="st-logo-upload" type="file" accept="image/png, image/jpeg, image/webp" className="hidden" onChange={handleLogoUpload} disabled={busy} />
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
