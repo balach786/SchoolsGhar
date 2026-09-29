@@ -14,6 +14,7 @@ import {
 import { randomToken } from '../utils/id';
 import { ApiError } from '../utils/ApiError';
 import { effectiveRole, getRolePermissionMap } from './permission.service';
+import { logger } from '../utils/logger';
 
 /**
  * Session/token service — storage-efficient strategy:
@@ -138,61 +139,77 @@ export async function loginUser(schoolCode: string, email: string, password: str
   const masterDb = getMasterConnection();
   const masterModels = getMasterModels(masterDb);
 
-  let tenant = await masterModels.Tenant.findOne({ slug: schoolCode.toLowerCase() });
-  if (!tenant) {
-    // TRANSITION COMPATIBILITY: Fallback to legacy default connection for old dummy tenants
-    tenant = await Tenant.findOne({ slug: schoolCode.toLowerCase() });
-  }
+  const startTime = Date.now();
+  try {
+    let tenant = await masterModels.Tenant.findOne({ slug: schoolCode.toLowerCase() }).maxTimeMS(5000);
+    if (!tenant) {
+      // TRANSITION COMPATIBILITY: Fallback to legacy default connection for old dummy tenants
+      tenant = await Tenant.findOne({ slug: schoolCode.toLowerCase() }).maxTimeMS(5000);
+    }
+    logger.info(`[LOGIN] Tenant lookup finished in ${Date.now() - startTime}ms`);
 
-  if (!tenant) {
-    throw ApiError.unauthorized('Invalid school code or credentials', 'INVALID_CREDENTIALS');
-  }
-  if (tenant.isDeleted) {
-    throw ApiError.forbidden('School account has been deleted.', 'TENANT_DELETED');
-  }
-  if (tenant.isSuspended) {
-    throw ApiError.forbidden('School account is suspended.', 'TENANT_SUSPENDED');
-  }
-  if (tenant.provisioningStatus === 'failed') {
-    throw ApiError.unauthorized('School account provisioning failed. Please contact support.', 'PROVISIONING_FAILED');
-  }
+    if (!tenant) {
+      throw ApiError.unauthorized('Invalid school code or credentials', 'INVALID_CREDENTIALS');
+    }
+    if (tenant.isDeleted) {
+      throw ApiError.forbidden('School account has been deleted.', 'TENANT_DELETED');
+    }
+    if (tenant.isSuspended) {
+      throw ApiError.forbidden('School account is suspended.', 'TENANT_SUSPENDED');
+    }
+    if (tenant.provisioningStatus === 'failed') {
+      throw ApiError.unauthorized('School account provisioning failed. Please contact support.', 'PROVISIONING_FAILED');
+    }
 
-  const dbName = tenant.databaseName;
-  if (!tenant.isDatabaseProvisioned || !dbName) {
-    throw ApiError.unauthorized('School account is not fully provisioned yet.', 'PROVISIONING_PENDING');
+    const dbName = tenant.databaseName;
+    if (!tenant.isDatabaseProvisioned || !dbName) {
+      throw ApiError.unauthorized('School account is not fully provisioned yet.', 'PROVISIONING_PENDING');
+    }
+    
+    const tConnection = Date.now();
+    const tenantDb = getTenantConnection(dbName);
+    const tenantModels = getTenantModels(tenantDb);
+    logger.info(`[LOGIN] Tenant connection resolved in ${Date.now() - tConnection}ms`);
+
+    const tUser = Date.now();
+    const user = await tenantModels.User.findOne({ email, isArchived: false }).select('+passwordHash').maxTimeMS(5000);
+    logger.info(`[LOGIN] User lookup finished in ${Date.now() - tUser}ms`);
+
+    if (!user) {
+      throw ApiError.unauthorized('Invalid school code or credentials', 'INVALID_CREDENTIALS');
+    }
+
+    // TRANSITION COMPATIBILITY: Since all tenants currently share 'schoolsghar', 
+    // ensure the matched user actually belongs to the resolved tenant.
+    if (user.tenantId && String(user.tenantId) !== String(tenant._id)) {
+      throw ApiError.unauthorized('Invalid school code or credentials', 'INVALID_CREDENTIALS');
+    }
+
+    const tBcrypt = Date.now();
+    const passwordOk = await verifyPassword(password, user.passwordHash);
+    logger.info(`[LOGIN] Password verify finished in ${Date.now() - tBcrypt}ms`);
+
+    if (!passwordOk) {
+      throw ApiError.unauthorized('Invalid school code or credentials', 'INVALID_CREDENTIALS');
+    }
+
+    if (!user.isActive) {
+      throw ApiError.forbidden('Your account has been deactivated. Please contact the administrator.', 'ACCOUNT_INACTIVE');
+    }
+
+    const role = await effectiveRole(String(user.roleId), user.tenantId ? String(user.tenantId) : undefined, tenantDb);
+    if (!role || !role.isActive) {
+      throw ApiError.forbidden('Your role is not active. Please contact the administrator.', 'ROLE_INACTIVE');
+    }
+
+    user.lastLoginAt = new Date();
+    await user.save();
+
+    return buildSafeAuthResponse(user, tenantDb);
+  } catch (err: any) {
+    logger.error(`[LOGIN] Failed with error: ${err.message}`, { stack: err.stack, schoolCode, email });
+    throw err;
   }
-  const tenantDb = getTenantConnection(dbName);
-  const tenantModels = getTenantModels(tenantDb);
-
-  const user = await tenantModels.User.findOne({ email, isArchived: false }).select('+passwordHash');
-  if (!user) {
-    throw ApiError.unauthorized('Invalid school code or credentials', 'INVALID_CREDENTIALS');
-  }
-
-  // TRANSITION COMPATIBILITY: Since all tenants currently share 'schoolsghar', 
-  // ensure the matched user actually belongs to the resolved tenant.
-  if (user.tenantId && String(user.tenantId) !== String(tenant._id)) {
-    throw ApiError.unauthorized('Invalid school code or credentials', 'INVALID_CREDENTIALS');
-  }
-
-  const passwordOk = await verifyPassword(password, user.passwordHash);
-  if (!passwordOk) {
-    throw ApiError.unauthorized('Invalid school code or credentials', 'INVALID_CREDENTIALS');
-  }
-
-  if (!user.isActive) {
-    throw ApiError.forbidden('Your account has been deactivated. Please contact the administrator.', 'ACCOUNT_INACTIVE');
-  }
-
-  const role = await effectiveRole(String(user.roleId), user.tenantId ? String(user.tenantId) : undefined, tenantDb);
-  if (!role || !role.isActive) {
-    throw ApiError.forbidden('Your role is not active. Please contact the administrator.', 'ROLE_INACTIVE');
-  }
-
-  user.lastLoginAt = new Date();
-  await user.save();
-
-  return buildSafeAuthResponse(user, tenantDb);
 }
 
 /** Refresh: verify token, find live session, rotate, return fresh pair. */
