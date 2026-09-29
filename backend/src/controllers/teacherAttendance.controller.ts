@@ -6,7 +6,7 @@ import { ApiError } from '../utils/ApiError';
 import { paginated } from '../utils/apiResponse';
 import { sendCsv, wantsCsv } from '../utils/csv';
 import { SalaryRecord } from '../models/SalaryRecord';
-import { AcademicSession } from '../models/AcademicSession';
+import { AcademicSession } from '../models/AcademicSession'; // Removed in favor of tenantModels
 import { getOwnTeacher, normalizeDate, dayStart, dayEnd, type AuthedUser } from '../services/attendance.service';
 import { scopeQuery, getTenantObjectId } from '../utils/tenantScope';
 
@@ -40,7 +40,7 @@ function publicRecord(r: any, tMap: Map<string, any>) {
 export const bulkMark = asyncHandler(async (req: Request & { tenantDb?: mongoose.Connection }, res: Response) => {
   const tenantDb = req.tenantDb as mongoose.Connection;
   if (!tenantDb) throw new ApiError(500, 'tenantDb connection is required', 'TENANT_DB_MISSING');
-  const { TeacherAttendance, Teacher, SchoolClosure } = getTenantModels(tenantDb);
+  const { TeacherAttendance, Teacher, SchoolClosure, AcademicSession } = getTenantModels(tenantDb);
 
   const user = req.user as unknown as ReqUser;
   assertStaff(user);
