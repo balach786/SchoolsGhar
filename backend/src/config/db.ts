@@ -23,50 +23,59 @@ export async function connectDatabase() {
     return mongoose.connection;
   }
 
-  // If not connected and not connecting, reset the promise to force a new connection
-  if (mongoose.connection.readyState !== 2) {
-    cachedPromise = null;
-    global._mongoosePromise = null;
+  // If currently reconnecting (readyState === 2), wait for it to finish
+  if (mongoose.connection.readyState === 2) {
+    await new Promise<void>((resolve) => {
+      mongoose.connection.once('connected', () => resolve());
+      // Also resolve on error so we don't hang forever, the subsequent query will fail appropriately
+      mongoose.connection.once('error', () => resolve()); 
+    });
+    return mongoose.connection;
   }
+
+  // If disconnected, reset the promise to force a new connection
+  cachedPromise = null;
+  global._mongoosePromise = null;
 
   mongoose.set('strictQuery', true);
-  mongoose.set('bufferCommands', false); // Disable buffering globally so queries fail fast
+  // Disable buffering globally (though schemas may have already compiled with it, this helps dynamic models)
+  mongoose.set('bufferCommands', false); 
 
-  if (!cachedPromise) {
-    // TRANSITION COMPATIBILITY: We cannot make schoolsghar_master the primary connection yet 
-    // because unconverted operational models (Phase 4) still rely on the default connection.
-    // We will connect to the legacy MONGODB_URI to preserve all operational API behavior.
-    cachedPromise = mongoose.connect(env.mongodbUri, {
-      maxPoolSize: 5,          // Reduced from 10: serverless reuses fewer concurrent sockets
-      minPoolSize: 0,          // Don't hold idle connections between invocations
-      serverSelectionTimeoutMS: 5000, // Reduced to fail fast on cold starts if DB is unreachable
-      connectTimeoutMS: 15000,
-      socketTimeoutMS: 45000,
-      bufferCommands: false, // Prevents queries hanging indefinitely if connection fails
-    });
-    global._mongoosePromise = cachedPromise;
-    
-    // Only bind event listeners once when the promise is first created
-    mongoose.connection.on('connected', () => {
-      logger.info('MongoDB connected');
-    });
-    mongoose.connection.on('error', (err) => {
-      logger.error(`MongoDB connection error: ${err.message}`);
-    });
-    mongoose.connection.on('disconnected', () => {
-      logger.warn('MongoDB disconnected');
-    });
-  }
+  // Create new connection promise
+  cachedPromise = mongoose.connect(env.mongodbUri, {
+    maxPoolSize: 5,          // Reduced from 10: serverless reuses fewer concurrent sockets
+    minPoolSize: 0,          // Don't hold idle connections between invocations
+    maxIdleTimeMS: 10000,    // Close connections after 10s of idle time to prevent silent drops by NAT gateways
+    serverSelectionTimeoutMS: 5000, // Reduced to fail fast on cold starts if DB is unreachable
+    connectTimeoutMS: 15000,
+    socketTimeoutMS: 45000,
+    bufferCommands: false, // Prevents queries hanging indefinitely if connection fails
+  });
+  global._mongoosePromise = cachedPromise;
+  
+  // Only bind event listeners once when the promise is first created
+  mongoose.connection.removeAllListeners('connected');
+  mongoose.connection.removeAllListeners('error');
+  mongoose.connection.removeAllListeners('disconnected');
+
+  mongoose.connection.on('connected', () => {
+    logger.info('MongoDB connected');
+  });
+  mongoose.connection.on('error', (err) => {
+    logger.error(`MongoDB connection error: ${err.message}`);
+  });
+  mongoose.connection.on('disconnected', () => {
+    logger.warn('MongoDB disconnected');
+  });
 
   try {
     await cachedPromise;
+    return mongoose.connection;
   } catch (err) {
     cachedPromise = null;
     global._mongoosePromise = null;
     throw err;
   }
-
-  return mongoose.connection;
 }
 
 export async function disconnectDatabase(): Promise<void> {
