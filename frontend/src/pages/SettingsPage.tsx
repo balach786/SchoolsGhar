@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/components/ui/sonner';
 import { useAuth } from '@/context/AuthContext';
 import { api, apiErrorMessage, type ApiListResponse } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 interface SettingsData {
   schoolCode?: string;
@@ -214,8 +215,17 @@ export function SettingsPage() {
     );
   };
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>) => {
+    let file: File | undefined;
+    if ('dataTransfer' in e) {
+      e.preventDefault();
+      setIsDragging(false);
+      file = e.dataTransfer.files?.[0];
+    } else {
+      file = e.target.files?.[0];
+    }
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
@@ -240,8 +250,10 @@ export function SettingsPage() {
       toast.error(apiErrorMessage(err, 'Failed to upload logo'));
     } finally {
       setBusy(false);
-      // Reset input value
-      e.target.value = '';
+      // Reset input value if it's from input change
+      if ('target' in e && e.target instanceof HTMLInputElement) {
+        e.target.value = '';
+      }
     }
   };
 
@@ -328,9 +340,17 @@ export function SettingsPage() {
                       )}
                     </div>
                   ) : (
-                    <div className="rounded-xl border border-dashed bg-muted/30 w-24 h-24 flex flex-col items-center justify-center text-muted-foreground">
-                      <School className="h-6 w-6 mb-1 opacity-50" />
-                      <span className="text-[10px] uppercase font-medium tracking-wider">No logo</span>
+                    <div 
+                      className={cn(
+                        "rounded-xl border border-dashed w-24 h-24 flex flex-col items-center justify-center transition-colors",
+                        isDragging ? "border-primary bg-primary/10 text-primary" : "border-border bg-muted/30 text-muted-foreground"
+                      )}
+                      onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                      onDragLeave={() => setIsDragging(false)}
+                      onDrop={handleLogoUpload}
+                    >
+                      <School className={cn("h-6 w-6 mb-1 transition-opacity", isDragging ? "opacity-100" : "opacity-50")} />
+                      <span className="text-[10px] uppercase font-medium tracking-wider">{isDragging ? 'Drop logo' : 'No logo'}</span>
                     </div>
                   )}
                   {canEdit && (

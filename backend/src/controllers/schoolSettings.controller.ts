@@ -112,8 +112,9 @@ export const uploadLogoFile = asyncHandler(async (req: AuthRequest, res: Respons
     throw ApiError.badRequest('No image file provided');
   }
 
-  // Construct public URL
-  const publicUrl = `/uploads/logos/${req.file.filename}`;
+  // Construct public URL as a Base64 data URL
+  const base64Data = req.file.buffer.toString('base64');
+  const publicUrl = `data:${req.file.mimetype};base64,${base64Data}`;
 
   let doc = await SchoolSettings.findOne({ tenantId });
   if (!doc) {
