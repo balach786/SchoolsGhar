@@ -23,7 +23,14 @@ export async function connectDatabase() {
     return mongoose.connection;
   }
 
+  // If not connected and not connecting, reset the promise to force a new connection
+  if (mongoose.connection.readyState !== 2) {
+    cachedPromise = null;
+    global._mongoosePromise = null;
+  }
+
   mongoose.set('strictQuery', true);
+  mongoose.set('bufferCommands', false); // Disable buffering globally so queries fail fast
 
   if (!cachedPromise) {
     // TRANSITION COMPATIBILITY: We cannot make schoolsghar_master the primary connection yet 
