@@ -49,7 +49,7 @@ router.get(
 // ── Student attendance ──────────────────────────────────
 router.get(
   '/student-attendance/check-auth',
-  requirePermission('studentAttendance', 'create'),
+  requirePermission('studentAttendance', 'view'),
   studentAttendanceController.checkAuth
 );
 router.get(

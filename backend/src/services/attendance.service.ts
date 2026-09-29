@@ -155,7 +155,12 @@ import { hasPermission } from './permission.service';
 export async function authorizeAttendanceModification(user: AuthedUser, classId: string, attendanceDate: Date, tenantId: string | mongoose.Types.ObjectId, tenantDb: mongoose.Connection): Promise<void> {
   const { Class, TemporaryAssignment } = getTenantModels(tenantDb);
 
-  // 1. Check if user has explicit attendance:manage permission (Admin/Principal)
+  // 1. Check if user is an admin or principal
+  if (['admin', 'school_admin', 'principal', 'super_admin'].includes(user.role)) {
+    return;
+  }
+
+  // Fallback to strict permission check
   const canManage = await hasPermission(user.roleId, user.role, 'studentAttendance', 'create', tenantId as any, tenantDb);
   if (canManage) return;
 
