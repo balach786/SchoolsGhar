@@ -33,21 +33,23 @@ function SchoolLogo({ className, collapsed }: { className?: string; collapsed?: 
   useEffect(() => {
     let mounted = true;
     
-    const fetchSettings = () => {
-      api
-        .get<{ success: boolean; data: { schoolName?: string; schoolLogoUrl?: string | null } }>('/school-settings')
-        .then((res) => {
-          if (mounted && res.data?.data) {
-            if (res.data.data.schoolName) {
-              setSchoolName(res.data.data.schoolName);
-            }
-            if (res.data.data.schoolLogoUrl !== undefined) {
-              setSchoolLogoUrl(res.data.data.schoolLogoUrl);
-              setLogoError(false);
-            }
+    const fetchSettings = async (retryCount = 1) => {
+      try {
+        const res = await api.get<{ success: boolean; data: { schoolName?: string; schoolLogoUrl?: string | null } }>('/school-settings');
+        if (mounted && res.data?.data) {
+          if (res.data.data.schoolName) {
+            setSchoolName(res.data.data.schoolName);
           }
-        })
-        .catch(() => {});
+          if (res.data.data.schoolLogoUrl !== undefined) {
+            setSchoolLogoUrl(res.data.data.schoolLogoUrl);
+            setLogoError(false);
+          }
+        }
+      } catch (err) {
+        if (retryCount > 0 && mounted) {
+          setTimeout(() => fetchSettings(retryCount - 1), 1500);
+        }
+      }
     };
 
     fetchSettings();
@@ -188,15 +190,20 @@ function SidebarContent({ onNavigate, collapsed = false, setCollapsed, isMobile 
 
   useEffect(() => {
     let mounted = true;
-    api
-      .get<{ success: boolean; data: Array<{ name: string; isActive: boolean }> }>('/academic-sessions/lookup')
-      .then((res) => {
+    const fetchActiveSession = async (retryCount = 1) => {
+      try {
+        const res = await api.get<{ success: boolean; data: Array<{ name: string; isActive: boolean }> }>('/academic-sessions/lookup');
         if (mounted && res.data?.data) {
           const active = res.data.data.find((s) => s.isActive);
           if (active) setSessionName(active.name);
         }
-      })
-      .catch(() => {});
+      } catch (err) {
+        if (retryCount > 0 && mounted) {
+          setTimeout(() => fetchActiveSession(retryCount - 1), 1500);
+        }
+      }
+    };
+    fetchActiveSession();
     return () => {
       mounted = false;
     };

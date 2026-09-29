@@ -168,6 +168,13 @@ api.interceptors.response.use(
           processQueue(error, null);
           return Promise.reject(error);
         }
+      } else {
+        // If it's a retry and it STILL failed with 401, the token is fundamentally invalid.
+        if (!hasLoggedOut) {
+          hasLoggedOut = true;
+          clearTokens();
+          notifyAuthExpired();
+        }
       }
     }
     

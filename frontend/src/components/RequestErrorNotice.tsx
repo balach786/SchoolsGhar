@@ -7,7 +7,11 @@ import { Button } from './ui/button';
 export function RequestErrorNotice({ route }: { route: string }) {
  const [failed,setFailed]=useState(false);
  useEffect(()=>{setFailed(false);const id=api.interceptors.response.use(response=>response,error=>{
-   if(error.config?.method==='get' && error.response?.status!==401 && error.response?.status!==403) setFailed(true);
+   const isLayoutRequest = error.config?.url?.includes('/academic-sessions/lookup') || error.config?.url?.includes('/school-settings');
+   if(error.config?.method==='get' && error.response?.status!==401 && error.response?.status!==403 && !isLayoutRequest) {
+     console.error('[RequestErrorNotice triggered]', error.config?.url, error.response?.status, error);
+     setFailed(true);
+   }
    return Promise.reject(error);
  });return()=>api.interceptors.response.eject(id);},[route]);
  if(!failed)return null;
