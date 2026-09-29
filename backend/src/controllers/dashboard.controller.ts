@@ -254,7 +254,7 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
     can('students') ? tenantModels.Student.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
     can('teachers') ? tenantModels.Teacher.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
     can('classes') ? tenantModels.Class.countDocuments(scopeQuery(req, { isArchived: false })) : Promise.resolve(0),
-    can('studentAttendance') ? getTenantModels((req as any).tenantDb as mongoose.Connection).StudentAttendance.aggregate([
+    can('studentAttendance') ? tenantModels.StudentAttendance.aggregate([
       { $match: tMatch({ attendanceDate: { $gte: lastSix[0].start } }) },
       { $group: {
           _id: { $dateToString: { format: '%Y-%m-%d', date: '$attendanceDate', timezone: SCHOOL_TIMEZONE } },
@@ -274,11 +274,11 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
       { $match: tMatch({ isArchived: false }) },
       { $group: { _id: '$gender', count: { $sum: 1 } } },
     ]) : Promise.resolve([]),
-    can('studentAttendance') ? getTenantModels((req as any).tenantDb as mongoose.Connection).StudentAttendance.aggregate([
+    can('studentAttendance') ? tenantModels.StudentAttendance.aggregate([
       { $match: tMatch({ attendanceDate: { $gte: todayStart, $lt: todayEnd } }) },
       { $group: { _id: '$status', count: { $sum: 1 } } },
     ]) : Promise.resolve([]),
-    can('teacherAttendance') ? getTenantModels((req as any).tenantDb as mongoose.Connection).TeacherAttendance.aggregate([
+    can('teacherAttendance') ? tenantModels.TeacherAttendance.aggregate([
       { $match: tMatch({ attendanceDate: { $gte: todayStart, $lt: todayEnd } }) },
       { $group: { _id: '$status', count: { $sum: 1 } } },
     ]) : Promise.resolve([]),
@@ -355,67 +355,92 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
         ],
       })
     ) : Promise.resolve(0),
-    can('payments') ? tenantModels.Payment.aggregate([
-      { $match: tMatch({ paymentDate: { $gte: todayStart, $lt: todayEnd } }) },
-      { $unwind: '$allocations' },
-      { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
-      { $unwind: '$fee' },
-      { $match: { 'fee.feeType': 'admission_fee' } },
-      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
-    ]) : Promise.resolve([]),
-    can('payments') ? tenantModels.Payment.aggregate([
-      { $match: tMatch({ paymentDate: { $gte: thisMonthStart, $lt: thisMonthEnd } }) },
-      { $unwind: '$allocations' },
-      { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
-      { $unwind: '$fee' },
-      { $match: { 'fee.feeType': 'admission_fee' } },
-      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
-    ]) : Promise.resolve([]),
+    // Admission-fee collections: single $lookup pass, split by time range via $facet.
+    // Previously 3 separate pipelines (3× $lookup + $unwind round-trips); now 1.
     can('payments') ? tenantModels.Payment.aggregate([
       { $match: tMatch({}) },
       { $unwind: '$allocations' },
       { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
       { $unwind: '$fee' },
       { $match: { 'fee.feeType': 'admission_fee' } },
-      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
-    ]) : Promise.resolve([]),
+      { $facet: {
+        today: [
+          { $match: { paymentDate: { $gte: todayStart, $lt: todayEnd } } },
+          { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
+        ],
+        month: [
+          { $match: { paymentDate: { $gte: thisMonthStart, $lt: thisMonthEnd } } },
+          { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
+        ],
+        total: [
+          { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
+        ],
+      }},
+    ]) : Promise.resolve([null]),
+    Promise.resolve(null), // admissionFeesMonth placeholder (merged into facet above)
+    Promise.resolve(null), // admissionFeesTotal placeholder (merged into facet above)
   ]);
 
   const classIds = studentsByClass.map((c: any) => c._id);
   const classNames = await tenantModels.Class.find(scopeQuery(req, { _id: { $in: classIds } })).select('name').lean();
   const classMap = new Map(classNames.map((c: any) => [String(c._id), c.name]));
 
-  // Class performance from published exams (last 8) — computed per exam, per student within tenant.
+  // ── Admission fee facet extraction ──────────────────────────────────────────
+  // admissionFeesToday holds the $facet result; the two placeholders are null.
+  const admissionFeeFacet = Array.isArray(admissionFeesToday) && admissionFeesToday[0]
+    ? admissionFeesToday[0] as { today: { amount: number }[]; month: { amount: number }[]; total: { amount: number }[] }
+    : null;
+  const admissionFeesTodayAmount  = admissionFeeFacet?.today?.[0]?.amount  ?? 0;
+  const admissionFeesMonthAmount  = admissionFeeFacet?.month?.[0]?.amount  ?? 0;
+  const admissionFeesTotalAmount  = admissionFeeFacet?.total?.[0]?.amount  ?? 0;
+
+  // ── Class performance from published exams (last 8) — BATCHED (was N+1) ────
+  // Single Mark.find() for all exams, then group in JS. Previously one await per exam.
   const publishedExams = await tenantModels.Exam.find(scopeQuery(req, { isPublished: true })).select('name classId classIds subjects').sort({ examDate: -1 }).limit(8).lean();
   const examPerf: { exam: string; class: string; students: number; avgPercentage: number; passRate: number }[] = [];
-  for (const exam of publishedExams) {
-    const marks = await tenantModels.Mark.find(scopeQuery(req, { examId: exam._id })).select('studentId subjectId marksObtained').lean();
-    if (marks.length === 0) continue;
-    const perStudent = new Map<string, { obtained: number; max: number; failed: number }>();
-    const subjectMax = new Map(exam.subjects.map((s: any) => [String(s.subjectId), { max: s.maxMarks, pass: s.passMarks ?? 0 }]));
-    for (const m of marks) {
-      const key = String(m.studentId);
-      const agg = perStudent.get(key) ?? { obtained: 0, max: 0, failed: 0 };
-      const sub = subjectMax.get(String(m.subjectId)) ?? { max: 100, pass: 0 };
-      agg.obtained += m.marksObtained;
-      agg.max += sub.max;
-      if (sub.pass > 0 && m.marksObtained < sub.pass) agg.failed += 1;
-      perStudent.set(key, agg);
+
+  if (publishedExams.length > 0) {
+    const allMarks = await tenantModels.Mark.find(
+      scopeQuery(req, { examId: { $in: publishedExams.map((e: any) => e._id) } })
+    ).select('examId studentId subjectId marksObtained').lean();
+
+    // Group marks by examId for O(n) lookup
+    const marksByExam = new Map<string, typeof allMarks>();
+    for (const m of allMarks) {
+      const key = String((m as any).examId);
+      if (!marksByExam.has(key)) marksByExam.set(key, []);
+      marksByExam.get(key)!.push(m);
     }
-    const students = [...perStudent.values()];
-    const avgPercentage = students.length
-      ? Math.round((students.reduce((s, v) => s + (v.max > 0 ? (v.obtained / v.max) * 100 : 0), 0) / students.length) * 100) / 100
-      : 0;
-    const passRate = students.length ? Math.round((students.filter((v) => v.failed === 0).length / students.length) * 1000) / 10 : 0;
-    examPerf.push({
-      exam: exam.name,
-      class: exam.classIds && exam.classIds.length > 0 
-        ? exam.classIds.map(id => classMap.get(String(id)) ?? '—').join(', ') 
-        : (classMap.get(String(exam.classId)) ?? '—'),
-      students: students.length,
-      avgPercentage,
-      passRate,
-    });
+
+    for (const exam of publishedExams) {
+      const marks = marksByExam.get(String(exam._id)) ?? [];
+      if (marks.length === 0) continue;
+      const perStudent = new Map<string, { obtained: number; max: number; failed: number }>();
+      const subjectMax = new Map((exam.subjects as any[]).map((s: any) => [String(s.subjectId), { max: s.maxMarks, pass: s.passMarks ?? 0 }]));
+      for (const m of marks) {
+        const key = String(m.studentId);
+        const agg = perStudent.get(key) ?? { obtained: 0, max: 0, failed: 0 };
+        const sub = subjectMax.get(String(m.subjectId)) ?? { max: 100, pass: 0 };
+        agg.obtained += m.marksObtained;
+        agg.max += sub.max;
+        if (sub.pass > 0 && m.marksObtained < sub.pass) agg.failed += 1;
+        perStudent.set(key, agg);
+      }
+      const students = [...perStudent.values()];
+      const avgPercentage = students.length
+        ? Math.round((students.reduce((s, v) => s + (v.max > 0 ? (v.obtained / v.max) * 100 : 0), 0) / students.length) * 100) / 100
+        : 0;
+      const passRate = students.length ? Math.round((students.filter((v) => v.failed === 0).length / students.length) * 1000) / 10 : 0;
+      examPerf.push({
+        exam: exam.name,
+        class: (exam as any).classIds && (exam as any).classIds.length > 0
+          ? (exam as any).classIds.map((id: any) => classMap.get(String(id)) ?? '—').join(', ')
+          : (classMap.get(String(exam.classId)) ?? '—'),
+        students: students.length,
+        avgPercentage,
+        passRate,
+      });
+    }
   }
 
   const attendanceTodayCounts: Record<string, number> = {};
@@ -545,9 +570,9 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
       paymentsToday: paymentsToday[0]?.count ?? 0,
       pendingFees: feeSplit.unpaid?.count ?? 0,
       pendingFeesAmount,
-      admissionFeesToday: admissionFeesToday[0]?.amount ?? 0,
-      admissionFeesMonth: admissionFeesMonth[0]?.amount ?? 0,
-      admissionFeesTotal: admissionFeesTotal[0]?.amount ?? 0,
+      admissionFeesToday: admissionFeesTodayAmount,
+      admissionFeesMonth: admissionFeesMonthAmount,
+      admissionFeesTotal: admissionFeesTotalAmount,
       partialFees: feeSplit.partial?.count ?? 0,
       paidFees: feeSplit.paid?.count ?? 0,
       incomeThisMonth: incomeThisMonth[0]?.amount ?? 0,

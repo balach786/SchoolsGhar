@@ -155,7 +155,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const refresh = () => { void refreshUser().catch(() => undefined); };
+    const lastRefreshAt = { current: 0 };
+    const refresh = () => {
+      const now = Date.now();
+      // Throttle: skip if last refresh was less than 60 s ago
+      if (now - lastRefreshAt.current < 60_000) return;
+      lastRefreshAt.current = now;
+      void refreshUser().catch(() => undefined);
+    };
     const updated = (event: Event) => { setUser((event as CustomEvent<AuthUser>).detail); };
     window.addEventListener('focus', refresh);
     window.addEventListener(PERMISSION_CHANGED_EVENT, refresh);
