@@ -37,7 +37,7 @@ export async function connectDatabase() {
     // because unconverted operational models (Phase 4) still rely on the default connection.
     // We will connect to the legacy MONGODB_URI to preserve all operational API behavior.
     cachedPromise = mongoose.connect(env.mongodbUri, {
-      maxPoolSize: 5,          // Reduced from 10: serverless reuses fewer concurrent sockets
+      maxPoolSize: 50,         // Increased to 50 so concurrent Promise.all aggregations execute instantly
       minPoolSize: 0,          // Don't hold idle connections between invocations
       maxIdleTimeMS: 10000,    // CRITICAL FOR SERVERLESS: Close connections idle for >10s to prevent half-open socket hangs on thaw
       serverSelectionTimeoutMS: 5000, // Reduced to fail fast on cold starts if DB is unreachable

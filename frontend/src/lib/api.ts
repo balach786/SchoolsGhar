@@ -99,15 +99,33 @@ async function tryRefresh(): Promise<string | null> {
   }
 }
 
-// Attach token to every request
+// Simple in-memory cache for GET /lookup endpoints
+const GET_CACHE = new Map<string, { data: any; expiry: number }>();
+const CACHE_TTL = 3 * 60 * 1000; // 3 minutes
+
+// Attach token to every request and use cache for lookup requests
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (hasLoggedOut) {
-    // Prevent firing protected requests if we are in a confirmed logged-out state
-    // We only allow /auth endpoints to proceed
     if (!config.url?.includes('/auth/')) {
       return Promise.reject(new axios.Cancel('Session expired'));
     }
   }
+
+  // Attempt to return cached response for /lookup GET requests
+  if (config.method?.toUpperCase() === 'GET' && config.url?.endsWith('/lookup')) {
+    const cached = GET_CACHE.get(config.url);
+    if (cached && cached.expiry > Date.now()) {
+      config.adapter = async () => ({
+        data: cached.data,
+        status: 200,
+        statusText: 'OK',
+        headers: {} as any,
+        config,
+        request: {}
+      });
+    }
+  }
+
   const token = getAccessToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
@@ -121,6 +139,15 @@ api.interceptors.response.use(
   (response) => {
     // If a request succeeds, we are not logged out
     hasLoggedOut = false;
+    
+    // Save successful /lookup GET requests to cache
+    if (response.config.method?.toUpperCase() === 'GET' && response.config.url?.endsWith('/lookup')) {
+      GET_CACHE.set(response.config.url, {
+        data: response.data,
+        expiry: Date.now() + CACHE_TTL
+      });
+    }
+    
     return response;
   },
   async (error: AxiosError) => {
