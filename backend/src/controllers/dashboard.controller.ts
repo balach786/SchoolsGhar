@@ -355,44 +355,36 @@ export const analytics = asyncHandler(async (req: AuthRequest, res: Response) =>
         ],
       })
     ) : Promise.resolve(0),
-    // Admission-fee collections: single $lookup pass, split by time range via $facet.
-    // Previously 3 separate pipelines (3× $lookup + $unwind round-trips); now 1.
     can('payments') ? tenantModels.Payment.aggregate([
-      { $match: tMatch({}) },
+      { $match: tMatch({ paymentDate: { $gte: todayStart, $lt: todayEnd } }) },
       { $unwind: '$allocations' },
       { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
       { $unwind: '$fee' },
       { $match: { 'fee.feeType': 'admission_fee' } },
-      { $facet: {
-        today: [
-          { $match: { paymentDate: { $gte: todayStart, $lt: todayEnd } } },
-          { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
-        ],
-        month: [
-          { $match: { paymentDate: { $gte: thisMonthStart, $lt: thisMonthEnd } } },
-          { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
-        ],
-        total: [
-          { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
-        ],
-      }},
-    ]) : Promise.resolve([null]),
-    Promise.resolve(null), // admissionFeesMonth placeholder (merged into facet above)
-    Promise.resolve(null), // admissionFeesTotal placeholder (merged into facet above)
+      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
+    ]) : Promise.resolve([]),
+    can('payments') ? tenantModels.Payment.aggregate([
+      { $match: tMatch({ paymentDate: { $gte: thisMonthStart, $lt: thisMonthEnd } }) },
+      { $unwind: '$allocations' },
+      { $lookup: { from: 'studentfees', localField: 'allocations.studentFeeId', foreignField: '_id', as: 'fee' } },
+      { $unwind: '$fee' },
+      { $match: { 'fee.feeType': 'admission_fee' } },
+      { $group: { _id: null, amount: { $sum: '$allocations.amountAllocated' } } },
+    ]) : Promise.resolve([]),
+    can('fees') ? tenantModels.StudentFee.aggregate([
+      { $match: tMatch({ feeType: 'admission_fee' }) },
+      { $group: { _id: null, amount: { $sum: '$amountPaid' } } },
+    ]) : Promise.resolve([]),
   ]);
 
   const classIds = studentsByClass.map((c: any) => c._id);
   const classNames = await tenantModels.Class.find(scopeQuery(req, { _id: { $in: classIds } })).select('name').lean();
   const classMap = new Map(classNames.map((c: any) => [String(c._id), c.name]));
 
-  // ── Admission fee facet extraction ──────────────────────────────────────────
-  // admissionFeesToday holds the $facet result; the two placeholders are null.
-  const admissionFeeFacet = Array.isArray(admissionFeesToday) && admissionFeesToday[0]
-    ? admissionFeesToday[0] as { today: { amount: number }[]; month: { amount: number }[]; total: { amount: number }[] }
-    : null;
-  const admissionFeesTodayAmount  = admissionFeeFacet?.today?.[0]?.amount  ?? 0;
-  const admissionFeesMonthAmount  = admissionFeeFacet?.month?.[0]?.amount  ?? 0;
-  const admissionFeesTotalAmount  = admissionFeeFacet?.total?.[0]?.amount  ?? 0;
+  // ── Admission fee extraction ──────────────────────────────────────────
+  const admissionFeesTodayAmount = admissionFeesToday[0]?.amount ?? 0;
+  const admissionFeesMonthAmount = admissionFeesMonth[0]?.amount ?? 0;
+  const admissionFeesTotalAmount = admissionFeesTotal[0]?.amount ?? 0;
 
   // ── Class performance from published exams (last 8) — BATCHED (was N+1) ────
   // Single Mark.find() for all exams, then group in JS. Previously one await per exam.
