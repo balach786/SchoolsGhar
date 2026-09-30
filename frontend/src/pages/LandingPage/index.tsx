@@ -505,13 +505,13 @@ export function LandingPage() {
                 <br className="hidden sm:block" /> Bring academics, attendance and finance into one beautifully organized workspace.
               </p>
             </StaggerItem>
-            <StaggerItem className="hero-actions flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:max-w-none mx-auto mt-8">
-              <Button size="lg" asChild className="w-full sm:w-auto h-12 text-base sm:px-8">
+            <StaggerItem className="hero-actions flex flex-col sm:flex-row gap-4 w-full max-w-xs sm:max-w-none mx-auto mt-8 justify-center">
+              <Button size="lg" asChild className="w-full sm:w-auto h-12 text-base font-semibold sm:px-8 rounded-full shadow-lg">
                 <Link to="/register">
                   Start Your 7-Day Free Trial <ArrowRight className="ml-2" size={18} />
                 </Link>
               </Button>
-              <Button size="lg" asChild className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 text-white font-semibold h-12 sm:px-8 rounded-full shadow-lg hover:shadow-indigo-500/25 transition duration-300 w-full sm:w-auto text-center flex items-center justify-center border-0">
+              <Button size="lg" asChild className="w-full sm:w-auto h-12 text-base font-semibold sm:px-8 rounded-full shadow-lg bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 text-white hover:shadow-indigo-500/25 transition duration-300 border-0">
                 <Link to="/login">
                   Sign In / Login
                 </Link>
