@@ -381,7 +381,7 @@ export function DashboardPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Link to="/sessions" className="group">
-                <div className="p-4 rounded-2xl border border-border/80 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm hover:border-primary/50 hover:shadow-md transition-all space-y-2 h-full flex flex-col justify-between">
+                <div className="p-4 rounded-2xl border border-border/80 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm hover:border-primary/50 hover:shadow-md transition-all space-y-2 h-full flex flex-col justify-between">
                   <div className="space-y-2">
                     <span className="inline-block px-2 py-0.5 text-[11px] font-bold rounded-lg bg-primary/10 text-primary">
                       Step 1
@@ -401,7 +401,7 @@ export function DashboardPage() {
               </Link>
 
               <Link to="/classes" className="group">
-                <div className="p-4 rounded-2xl border border-border/80 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm hover:border-primary/50 hover:shadow-md transition-all space-y-2 h-full flex flex-col justify-between">
+                <div className="p-4 rounded-2xl border border-border/80 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm hover:border-primary/50 hover:shadow-md transition-all space-y-2 h-full flex flex-col justify-between">
                   <div className="space-y-2">
                     <span className="inline-block px-2 py-0.5 text-[11px] font-bold rounded-lg bg-primary/10 text-primary">
                       Step 2
@@ -421,7 +421,7 @@ export function DashboardPage() {
               </Link>
 
               <Link to="/teachers" className="group">
-                <div className="p-4 rounded-2xl border border-border/80 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm hover:border-primary/50 hover:shadow-md transition-all space-y-2 h-full flex flex-col justify-between">
+                <div className="p-4 rounded-2xl border border-border/80 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm hover:border-primary/50 hover:shadow-md transition-all space-y-2 h-full flex flex-col justify-between">
                   <div className="space-y-2">
                     <span className="inline-block px-2 py-0.5 text-[11px] font-bold rounded-lg bg-primary/10 text-primary">
                       Step 3
@@ -441,7 +441,7 @@ export function DashboardPage() {
               </Link>
 
               <Link to="/students" className="group">
-                <div className="p-4 rounded-2xl border border-border/80 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm hover:border-primary/50 hover:shadow-md transition-all space-y-2 h-full flex flex-col justify-between">
+                <div className="p-4 rounded-2xl border border-border/80 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm hover:border-primary/50 hover:shadow-md transition-all space-y-2 h-full flex flex-col justify-between">
                   <div className="space-y-2">
                     <span className="inline-block px-2 py-0.5 text-[11px] font-bold rounded-lg bg-primary/10 text-primary">
                       Step 4
@@ -673,7 +673,7 @@ export function DashboardPage() {
             </StaggerItem>
           </StaggerContainer>
 
-          <Card className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+          <Card className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
             <CardHeader className="p-5 pb-3">
               <CardTitle className="text-base font-bold text-foreground">Recent Class Assignments</CardTitle>
               <CardDescription className="text-xs text-muted-foreground">Homework assignments across your assigned classes</CardDescription>
@@ -755,7 +755,7 @@ export function DashboardPage() {
           </StaggerContainer>
 
           <div className="grid gap-5 lg:grid-cols-2">
-            <Card className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+            <Card className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
               <CardHeader className="p-5 pb-3">
                 <CardTitle className="text-base font-bold text-foreground">Upcoming Fees & Dues</CardTitle>
                 <CardDescription className="text-xs text-muted-foreground">Tuition and exam fees payable</CardDescription>
@@ -784,7 +784,7 @@ export function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+            <Card className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
               <CardHeader className="p-5 pb-3">
                 <CardTitle className="text-base font-bold text-foreground">Recent Examination Results</CardTitle>
                 <CardDescription className="text-xs text-muted-foreground">Scores and grades from published exams</CardDescription>

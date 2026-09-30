@@ -254,7 +254,7 @@ export function PlatformCustomersPage() {
       </div>
 
       {/* Filter Bar */}
-      <Card className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm p-4">
+      <Card className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm p-4">
         <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -291,7 +291,7 @@ export function PlatformCustomersPage() {
       </Card>
 
       {/* Customers Table */}
-      <Card className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+      <Card className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
         <CardContent className="p-0">
           {loading ? (
             <div className="flex h-64 items-center justify-center text-muted-foreground">
@@ -388,7 +388,7 @@ export function PlatformCustomersPage() {
                                 setExtensionReason('');
                                 setExtendModalOpen(true);
                               }}
-                              className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground hover:text-foreground text-[11px] h-7 px-2.5"
+                              className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground hover:text-foreground text-[11px] h-7 px-2.5"
                             >
                               <Clock className="w-3 h-3 mr-1 text-primary" />
                               Extend
@@ -402,7 +402,7 @@ export function PlatformCustomersPage() {
                                 setNewSchoolCode(c.slug);
                                 setCodeModalOpen(true);
                               }}
-                              className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground hover:text-foreground text-[11px] h-7 px-2.5"
+                              className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground hover:text-foreground text-[11px] h-7 px-2.5"
                             >
                               <Building2 className="w-3 h-3 mr-1 text-primary" />
                               Change Code
@@ -416,7 +416,7 @@ export function PlatformCustomersPage() {
                                 setSuspendReason(c.suspensionReason || '');
                                 setSuspendModalOpen(true);
                               }}
-                              className={`border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-[11px] h-7 px-2.5 ${
+                              className={`border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-[11px] h-7 px-2.5 ${
                                 c.isSuspended
                                   ? 'text-success hover:bg-emerald-950/30'
                                   : 'text-destructive hover:bg-rose-950/30'
@@ -488,7 +488,7 @@ export function PlatformCustomersPage() {
 
       {/* Manual Extension Dialog */}
       <Dialog open={extendModalOpen} onOpenChange={setExtendModalOpen}>
-        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border-border text-foreground max-w-md">
+        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border-border text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-foreground flex items-center gap-2">
               <Clock className="w-4 h-4 text-primary" />
@@ -529,7 +529,7 @@ export function PlatformCustomersPage() {
                 type="button"
                 variant="outline"
                 onClick={() => setExtendModalOpen(false)}
-                className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground text-xs"
+                className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground text-xs"
               >
                 Cancel
               </Button>
@@ -547,7 +547,7 @@ export function PlatformCustomersPage() {
 
       {/* Suspend / Unsuspend Dialog */}
       <Dialog open={suspendModalOpen} onOpenChange={setSuspendModalOpen}>
-        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border-border text-foreground max-w-md">
+        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border-border text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-foreground flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-destructive" />
@@ -579,7 +579,7 @@ export function PlatformCustomersPage() {
                 type="button"
                 variant="outline"
                 onClick={() => setSuspendModalOpen(false)}
-                className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground text-xs"
+                className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground text-xs"
               >
                 Cancel
               </Button>
@@ -607,7 +607,7 @@ export function PlatformCustomersPage() {
 
       {/* Change Code Dialog */}
       <Dialog open={codeModalOpen} onOpenChange={setCodeModalOpen}>
-        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border-border text-foreground max-w-md">
+        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border-border text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-foreground flex items-center gap-2">
               <Building2 className="w-4 h-4 text-primary" />
@@ -645,7 +645,7 @@ export function PlatformCustomersPage() {
                 variant="outline"
                 onClick={() => setCodeModalOpen(false)}
                 disabled={actionLoading}
-                className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground text-xs"
+                className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground text-xs"
               >
                 Cancel
               </Button>
@@ -663,7 +663,7 @@ export function PlatformCustomersPage() {
 
       {/* Soft Delete Modal */}
       <Dialog open={softDeleteModalOpen} onOpenChange={setSoftDeleteModalOpen}>
-        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border-border text-foreground max-w-md">
+        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border-border text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-destructive flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" />
@@ -686,7 +686,7 @@ export function PlatformCustomersPage() {
               />
             </div>
             <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => setSoftDeleteModalOpen(false)} className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground text-xs">
+              <Button type="button" variant="outline" onClick={() => setSoftDeleteModalOpen(false)} className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground text-xs">
                 Cancel
               </Button>
               <Button type="submit" disabled={actionLoading} className="bg-red-600 hover:bg-red-500 text-white text-xs">
@@ -699,7 +699,7 @@ export function PlatformCustomersPage() {
 
       {/* Hard Delete Modal */}
       <Dialog open={hardDeleteModalOpen} onOpenChange={setHardDeleteModalOpen}>
-        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border-border text-foreground max-w-md">
+        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border-border text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-destructive flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" />
@@ -747,7 +747,7 @@ export function PlatformCustomersPage() {
             })()}
 
             <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => setHardDeleteModalOpen(false)} className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground text-xs">
+              <Button type="button" variant="outline" onClick={() => setHardDeleteModalOpen(false)} className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground text-xs">
                 Cancel
               </Button>
               <Button 

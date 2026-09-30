@@ -149,7 +149,7 @@ export function PlatformPaymentMethodsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {methods.map((m) => (
-            <Card key={m._id} className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm flex flex-col justify-between">
+            <Card key={m._id} className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm flex flex-col justify-between">
               <div>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
@@ -218,7 +218,7 @@ export function PlatformPaymentMethodsPage() {
 
       {/* Payment Method Dialog */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border-border text-foreground max-w-lg">
+        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border-border text-foreground max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-foreground">
               {editingMethod ? 'Edit Payment Method' : 'Add Payment Method'}
@@ -307,7 +307,7 @@ export function PlatformPaymentMethodsPage() {
                 type="button"
                 variant="outline"
                 onClick={() => setModalOpen(false)}
-                className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground text-xs"
+                className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground text-xs"
               >
                 Cancel
               </Button>

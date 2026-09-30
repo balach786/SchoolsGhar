@@ -305,7 +305,7 @@ export function ClassesPage() {
       </div>
 
       {/* ── Filter Toolbar ── */}
-      <div className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] p-3 shadow-sm flex flex-col gap-2.5 sm:flex-row sm:items-center">
+      <div className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 p-3 shadow-sm flex flex-col gap-2.5 sm:flex-row sm:items-center">
         <div className="relative w-full sm:max-w-xs">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -323,7 +323,7 @@ export function ClassesPage() {
         </Select>
       </div>
 
-      <div className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm overflow-hidden">
+      <div className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm overflow-hidden">
         <DataTable
           columns={columns}
           data={data}
@@ -379,7 +379,7 @@ export function ClassesPage() {
 
       {/* ── Class Student Roster Sheet Dialog ── */}
       <Dialog open={Boolean(selectedClassForSheet)} onOpenChange={(o) => !o && setSelectedClassForSheet(null)}>
-        <DialogContent className="max-w-5xl w-[96vw] max-h-[90vh] p-0 overflow-hidden flex flex-col rounded-3xl border-border/80 shadow-2xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+        <DialogContent className="max-w-5xl w-[96vw] max-h-[90vh] p-0 overflow-hidden flex flex-col rounded-3xl border-border/80 shadow-2xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
           {/* Header */}
           <div className="p-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-b border-border/70 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">

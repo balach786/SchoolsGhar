@@ -331,7 +331,7 @@ export async function recordPayment(
 
       // 2. Allocate oldest first
       let remainingAmount = amount;
-      const allocations: { studentFeeId: mongoose.Types.ObjectId; amountAllocated: number; nextStatus: string }[] = [];
+      const allocations: { studentFeeId: mongoose.Types.ObjectId; month: number | null; amountAllocated: number; nextStatus: string }[] = [];
       const bulkOps: any[] = [];
 
       for (const fee of feesToPay) {
@@ -346,7 +346,7 @@ export async function recordPayment(
         const newRemaining = fee.netPayable - newAmountPaid;
         const newStatus = newRemaining <= 0 ? 'paid' : 'partial';
 
-        allocations.push({ studentFeeId: fee._id as mongoose.Types.ObjectId, amountAllocated: allocated, nextStatus: newStatus });
+        allocations.push({ studentFeeId: fee._id as mongoose.Types.ObjectId, month: fee.month, amountAllocated: allocated, nextStatus: newStatus });
 
         bulkOps.push({
           updateOne: {
@@ -389,7 +389,7 @@ export async function recordPayment(
             receiptNumber,
             reference: input.reference ? input.reference.trim() : undefined,
             notes: input.notes,
-            allocations: allocations.map(a => ({ studentFeeId: a.studentFeeId, amountAllocated: a.amountAllocated })),
+            allocations: allocations.map(a => ({ studentFeeId: a.studentFeeId, month: a.month, amountAllocated: a.amountAllocated })),
             status: 'active',
             collectedBy: actor._id,
           },

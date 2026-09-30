@@ -600,7 +600,7 @@ export function ExamsPage() {
       </div>
 
       {/* Filter Bar */}
-      <Card className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+      <Card className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
         <CardContent className="p-4">
           <div className="flex flex-wrap items-center gap-3">
             <div className="w-48">
@@ -671,7 +671,7 @@ export function ExamsPage() {
 
       {/* Main Table or Custom Empty State */}
       {!loading && data.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border/70 p-12 text-center bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm/40">
+        <div className="rounded-xl border border-dashed border-border/70 p-12 text-center bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm/40">
           <FileSpreadsheet className="mx-auto h-12 w-12 text-muted-foreground/60" />
           <h3 className="mt-4 text-base font-semibold text-foreground">No exams created yet</h3>
           <p className="mt-1.5 text-sm text-muted-foreground max-w-md mx-auto">
@@ -988,7 +988,7 @@ export function ExamsPage() {
             {examTypes.map((t) => (
               <div
                 key={t._id}
-                className="flex items-center justify-between rounded-lg border border-border/70 p-2.5 text-xs bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm"
+                className="flex items-center justify-between rounded-lg border border-border/70 p-2.5 text-xs bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm"
               >
                 <div>
                   <p className="font-semibold">{t.name}</p>

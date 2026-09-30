@@ -232,7 +232,7 @@ export function PlatformLayout() {
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border-border text-foreground p-2">
+              <DropdownMenuContent align="end" className="w-80 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border-border text-foreground p-2">
                 <div className="flex items-center justify-between px-2 py-1.5 border-b border-border">
                   <span className="text-xs font-bold text-foreground">Platform Notifications</span>
                   {unreadCount > 0 && (
@@ -275,7 +275,7 @@ export function PlatformLayout() {
                 await logout();
                 navigate('/platform-admin/login');
               }}
-              className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground hover:text-foreground hover:bg-muted text-xs"
+              className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground hover:text-foreground hover:bg-muted text-xs"
             >
               <LogOut className="w-3.5 h-3.5 mr-1.5" />
               Sign Out

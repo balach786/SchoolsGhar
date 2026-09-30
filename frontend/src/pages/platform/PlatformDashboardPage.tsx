@@ -75,7 +75,7 @@ export function PlatformDashboardPage() {
     fetchMetrics();
   }, []);
 
-  if (!loading && !data) return <div role="alert" className="rounded-2xl border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm p-10 text-center"><h1 className="text-xl font-semibold">We couldn’t load your platform overview.</h1><p className="my-4 text-muted-foreground">Please try again to see the latest school and payment information.</p><Button onClick={fetchMetrics}>Try again</Button></div>;
+  if (!loading && !data) return <div role="alert" className="rounded-2xl border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm p-10 text-center"><h1 className="text-xl font-semibold">We couldn’t load your platform overview.</h1><p className="my-4 text-muted-foreground">Please try again to see the latest school and payment information.</p><Button onClick={fetchMetrics}>Try again</Button></div>;
   if (loading || !data) {
     return (
       <div className="flex h-96 items-center justify-center text-muted-foreground">
@@ -96,7 +96,7 @@ export function PlatformDashboardPage() {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Link to="/platform-admin/customers">
-            <Button variant="outline" size="sm" className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground hover:bg-muted text-xs">
+            <Button variant="outline" size="sm" className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground hover:bg-muted text-xs">
               <Building2 className="w-3.5 h-3.5 mr-1.5" />
               Manage All Schools
             </Button>
@@ -142,7 +142,7 @@ export function PlatformDashboardPage() {
       {/* Top 4 KPI Metrics */}
       <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Customers */}
-        <StaggerItem><RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm backdrop-blur-md">
+        <StaggerItem><RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm backdrop-blur-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Total Schools
@@ -158,7 +158,7 @@ export function PlatformDashboardPage() {
         </RevealCard></StaggerItem>
 
         {/* Active Subscriptions */}
-        <StaggerItem><RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm backdrop-blur-md">
+        <StaggerItem><RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm backdrop-blur-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Active Subscriptions
@@ -174,7 +174,7 @@ export function PlatformDashboardPage() {
         </RevealCard></StaggerItem>
 
         {/* Active Free Trials */}
-        <StaggerItem><RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm backdrop-blur-md">
+        <StaggerItem><RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm backdrop-blur-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Active Free Trials
@@ -194,7 +194,7 @@ export function PlatformDashboardPage() {
         </RevealCard></StaggerItem>
 
         {/* Total Recorded Revenue */}
-        <StaggerItem><RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm backdrop-blur-md">
+        <StaggerItem><RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm backdrop-blur-md">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Total Revenue
@@ -216,7 +216,7 @@ export function PlatformDashboardPage() {
       {/* Secondary Row: Plan Distribution & Health Statuses */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Tier Distribution */}
-        <RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm lg:col-span-1">
+        <RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm lg:col-span-1">
           <CardHeader>
             <CardTitle className="text-base font-semibold text-foreground">Tier Breakdown</CardTitle>
             <CardDescription className="text-xs text-muted-foreground">
@@ -264,7 +264,7 @@ export function PlatformDashboardPage() {
         </RevealCard>
 
         {/* Recent Registrations Table */}
-        <RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm lg:col-span-2">
+        <RevealCard className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle className="text-base font-semibold text-foreground">Recent School Registrations</CardTitle>

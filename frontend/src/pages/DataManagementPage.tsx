@@ -140,7 +140,7 @@ export function DataManagementPage() {
         onValueChange={(val) => setSearchParams({ tab: val })}
         className="space-y-6"
       >
-        <TabsList className="bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm p-1.5 rounded-2xl border border-border/70 flex flex-wrap h-auto gap-1 shadow-sm">
+        <TabsList className="bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm p-1.5 rounded-2xl border border-border/70 flex flex-wrap h-auto gap-1 shadow-sm">
           <TabsTrigger value="students" className="rounded-xl text-xs font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">
             <Users className="mr-1.5 h-3.5 w-3.5" /> Students
           </TabsTrigger>
@@ -167,7 +167,7 @@ export function DataManagementPage() {
         {/* 1. STUDENTS TAB */}
         <TabsContent value="students" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="md:col-span-2 border-border/70 shadow-sm rounded-2xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+            <Card className="md:col-span-2 border-border/70 shadow-sm rounded-2xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
               <ExportFilterCard
                 title="Export Students"
                 description="Download verified student lists filtered by session, class, section, status, and admission dates."
@@ -335,7 +335,7 @@ export function DataManagementPage() {
         <TabsContent value="exams" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Pre-filled Marks Sheet Generator */}
-            <Card className="border-border/70 shadow-sm rounded-2xl overflow-hidden bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+            <Card className="border-border/70 shadow-sm rounded-2xl overflow-hidden bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
               <CardHeader className="bg-primary/5 pb-4 border-b border-border/60">
                 <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
                   <FileSpreadsheet className="h-4 w-4 text-primary" />
@@ -350,7 +350,7 @@ export function DataManagementPage() {
                   <div className="space-y-1">
                     <Label className="text-xs font-medium">Exam</Label>
                     <Select value={marksExamId} onValueChange={setMarksExamId}>
-                      <SelectTrigger className="h-9 text-xs rounded-xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+                      <SelectTrigger className="h-9 text-xs rounded-xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
                         <SelectValue placeholder="Select Exam" />
                       </SelectTrigger>
                       <SelectContent>
@@ -364,7 +364,7 @@ export function DataManagementPage() {
                   <div className="space-y-1">
                     <Label className="text-xs font-medium">Subject</Label>
                     <Select value={marksSubjectId} onValueChange={setMarksSubjectId}>
-                      <SelectTrigger className="h-9 text-xs rounded-xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+                      <SelectTrigger className="h-9 text-xs rounded-xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
                         <SelectValue placeholder="Select Subject" />
                       </SelectTrigger>
                       <SelectContent>
@@ -378,7 +378,7 @@ export function DataManagementPage() {
                   <div className="space-y-1">
                     <Label className="text-xs font-medium">Section (Optional)</Label>
                     <Select value={marksSectionId || 'all'} onValueChange={setMarksSectionId}>
-                      <SelectTrigger className="h-9 text-xs rounded-xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+                      <SelectTrigger className="h-9 text-xs rounded-xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
                         <SelectValue placeholder="All Sections" />
                       </SelectTrigger>
                       <SelectContent>
@@ -393,7 +393,7 @@ export function DataManagementPage() {
                   <div className="space-y-1">
                     <Label className="text-xs font-medium">Format</Label>
                     <Select value={marksFormat} onValueChange={(v: any) => setMarksFormat(v)}>
-                      <SelectTrigger className="h-9 text-xs rounded-xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+                      <SelectTrigger className="h-9 text-xs rounded-xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -437,7 +437,7 @@ export function DataManagementPage() {
         {/* 6. ACADEMIC SETUP TAB */}
         <TabsContent value="academic" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="md:col-span-2 border-border/70 shadow-sm rounded-2xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+            <Card className="md:col-span-2 border-border/70 shadow-sm rounded-2xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
               <ExportFilterCard
                 title="Export Academic Structure"
                 description="Export all Classes, Sections, and Subjects configured for your school in multiple tabs."

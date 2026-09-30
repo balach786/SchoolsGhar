@@ -188,7 +188,7 @@ export function FeeReportsPage() {
       <FeesNavHeader activeTab="reports" />
 
       {/* Filter Toolbar */}
-      <div className="p-4 rounded-2xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border border-border/70 shadow-xs flex flex-wrap items-center gap-4">
+      <div className="p-4 rounded-2xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border border-border/70 shadow-xs flex flex-wrap items-center gap-4">
         {sessions.length > 0 && (
           <div className="space-y-1">
             <Label className="text-[11px] text-muted-foreground">Session Filter</Label>
@@ -304,25 +304,25 @@ export function FeeReportsPage() {
       {/* Auxiliary Charges Breakdown */}
       {s && (
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div className="p-3.5 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF]">
+          <div className="p-3.5 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900">
             <span className="text-[11px] text-muted-foreground font-medium">Discounts Granted:</span>
             <p className="text-base font-bold text-amber-600 mt-0.5">
               {formatCurrency(s.discountAmount)}
             </p>
           </div>
-          <div className="p-3.5 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF]">
+          <div className="p-3.5 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900">
             <span className="text-[11px] text-muted-foreground font-medium">Assessed Late Fines:</span>
             <p className="text-base font-bold text-purple-600 mt-0.5">
               {formatCurrency(s.fineAmount)}
             </p>
           </div>
-          <div className="p-3.5 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF]">
+          <div className="p-3.5 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900">
             <span className="text-[11px] text-muted-foreground font-medium">{otherFeeName} Charges:</span>
             <p className="text-base font-bold text-foreground mt-0.5">
               {formatCurrency(s.otherFeeAmount)}
             </p>
           </div>
-          <div className="p-3.5 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF]">
+          <div className="p-3.5 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900">
             <span className="text-[11px] text-muted-foreground font-medium">Admission Fees Collected:</span>
             <p className="text-base font-bold text-emerald-600 mt-0.5">
               {formatCurrency(s.admissionFeeAmount)}

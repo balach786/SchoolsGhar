@@ -248,7 +248,7 @@ export function ExamReportsPage() {
               </div>
 
               {/* Status and Configuration Metadata */}
-              <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm p-5 space-y-4">
+              <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm p-5 space-y-4">
                 <h3 className="font-semibold text-base border-b pb-2">Examination Operational Specifications</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
                   <div>
@@ -340,7 +340,7 @@ export function ExamReportsPage() {
               </div>
 
               {/* Category Breakdown Table */}
-              <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm overflow-hidden">
+              <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm overflow-hidden">
                 <div className="p-4 border-b bg-muted/40 font-semibold text-sm">
                   Expense Breakdown by Category
                 </div>
@@ -427,7 +427,7 @@ export function ExamReportsPage() {
               </div>
 
               {/* Students Fee Roster */}
-              <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm overflow-hidden">
+              <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm overflow-hidden">
                 <div className="p-4 border-b bg-muted/40 font-semibold text-sm">
                   Student Fee Clearance Ledger
                 </div>
@@ -490,7 +490,7 @@ export function ExamReportsPage() {
           {loading ? (
             <Skeleton className="h-64 w-full" />
           ) : (
-            <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm overflow-hidden">
+            <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 border-b text-xs text-muted-foreground uppercase font-semibold">
                   <tr>
@@ -554,7 +554,7 @@ export function ExamReportsPage() {
           {loading ? (
             <Skeleton className="h-64 w-full" />
           ) : (
-            <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm overflow-hidden">
+            <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 border-b text-xs text-muted-foreground uppercase font-semibold">
                   <tr>

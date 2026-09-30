@@ -271,7 +271,7 @@ export function TeacherAttendancePage() {
       {viewMode === 'monthly' && (
         <div className="space-y-4">
           {/* Monthly Control Bar */}
-          <div className="p-4 rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-xs flex flex-wrap items-center justify-between gap-3">
+          <div className="p-4 rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-xs flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-3">
               <div className="w-48">
                 <Label className="text-[11px] font-semibold text-muted-foreground mb-1 block">Calculation Month</Label>
@@ -290,7 +290,7 @@ export function TeacherAttendancePage() {
                     type="button"
                     onClick={() => setMonthlySubView('register')}
                     className={`px-3 py-1 rounded-lg font-medium transition-all ${
-                      monthlySubView === 'register' ? 'bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground shadow-xs font-semibold' : 'text-muted-foreground hover:text-foreground'
+                      monthlySubView === 'register' ? 'bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground shadow-xs font-semibold' : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     Manual Register Sheet
@@ -299,7 +299,7 @@ export function TeacherAttendancePage() {
                     type="button"
                     onClick={() => setMonthlySubView('summary')}
                     className={`px-3 py-1 rounded-lg font-medium transition-all ${
-                      monthlySubView === 'summary' ? 'bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground shadow-xs font-semibold' : 'text-muted-foreground hover:text-foreground'
+                      monthlySubView === 'summary' ? 'bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground shadow-xs font-semibold' : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     Payroll Breakdown
@@ -338,7 +338,7 @@ export function TeacherAttendancePage() {
                 variant="outline"
                 size="sm"
                 onClick={exportMonthlyCsv}
-                className="h-9 rounded-xl text-xs font-semibold gap-1.5 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm hover:bg-muted"
+                className="h-9 rounded-xl text-xs font-semibold gap-1.5 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm hover:bg-muted"
               >
                 <Download className="h-3.5 w-3.5 text-muted-foreground" />
                 Export Monthly Sheet
@@ -406,7 +406,7 @@ export function TeacherAttendancePage() {
             <>
               {/* Monthly KPI Stats Cards */}
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <div className="p-4 rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-xs flex items-center gap-3.5">
+                <div className="p-4 rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-xs flex items-center gap-3.5">
                   <div className="h-11 w-11 rounded-xl bg-blue-50 text-[#1E3A8A] flex items-center justify-center border border-blue-200/60 shrink-0">
                     <Users className="h-5 w-5 stroke-[2.2]" />
                   </div>
@@ -417,7 +417,7 @@ export function TeacherAttendancePage() {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-xs flex items-center gap-3.5">
+                <div className="p-4 rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-xs flex items-center gap-3.5">
                   <div className="h-11 w-11 rounded-xl bg-amber-50 text-[#F59E0B] flex items-center justify-center border border-amber-200/60 shrink-0">
                     <Calendar className="h-5 w-5 stroke-[2.2]" />
                   </div>
@@ -428,7 +428,7 @@ export function TeacherAttendancePage() {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-xs flex items-center gap-3.5">
+                <div className="p-4 rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-xs flex items-center gap-3.5">
                   <div className="h-11 w-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200/60 shrink-0">
                     <TrendingUp className="h-5 w-5 stroke-[2.2]" />
                   </div>
@@ -439,7 +439,7 @@ export function TeacherAttendancePage() {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-xs flex items-center gap-3.5">
+                <div className="p-4 rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-xs flex items-center gap-3.5">
                   <div className="h-11 w-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center border border-rose-200/60 shrink-0">
                     <DollarSign className="h-5 w-5 stroke-[2.2]" />
                   </div>
@@ -465,7 +465,7 @@ export function TeacherAttendancePage() {
               </div>
 
               {/* Monthly Staff Attendance & Pay Table */}
-              <div className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-xs overflow-hidden">
+              <div className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-xs overflow-hidden">
                 {loadingMonthly ? (
                   <div className="p-12 text-center">
                     <Loader2 className="h-7 w-7 animate-spin mx-auto text-primary mb-2" />

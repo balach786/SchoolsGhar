@@ -579,7 +579,7 @@ export function CollectFeePage() {
                 </div>
 
                 {/* 1. Current Month Fee Breakdown */}
-                <div className="p-3.5 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] space-y-2">
+                <div className="p-3.5 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 space-y-2">
                   <div className="flex items-center justify-between font-semibold">
                     <span className="text-foreground flex items-center gap-1.5">
                       <Calendar className="h-4 w-4 text-primary" />
@@ -709,7 +709,7 @@ export function CollectFeePage() {
 
                 {/* 3. Admission Fee Status (Only if Eligible according to backend) */}
                 {hasAdmissionFee && adm && (
-                  <div className="p-3 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] flex items-center justify-between">
+                  <div className="p-3 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="h-4 w-4 text-emerald-600" />
                       <div>

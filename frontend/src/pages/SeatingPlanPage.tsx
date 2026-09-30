@@ -309,7 +309,7 @@ export function SeatingPlanPage() {
           Loading seating plan...
         </div>
       ) : seatingBlocks.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border/70 p-12 text-center bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm/40">
+        <div className="rounded-xl border border-dashed border-border/70 p-12 text-center bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm/40">
           <Users className="mx-auto h-12 w-12 text-muted-foreground/60" />
           <h3 className="mt-4 text-base font-semibold text-foreground">No Seating Blocks Found</h3>
           <p className="mt-1.5 text-sm text-muted-foreground max-w-md mx-auto">

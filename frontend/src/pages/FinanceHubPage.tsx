@@ -65,7 +65,7 @@ const HUB_CARDS: HubCard[] = [
 
 const colorMap: Record<string, { card: string; icon: string; title: string; arrow: string }> = {
   navy: {
-    card: 'border-blue-200/60 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] hover:border-blue-400/50 hover:shadow-blue-100',
+    card: 'border-blue-200/60 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 hover:border-blue-400/50 hover:shadow-blue-100',
     icon: 'bg-[#1E3A8A] text-white',
     title: 'text-[#1E3A8A]',
     arrow: 'text-[#1E3A8A]/60 group-hover:text-[#1E3A8A]',

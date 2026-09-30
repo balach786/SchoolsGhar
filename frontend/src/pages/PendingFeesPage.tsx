@@ -382,7 +382,7 @@ export function PendingFeesPage() {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border border-border/70 shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border border-border/70 shadow-xs">
         <div className="flex flex-wrap items-center gap-3">
           {sessions.length > 0 && (
             <Select value={sessionId} onValueChange={setSessionId}>

@@ -231,7 +231,31 @@ export const updateFeeStructure = asyncHandler(async (req: AuthRequest, res: Res
   if (doc.isArchived) throw ApiError.badRequest('Archived fee structures cannot be edited', 'FEE_STRUCTURE_ARCHIVED');
 
   if (req.body.title !== undefined && doc.feeType !== 'monthly_tuition') doc.title = req.body.title;
-  if (req.body.amount !== undefined) doc.amount = req.body.amount;
+  if (req.body.amount !== undefined && req.body.amount !== doc.amount) {
+    const diff = req.body.amount - doc.amount;
+    doc.amount = req.body.amount;
+    
+    // Sync to existing unpaid invoices
+    const unpaidFees = await StudentFee.find({
+      tenantId: doc.tenantId,
+      sessionId: doc.sessionId,
+      classId: doc.classId,
+      feeType: doc.feeType,
+      month: doc.month,
+      status: 'unpaid'
+    });
+
+    for (const fee of unpaidFees) {
+      fee.originalAmount = req.body.amount;
+      fee.netPayable = Math.max(0, fee.netPayable + diff);
+      fee.remainingBalance = Math.max(0, fee.remainingBalance + diff);
+      if (fee.chargeBreakdown) {
+        fee.chargeBreakdown.baseFeePaisa = req.body.amount;
+        fee.chargeBreakdown.netPayablePaisa = Math.max(0, fee.chargeBreakdown.netPayablePaisa + diff);
+      }
+      await fee.save();
+    }
+  }
   if (req.body.month !== undefined) {
     doc.month = req.body.month;
     if (doc.feeType === 'monthly_tuition') {

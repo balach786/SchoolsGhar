@@ -166,7 +166,7 @@ export function FeesOverviewPage() {
           <div className="flex flex-wrap items-center gap-2">
             {sessions.length > 0 && (
               <Select value={sessionId} onValueChange={setSessionId}>
-                <SelectTrigger className="w-44 h-9 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+                <SelectTrigger className="w-44 h-9 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
                   <SelectValue placeholder="Session" />
                 </SelectTrigger>
                 <SelectContent>
@@ -359,19 +359,19 @@ export function FeesOverviewPage() {
       {(hasOtherFee || hasLateFee || hasAdmissionFee) && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {hasOtherFee && (
-            <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border border-border/70 text-xs shadow-2xs">
+            <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border border-border/70 text-xs shadow-2xs">
               <span className="text-muted-foreground font-medium">{otherFeeName} Collected:</span>
               <span className="font-bold text-foreground">{formatCurrency(s?.otherFeeAmount ?? 0)}</span>
             </div>
           )}
           {hasLateFee && (
-            <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border border-border/70 text-xs shadow-2xs">
+            <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border border-border/70 text-xs shadow-2xs">
               <span className="text-muted-foreground font-medium">Overdue Late Fines:</span>
               <span className="font-bold text-purple-600">{formatCurrency(s?.fineAmount ?? 0)}</span>
             </div>
           )}
           {hasAdmissionFee && (
-            <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border border-border/70 text-xs shadow-2xs">
+            <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border border-border/70 text-xs shadow-2xs">
               <span className="text-muted-foreground font-medium">Admission Fees Collected:</span>
               <span className="font-bold text-emerald-600">{formatCurrency(s?.admissionFeeAmount ?? 0)}</span>
             </div>
@@ -454,7 +454,7 @@ export function FeesOverviewPage() {
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
             <div
               onClick={() => navigate('/fees/collect')}
-              className="group p-4 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3"
+              className="group p-4 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3"
             >
               <div className="p-2.5 rounded-xl bg-primary/10 text-primary group-hover:scale-105 transition-transform">
                 <CreditCard className="h-5 w-5" />
@@ -472,7 +472,7 @@ export function FeesOverviewPage() {
 
             <div
               onClick={() => navigate('/fees/class-collection')}
-              className="group p-4 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3"
+              className="group p-4 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3"
             >
               <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 group-hover:scale-105 transition-transform">
                 <Users className="h-5 w-5" />
@@ -490,7 +490,7 @@ export function FeesOverviewPage() {
 
             <div
               onClick={() => navigate('/fees/setup')}
-              className="group p-4 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3"
+              className="group p-4 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3"
             >
               <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-600 group-hover:scale-105 transition-transform">
                 <Layers className="h-5 w-5" />
@@ -508,7 +508,7 @@ export function FeesOverviewPage() {
 
             <div
               onClick={() => navigate('/fees/pending')}
-              className="group p-4 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3"
+              className="group p-4 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3"
             >
               <div className="p-2.5 rounded-xl bg-rose-500/10 text-rose-600 group-hover:scale-105 transition-transform">
                 <AlertCircle className="h-5 w-5" />
@@ -527,7 +527,7 @@ export function FeesOverviewPage() {
             {can('salaries', 'view') && (
               <div
                 onClick={() => navigate('/salaries')}
-                className="group p-4 rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3 sm:col-span-2 md:col-span-1"
+                className="group p-4 rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 hover:border-primary/40 hover:shadow-md transition-all cursor-pointer flex items-start gap-3 sm:col-span-2 md:col-span-1"
               >
                 <div className="p-2.5 rounded-xl bg-teal-500/10 text-teal-600 group-hover:scale-105 transition-transform">
                   <HandCoins className="h-5 w-5" />

@@ -348,7 +348,7 @@ function BillingContent() {
 
       {/* Current Status Overview Card */}
       {summary ? (
-        <RevealCard className="border-border/80 shadow-sm bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm/60 backdrop-blur-sm">
+        <RevealCard className="border-border/80 shadow-sm bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm/60 backdrop-blur-sm">
           <CardHeader className="pb-4">
             <CardTitle className="text-base font-semibold flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
               <span className="flex items-center gap-2">

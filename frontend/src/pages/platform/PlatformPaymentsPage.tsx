@@ -164,7 +164,7 @@ export function PlatformPaymentsPage() {
       </div>
 
       {/* Filter Bar */}
-      <Card className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm p-4">
+      <Card className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm p-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <select
@@ -197,7 +197,7 @@ export function PlatformPaymentsPage() {
       </Card>
 
       {/* Table */}
-      <Card className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+      <Card className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
         <CardContent className="p-0">
           {loading ? (
             <div className="flex h-64 items-center justify-center text-muted-foreground">
@@ -295,7 +295,7 @@ export function PlatformPaymentsPage() {
                                 setRejectionReason('');
                                 setRejectOpen(true);
                               }}
-                              className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-destructive hover:bg-rose-950/30 text-[11px] h-7 px-2.5 font-semibold"
+                              className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-destructive hover:bg-rose-950/30 text-[11px] h-7 px-2.5 font-semibold"
                             >
                               <X className="w-3 h-3 mr-1" /> Reject
                             </Button>
@@ -319,7 +319,7 @@ export function PlatformPaymentsPage() {
 
       {/* Approve Dialog */}
       <Dialog open={approveOpen} onOpenChange={setApproveOpen}>
-        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border-border text-foreground max-w-md">
+        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border-border text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-foreground flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-success" />
@@ -364,7 +364,7 @@ export function PlatformPaymentsPage() {
               type="button"
               variant="outline"
               onClick={() => setApproveOpen(false)}
-              className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground text-xs"
+              className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground text-xs"
             >
               Cancel
             </Button>
@@ -381,7 +381,7 @@ export function PlatformPaymentsPage() {
 
       {/* Reject Dialog */}
       <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
-        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border-border text-foreground max-w-md">
+        <DialogContent className="bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border-border text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-foreground flex items-center gap-2">
               <XCircle className="w-4 h-4 text-destructive" />
@@ -410,7 +410,7 @@ export function PlatformPaymentsPage() {
                 type="button"
                 variant="outline"
                 onClick={() => setRejectOpen(false)}
-                className="border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm text-foreground text-xs"
+                className="border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm text-foreground text-xs"
               >
                 Cancel
               </Button>

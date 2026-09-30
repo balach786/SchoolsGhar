@@ -61,10 +61,10 @@ export function DataTable<T>({
 
   return (
     <div>
-      <div className="overflow-x-auto thin-scroll rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-[0_4px_14px_-2px_rgba(37,99,235,0.1)]">
+      <div className="overflow-x-auto thin-scroll rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-[0_4px_14px_-2px_rgba(37,99,235,0.1)]">
         <Table className="min-w-[640px]">
           <TableHeader>
-            <TableRow className="bg-[#E0EDFF]/50 hover:bg-[#E0EDFF]/50 border-b border-[#BFDBFE]">
+            <TableRow className="bg-[#E0EDFF]/50 dark:bg-slate-800/50 hover:bg-[#E0EDFF]/50 dark:bg-slate-800/50 border-b border-[#BFDBFE] dark:border-slate-800">
               {columns.map((col) => (
                 <TableHead key={col.key} className={col.headerClassName}>
                   {col.header}

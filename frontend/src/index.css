@@ -201,11 +201,15 @@ textarea {
   border-color: rgba(147, 197, 253, 0.75);
   box-shadow: 0 8px 24px -2px rgba(37, 99, 235, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.35);
 }
-
 .apple-card {
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   background: linear-gradient(135deg, #F0F6FF 0%, #E0EDFF 100%) !important;
   border-color: #BFDBFE !important;
+}
+
+.dark .apple-card {
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card)) 100%) !important;
+  border-color: hsl(var(--border)) !important;
 }
 
 .apple-card:hover {

@@ -389,7 +389,7 @@ export function ExamSchedulePage() {
       />
 
       {/* Filter / Scope Selector */}
-      <Card className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+      <Card className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
         <CardContent className="p-4">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mr-1">
@@ -497,7 +497,7 @@ export function ExamSchedulePage() {
                 <p className="text-sm text-muted-foreground animate-pulse">Loading exam schedules...</p>
               </div>
             ) : schedules.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-border/70 p-12 text-center bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm/40">
+              <div className="rounded-2xl border border-dashed border-border/70 p-12 text-center bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm/40">
                 <CalendarClock className="mx-auto h-12 w-12 text-muted-foreground/60" />
                 <h3 className="mt-4 text-base font-semibold text-foreground">No subjects scheduled yet</h3>
                 <p className="mt-1.5 text-sm text-muted-foreground max-w-md mx-auto">
@@ -508,9 +508,9 @@ export function ExamSchedulePage() {
                 </Button>
               </div>
             ) : (
-              <div className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] overflow-hidden shadow-sm">
+              <div className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 overflow-hidden shadow-sm">
                 {commonTime && (
-                  <div className="bg-white/60 p-3 border-b border-[#BFDBFE] text-sm font-semibold text-center text-primary flex items-center justify-center gap-2">
+                  <div className="bg-white/60 p-3 border-b border-[#BFDBFE] dark:border-slate-800 text-sm font-semibold text-center text-primary flex items-center justify-center gap-2">
                     <Clock className="h-4 w-4" /> Exam Time: {commonTime}
                   </div>
                 )}

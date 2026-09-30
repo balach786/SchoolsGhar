@@ -76,7 +76,7 @@ export function PlatformLoginPage() {
         </div>
 
         {/* Login Card */}
-        <div className="rounded-2xl border border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm backdrop-blur-xl p-6 sm:p-8 shadow-2xl shadow-none space-y-5">
+        <div className="rounded-2xl border border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm backdrop-blur-xl p-6 sm:p-8 shadow-2xl shadow-none space-y-5">
           {serverError && (
             <div role="alert" className="rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-sm text-destructive">
               {serverError}

@@ -22,6 +22,7 @@ export interface IPayment extends Document {
   /** Oldest-first multi-invoice allocation breakdown */
   allocations?: {
     studentFeeId: mongoose.Types.ObjectId;
+    month: number | null;
     amountAllocated: number;
   }[];
   status: PaymentStatus;
@@ -51,6 +52,7 @@ export const paymentSchema = new Schema<IPayment>(
     allocations: [
       {
         studentFeeId: { type: Schema.Types.ObjectId, ref: 'StudentFee', required: true },
+        month: { type: Number, default: null },
         amountAllocated: { type: Number, required: true, min: 1 , validate: { validator: Number.isInteger, message: 'Amount must be stored as integer paisa' }},
       },
     ],
@@ -86,6 +88,7 @@ export function publicPayment(doc: IPayment | (Record<string, any> & { _id?: unk
     notes: doc.notes ?? null,
     allocations: doc.allocations?.map((a: any) => ({
       studentFeeId: String(a.studentFeeId),
+      month: a.month ?? null,
       amountAllocated: a.amountAllocated,
     })) || [],
     status: doc.status || 'active',

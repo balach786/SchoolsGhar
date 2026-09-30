@@ -18,37 +18,37 @@ export interface StatCardProps {
 
 const toneStyles: Record<NonNullable<StatCardProps['tone']>, { card: string; iconBox: string; icon: string }> = {
   default: {
-    card: 'bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] border-[#BFDBFE] hover:border-[#60A5FA] hover:shadow-[0_22px_45px_-12px_rgba(37,99,235,0.25)]',
+    card: 'bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 border-[#BFDBFE] dark:border-slate-800 hover:border-[#60A5FA] hover:shadow-[0_22px_45px_-12px_rgba(37,99,235,0.25)]',
     iconBox: 'bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] shadow-[0_10px_22px_-5px_rgba(37,99,235,0.5)] border-none',
     icon: 'text-white',
   },
   primary: {
-    card: 'bg-gradient-to-br from-[#F5F3FF] to-[#E0E7FF] border-[#C7D2FE] hover:border-[#818CF8] hover:shadow-[0_22px_45px_-12px_rgba(79,70,229,0.25)]',
+    card: 'bg-gradient-to-br from-[#F5F3FF] dark:from-slate-800 to-[#E0E7FF] dark:to-slate-900 border-[#C7D2FE] dark:border-slate-800 hover:border-[#818CF8] hover:shadow-[0_22px_45px_-12px_rgba(79,70,229,0.25)]',
     iconBox: 'bg-gradient-to-br from-[#6366F1] to-[#4338CA] shadow-[0_10px_22px_-5px_rgba(79,70,229,0.5)] border-none',
     icon: 'text-white',
   },
   navy: {
-    card: 'bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] border-[#BFDBFE] hover:border-[#60A5FA] hover:shadow-[0_22px_45px_-12px_rgba(37,99,235,0.25)]',
+    card: 'bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 border-[#BFDBFE] dark:border-slate-800 hover:border-[#60A5FA] hover:shadow-[0_22px_45px_-12px_rgba(37,99,235,0.25)]',
     iconBox: 'bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] shadow-[0_10px_22px_-5px_rgba(37,99,235,0.5)] border-none',
     icon: 'text-white',
   },
   gold: {
-    card: 'bg-gradient-to-br from-[#FFFDF5] to-[#FEF3C7] border-[#FDE68A] hover:border-[#FBBF24] hover:shadow-[0_22px_45px_-12px_rgba(245,158,11,0.25)]',
+    card: 'bg-gradient-to-br from-[#FFFDF5] dark:from-slate-800 to-[#FEF3C7] dark:to-slate-900 border-[#FDE68A] dark:border-slate-800 hover:border-[#FBBF24] hover:shadow-[0_22px_45px_-12px_rgba(245,158,11,0.25)]',
     iconBox: 'bg-gradient-to-br from-[#F59E0B] to-[#D97706] shadow-[0_10px_22px_-5px_rgba(245,158,11,0.5)] border-none',
     icon: 'text-white',
   },
   success: {
-    card: 'bg-gradient-to-br from-[#F0FDF4] to-[#D1FAE5] border-[#A7F3D0] hover:border-[#34D399] hover:shadow-[0_22px_45px_-12px_rgba(16,185,129,0.25)]',
+    card: 'bg-gradient-to-br from-[#F0FDF4] dark:from-slate-800 to-[#D1FAE5] dark:to-slate-900 border-[#A7F3D0] dark:border-slate-800 hover:border-[#34D399] hover:shadow-[0_22px_45px_-12px_rgba(16,185,129,0.25)]',
     iconBox: 'bg-gradient-to-br from-[#10B981] to-[#047857] shadow-[0_10px_22px_-5px_rgba(16,185,129,0.5)] border-none',
     icon: 'text-white',
   },
   warning: {
-    card: 'bg-gradient-to-br from-[#FFFDF5] to-[#FEF3C7] border-[#FDE68A] hover:border-[#FBBF24] hover:shadow-[0_22px_45px_-12px_rgba(245,158,11,0.25)]',
+    card: 'bg-gradient-to-br from-[#FFFDF5] dark:from-slate-800 to-[#FEF3C7] dark:to-slate-900 border-[#FDE68A] dark:border-slate-800 hover:border-[#FBBF24] hover:shadow-[0_22px_45px_-12px_rgba(245,158,11,0.25)]',
     iconBox: 'bg-gradient-to-br from-[#F59E0B] to-[#D97706] shadow-[0_10px_22px_-5px_rgba(245,158,11,0.5)] border-none',
     icon: 'text-white',
   },
   destructive: {
-    card: 'bg-gradient-to-br from-[#FFF1F2] to-[#FFE4E6] border-[#FECDD3] hover:border-[#FB7185] hover:shadow-[0_22px_45px_-12px_rgba(244,63,94,0.25)]',
+    card: 'bg-gradient-to-br from-[#FFF1F2] dark:from-slate-800 to-[#FFE4E6] dark:to-slate-900 border-[#FECDD3] dark:border-slate-800 hover:border-[#FB7185] hover:shadow-[0_22px_45px_-12px_rgba(244,63,94,0.25)]',
     iconBox: 'bg-gradient-to-br from-[#F43F5E] to-[#BE123C] shadow-[0_10px_22px_-5px_rgba(244,63,94,0.5)] border-none',
     icon: 'text-white',
   },
@@ -85,7 +85,7 @@ export function StatCard({
       >
         <CardContent className="flex flex-col flex-1 p-4 sm:p-5">
           <div className="flex items-start justify-between gap-3">
-            <p className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-500/80 line-clamp-2 leading-snug">
+            <p className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-500/80 dark:text-slate-400 line-clamp-2 leading-snug">
               {title}
             </p>
             <div
@@ -104,7 +104,7 @@ export function StatCard({
             ) : (
               <p 
                 className={cn(
-                  "font-extrabold tracking-tight text-slate-800 break-normal leading-tight",
+                  "font-extrabold tracking-tight text-slate-800 dark:text-slate-100 break-normal leading-tight",
                   typeof value === 'string' && /[a-zA-Z]{4,}/.test(value.replace(/(PKR|USD|EUR|GBP)/gi, '')) 
                     ? "text-2xl sm:text-3xl" 
                     : "whitespace-nowrap",
@@ -120,7 +120,7 @@ export function StatCard({
               </p>
             )}
             {description && (
-              <div className="mt-2 text-[10px] sm:text-[11px] font-medium text-slate-500 line-clamp-2 leading-snug">
+              <div className="mt-2 text-[10px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 line-clamp-2 leading-snug">
                 {description}
               </div>
             )}

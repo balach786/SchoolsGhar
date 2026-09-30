@@ -274,7 +274,7 @@ export function ExamAttendancePage() {
 
       {/* Statistics and Quick Actions Bar */}
       {selectedSessionId && selectedBlock && (
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border rounded-lg p-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border rounded-lg p-4">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <span className="h-3 w-3 rounded-full bg-emerald-500" />
@@ -312,7 +312,7 @@ export function ExamAttendancePage() {
       )}
 
       {/* Attendance Roster Table */}
-      <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm overflow-hidden">
+      <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-muted/50 border-b text-muted-foreground text-xs uppercase tracking-wider font-semibold">
             <tr>

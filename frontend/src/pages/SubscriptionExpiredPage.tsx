@@ -28,7 +28,7 @@ export function SubscriptionExpiredPage() {
 
       {/* Lockout Box */}
       <main className="relative z-10 flex-1 flex items-center justify-center p-4">
-        <div className="max-w-md w-full rounded-2xl border border-border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm backdrop-blur-xl p-6 sm:p-8 text-center shadow-2xl shadow-black/80 space-y-6">
+        <div className="max-w-md w-full rounded-2xl border border-border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm backdrop-blur-xl p-6 sm:p-8 text-center shadow-2xl shadow-black/80 space-y-6">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 shadow-inner">
             <Lock className="h-8 w-8" />
           </div>

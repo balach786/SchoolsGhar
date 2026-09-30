@@ -425,7 +425,7 @@ export function ExamFeesPage() {
       </div>
 
       {/* Scope Selector */}
-      <Card className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm">
+      <Card className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm">
         <CardContent className="p-4">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mr-1">
@@ -520,7 +520,7 @@ export function ExamFeesPage() {
               <p className="text-sm text-muted-foreground animate-pulse">Loading student exam fees...</p>
             </div>
           ) : filteredStudentFees.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border/70 p-10 text-center bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm/40">
+            <div className="rounded-xl border border-dashed border-border/70 p-10 text-center bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm/40">
               <Wallet className="mx-auto h-10 w-10 text-muted-foreground/60" />
               <h3 className="mt-3 text-base font-semibold">No fee records found</h3>
               <p className="mt-1 text-xs text-muted-foreground max-w-sm mx-auto">
@@ -531,7 +531,7 @@ export function ExamFeesPage() {
               </Button>
             </div>
           ) : (
-            <div className="rounded-xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] overflow-hidden">
+            <div className="rounded-xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-muted/50 text-xs font-semibold text-muted-foreground uppercase border-b border-border/60">

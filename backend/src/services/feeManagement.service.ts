@@ -402,7 +402,27 @@ export async function calculateStudentFeeObligations(
     tenantId: tId,
     studentId: sId,
     status: { $in: ['unpaid', 'partial'] },
-  }).sort({ createdAt: 1 }).lean();
+  }).sort({ createdAt: 1 });
+
+  // Re-sync unpaid/partial invoices with current fee structures
+  const structureIds = [...new Set(pendingInvoices.map((inv) => String(inv.feeStructureId)))];
+  const structures = await FeeStructure.find({ _id: { $in: structureIds }, tenantId: tId }).select('amount').lean();
+  const structureAmountMap = new Map(structures.map((s) => [String(s._id), s.amount]));
+
+  for (const inv of pendingInvoices) {
+    const currentStructureAmount = structureAmountMap.get(String(inv.feeStructureId));
+    if (currentStructureAmount !== undefined && inv.originalAmount !== currentStructureAmount) {
+      const diff = currentStructureAmount - inv.originalAmount;
+      inv.originalAmount = currentStructureAmount;
+      inv.netPayable = Math.max(0, inv.netPayable + diff);
+      inv.remainingBalance = Math.max(0, inv.remainingBalance + diff);
+      if (inv.chargeBreakdown) {
+        inv.chargeBreakdown.baseFeePaisa = currentStructureAmount;
+        inv.chargeBreakdown.netPayablePaisa = Math.max(0, inv.chargeBreakdown.netPayablePaisa + diff);
+      }
+      await inv.save();
+    }
+  }
 
   // Traceable Late Fee Assessment:
   // If due date setting is enabled, late fee is enabled, and invoice is overdue past grace period

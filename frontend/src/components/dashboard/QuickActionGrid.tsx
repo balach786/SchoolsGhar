@@ -91,7 +91,7 @@ export function QuickActionGrid({ actions, className, onReorder }: QuickActionGr
       case 'navy':
       default:
         return {
-          card: 'bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] border-[#BFDBFE] hover:border-blue-400 hover:shadow-[0_22px_45px_-12px_rgba(37,99,235,0.25)]',
+          card: 'bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 border-[#BFDBFE] dark:border-slate-800 hover:border-blue-400 hover:shadow-[0_22px_45px_-12px_rgba(37,99,235,0.25)]',
           icon: 'bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] text-white shadow-[0_10px_22px_-5px_rgba(37,99,235,0.5)] border-none',
           text: 'group-hover:text-blue-700 text-blue-950',
           badge: 'bg-blue-100 text-blue-700',

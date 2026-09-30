@@ -256,7 +256,7 @@ export function ClassCollectionPage() {
       <FeesNavHeader activeTab="class-collection" />
 
       {/* Filter Control Bar */}
-      <div className="p-4 rounded-2xl bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm border border-border/70 shadow-xs grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="p-4 rounded-2xl bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm border border-border/70 shadow-xs grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
         {/* Session */}
         <div className="space-y-1">
           <Label className="text-[11px] text-muted-foreground">Session</Label>

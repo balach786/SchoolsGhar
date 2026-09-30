@@ -186,7 +186,7 @@ export function PaymentsPage() {
       </div>
 
       {/* ── Filter Toolbar ── */}
-      <div className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] p-3 shadow-sm flex flex-wrap items-center gap-3">
+      <div className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 p-3 shadow-sm flex flex-wrap items-center gap-3">
         <div className="relative w-72">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -207,7 +207,7 @@ export function PaymentsPage() {
         <Input type="date" className="w-40 h-9 text-xs rounded-xl" value={to} onChange={(e) => setTo(e.target.value)} aria-label="To date" />
       </div>
 
-      <div className="rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm overflow-hidden">
+      <div className="rounded-2xl border border-[#BFDBFE] dark:border-slate-800 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm overflow-hidden">
         <DataTable
         columns={columns}
         data={data}
@@ -424,7 +424,7 @@ function CreatePaymentDialog({ open, onOpenChange, onDone }: { open: boolean; on
 function ReceiptView({ receipt }: { receipt: ReceiptPayload }) {
   const school = receipt.school;
   return (
-    <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm p-6">
+    <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm p-6">
       <div className="flex items-start justify-between border-b pb-4">
         <div>
           <h2 className="text-lg font-semibold">{school.schoolName}</h2>

@@ -217,7 +217,7 @@ export function ResultsPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 bg-muted/30 p-3.5 rounded-xl border border-border/60">
           <div className="flex items-center gap-3">
             <Select value={examId} onValueChange={(v) => setSearchParams({ examId: v })}>
-              <SelectTrigger className="w-72 bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm"><SelectValue placeholder="Select an exam" /></SelectTrigger>
+              <SelectTrigger className="w-72 bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm"><SelectValue placeholder="Select an exam" /></SelectTrigger>
               <SelectContent>
                 {exams.length === 0 && <SelectItem value="__none" disabled>No exams yet</SelectItem>}
                 {exams.map((e) => (
@@ -366,7 +366,7 @@ export function ResultsPage() {
 
 function ResultCardView({ card }: { card: ResultCard }) {
   return (
-    <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] to-[#E0EDFF] shadow-sm p-6">
+    <div className="rounded-lg border bg-gradient-to-br from-[#F0F6FF] dark:from-slate-800 to-[#E0EDFF] dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 shadow-sm p-6">
       <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-4">
         <div>
           <h2 className="text-lg font-semibold">{card.exam.name}</h2>
